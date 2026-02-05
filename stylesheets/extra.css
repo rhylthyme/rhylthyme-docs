@@ -1,0 +1,266 @@
+/* Custom styles for Rhylthyme documentation */
+
+/* Code block styling */
+.highlight {
+    border-radius: 6px;
+    margin: 1em 0;
+}
+
+/* JSON/YAML syntax highlighting */
+.json .hljs-string { color: #a6e22e; }
+.json .hljs-number { color: #ae81ff; }
+.json .hljs-literal { color: #66d9ef; }
+.json .hljs-punctuation { color: #f8f8f2; }
+
+.yaml .hljs-string { color: #a6e22e; }
+.yaml .hljs-number { color: #ae81ff; }
+.yaml .hljs-literal { color: #66d9ef; }
+.yaml .hljs-punctuation { color: #f8f8f2; }
+
+/* Command examples */
+.cmd {
+    background-color: #2d3748;
+    color: #e2e8f0;
+    padding: 1rem;
+    border-radius: 6px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    margin: 1em 0;
+    overflow-x: auto;
+}
+
+.cmd::before {
+    content: "$ ";
+    color: #68d391;
+    font-weight: bold;
+}
+
+/* Output examples */
+.output {
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    padding: 1rem;
+    border-radius: 6px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    margin: 1em 0;
+    overflow-x: auto;
+}
+
+/* Warning and info boxes */
+.warning {
+    background-color: #fed7d7;
+    border-left: 4px solid #e53e3e;
+    padding: 1rem;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+}
+
+.info {
+    background-color: #bee3f8;
+    border-left: 4px solid #3182ce;
+    padding: 1rem;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+}
+
+.success {
+    background-color: #c6f6d5;
+    border-left: 4px solid #38a169;
+    padding: 1rem;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+}
+
+/* Table styling */
+.md-typeset table {
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.md-typeset table th {
+    background-color: #4a5568;
+    color: white;
+    font-weight: 600;
+}
+
+.md-typeset table td {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Navigation improvements */
+.md-nav__link {
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.md-nav__link:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+/* Code copy button */
+.md-clipboard {
+    color: #718096;
+}
+
+.md-clipboard:hover {
+    color: #4a5568;
+}
+
+/* Search improvements */
+.md-search__input {
+    border-radius: 6px;
+}
+
+.md-search__input::placeholder {
+    color: #a0aec0;
+}
+
+/* Footer styling */
+.md-footer {
+    background-color: #2d3748;
+    color: #e2e8f0;
+}
+
+.md-footer-copyright {
+    color: #a0aec0;
+}
+
+/* Homepage hero section */
+.hero {
+    text-align: center;
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    margin: -1rem -1rem 2rem -1rem;
+    border-radius: 0 0 12px 12px;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Feature grid */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.feature {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.feature h3 {
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+
+.feature p {
+    color: #4a5568;
+    line-height: 1.6;
+}
+
+/* Button styling */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #3182ce;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: #2c5aa0;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background-color: #718096;
+}
+
+.btn-secondary:hover {
+    background-color: #4a5568;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+    }
+    
+    .features {
+        grid-template-columns: 1fr;
+    }
+    
+    .md-content {
+        padding: 1rem;
+    }
+}
+
+/* Dark mode adjustments */
+[data-md-color-scheme="slate"] .warning {
+    background-color: #2d3748;
+    border-left-color: #fc8181;
+}
+
+[data-md-color-scheme="slate"] .info {
+    background-color: #2a4365;
+    border-left-color: #63b3ed;
+}
+
+[data-md-color-scheme="slate"] .success {
+    background-color: #22543d;
+    border-left-color: #68d391;
+}
+
+[data-md-color-scheme="slate"] .feature {
+    background-color: #2d3748;
+    border-color: #4a5568;
+}
+
+[data-md-color-scheme="slate"] .feature h3 {
+    color: #e2e8f0;
+}
+
+[data-md-color-scheme="slate"] .feature p {
+    color: #a0aec0;
+}
+
+/* Print styles */
+@media print {
+    .hero {
+        background: none !important;
+        color: black !important;
+    }
+    
+    .feature {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+    }
+    
+    .md-nav {
+        display: none !important;
+    }
+} 
