@@ -1,103 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/</loc>
+         <loc>https://docs.rhylthyme.com/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/privacy/</loc>
+         <loc>https://docs.rhylthyme.com/privacy/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/terms/</loc>
+         <loc>https://docs.rhylthyme.com/terms/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/development/architecture/</loc>
+         <loc>https://docs.rhylthyme.com/development/architecture/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/development/cli/</loc>
+         <loc>https://docs.rhylthyme.com/development/cli/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/development/contributing/</loc>
+         <loc>https://docs.rhylthyme.com/development/contributing/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/development/environment-schema/</loc>
+         <loc>https://docs.rhylthyme.com/development/environment-schema/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/development/installation/</loc>
+         <loc>https://docs.rhylthyme.com/development/installation/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/development/schema/</loc>
+         <loc>https://docs.rhylthyme.com/development/schema/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/getting-started/concepts/</loc>
+         <loc>https://docs.rhylthyme.com/getting-started/concepts/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/getting-started/examples/</loc>
+         <loc>https://docs.rhylthyme.com/getting-started/examples/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/getting-started/quick-start/</loc>
+         <loc>https://docs.rhylthyme.com/getting-started/quick-start/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/ios-app/</loc>
+         <loc>https://docs.rhylthyme.com/ios-app/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/ios-app/account/</loc>
+         <loc>https://docs.rhylthyme.com/ios-app/account/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/ios-app/chat/</loc>
+         <loc>https://docs.rhylthyme.com/ios-app/chat/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/ios-app/getting-started/</loc>
+         <loc>https://docs.rhylthyme.com/ios-app/getting-started/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/ios-app/home/</loc>
+         <loc>https://docs.rhylthyme.com/ios-app/home/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/ios-app/visualization/</loc>
+         <loc>https://docs.rhylthyme.com/ios-app/visualization/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/web-app/</loc>
+         <loc>https://docs.rhylthyme.com/web-app/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/web-app/account/</loc>
+         <loc>https://docs.rhylthyme.com/web-app/account/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/web-app/chat/</loc>
+         <loc>https://docs.rhylthyme.com/web-app/chat/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/web-app/getting-started/</loc>
+         <loc>https://docs.rhylthyme.com/web-app/getting-started/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/web-app/manual-controls/</loc>
+         <loc>https://docs.rhylthyme.com/web-app/manual-controls/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/web-app/mcp/</loc>
+         <loc>https://docs.rhylthyme.com/web-app/mcp/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
     <url>
-         <loc>https://rhylthyme.github.io/rhylthyme-docs/web-app/visualization/</loc>
+         <loc>https://docs.rhylthyme.com/web-app/visualization/</loc>
          <lastmod>2026-02-19</lastmod>
     </url>
 </urlset>
