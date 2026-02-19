@@ -1,7 +1,7 @@
 site_name: Rhylthyme Documentation
 site_description: Documentation for Rhylthyme - A tool for working with real-time program schedules
 site_author: Rhylthyme Team
-site_url: https://rhylthyme.github.io/rhylthyme-docs/
+site_url: https://docs.rhylthyme.com/
 
 # Repository
 repo_name: rhylthyme/rhylthyme-docs
