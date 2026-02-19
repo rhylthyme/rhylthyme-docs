@@ -43,18 +43,34 @@ theme:
 nav:
   - Home: index.md
   - Getting Started:
-    - Installation: installation.md
-    - Quick Start: quick-start.md
-  - User Guide:
-    - Environment Guide: environment-guide.md
-    - Examples: examples.md
-  - API Reference:
-    - CLI Commands: api/cli.md
-    - Program Schema: api/schema.md
-    - Environment Schema: api/environment-schema.md
+    - Concepts: getting-started/concepts.md
+    - Quick Start: getting-started/quick-start.md
+    - Examples: getting-started/examples.md
+  - Web App:
+    - Overview: web-app/index.md
+    - Getting Started: web-app/getting-started.md
+    - Visualization: web-app/visualization.md
+    - Manual Controls: web-app/manual-controls.md
+    - AI Chat: web-app/chat.md
+    - Account & Sharing: web-app/account.md
+    - MCP Server: web-app/mcp.md
+  - iOS App:
+    - Overview: ios-app/index.md
+    - Getting Started: ios-app/getting-started.md
+    - Home Tab: ios-app/home.md
+    - Visualization: ios-app/visualization.md
+    - Chat: ios-app/chat.md
+    - Account & Settings: ios-app/account.md
   - Development:
-    - Contributing: development/contributing.md
+    - Installation: development/installation.md
+    - CLI Commands: development/cli.md
+    - Program Schema: development/schema.md
+    - Environment Schema: development/environment-schema.md
     - Architecture: development/architecture.md
+    - Contributing: development/contributing.md
+  - Legal:
+    - Privacy Policy: privacy.md
+    - Terms of Service: terms.md
 
 # Plugins
 plugins:
@@ -65,9 +81,16 @@ plugins:
       minify_html: true
   - redirects:
       redirect_maps:
-        'installation-guide.md': 'installation.md'
-        'quick-start-guide.md': 'quick-start.md'
-        'environment-loading-guide.md': 'environment-guide.md'
+        'installation-guide.md': 'development/installation.md'
+        'quick-start-guide.md': 'getting-started/quick-start.md'
+        'environment-loading-guide.md': 'getting-started/concepts.md'
+        'installation.md': 'getting-started/concepts.md'
+        'quick-start.md': 'getting-started/quick-start.md'
+        'examples.md': 'getting-started/examples.md'
+        'environment-guide.md': 'getting-started/concepts.md'
+        'api/cli.md': 'development/cli.md'
+        'api/schema.md': 'development/schema.md'
+        'api/environment-schema.md': 'development/environment-schema.md'
 
 # Extra
 extra:
@@ -80,7 +103,7 @@ extra:
       link: https://twitter.com/rhylthyme
 
 # Copyright
-copyright: Copyright &copy; 2025 Rhylthyme Team
+copyright: Copyright &copy; 2025-2026 Rhylthyme Team
 
 # Markdown extensions
 markdown_extensions:

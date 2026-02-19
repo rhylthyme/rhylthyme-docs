@@ -1,4 +1,6 @@
-# Installation Guide
+# Installation
+
+This page covers installing the Rhylthyme CLI tools for local development and program execution. The web app at [www.rhylthyme.com](https://www.rhylthyme.com) requires no installation.
 
 ## Prerequisites
 
@@ -6,23 +8,14 @@
 - pip (Python package installer)
 - Git (for cloning repositories)
 
-## Installation
-
-The Rhylthyme packages are not yet on PyPI and must be installed from their Git repositories.
-
-### 1. Create a Virtual Environment
+## Install Core Packages
 
 ```bash
+# Create a virtual environment
 python3.12 -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-```
 
-### 2. Install Core Packages
-
-Install in order (rhylthyme-cli-runner depends on rhylthyme-spec):
-
-```bash
-# Clone and install
+# Clone and install (rhylthyme-cli-runner depends on rhylthyme-spec)
 git clone https://github.com/rhylthyme/rhylthyme-spec.git
 git clone https://github.com/rhylthyme/rhylthyme-cli-runner.git
 
@@ -30,21 +23,69 @@ pip install -e ./rhylthyme-spec
 pip install -e ./rhylthyme-cli-runner
 ```
 
-### 3. Verify Installation
+## Verify Installation
 
 ```bash
 rhylthyme --help
 ```
 
-### 4. Optional Packages
+## Your First Program
+
+Create a simple program and run it in the terminal:
+
+```bash
+cat > hello.json << 'EOF'
+{
+  "programId": "hello-world",
+  "name": "Hello World",
+  "tracks": [
+    {
+      "trackId": "main",
+      "name": "Main Track",
+      "steps": [
+        {
+          "stepId": "greet",
+          "name": "Greet",
+          "task": "greeting",
+          "duration": {"type": "fixed", "seconds": 5},
+          "startTrigger": {"type": "programStart"}
+        }
+      ]
+    }
+  ]
+}
+EOF
+
+# Run the program
+rhylthyme run hello.json
+```
+
+## Common CLI Operations
+
+```bash
+# Validate a program
+rhylthyme validate program.json
+
+# Run a program interactively
+rhylthyme run program.json
+
+# Run with environment for resource validation
+rhylthyme run program.json -e environments/kitchen.json
+
+# Optimize a program schedule
+rhylthyme plan input.json optimized.json
+
+# Run at 10x speed with auto-start
+rhylthyme run program.json --time-scale 10 --auto-start
+```
+
+See the [CLI Commands Reference](cli.md) for the full list of commands and options.
+
+## Optional Packages
 
 ```bash
 # Example programs and environments
 git clone https://github.com/rhylthyme/rhylthyme-examples.git
-
-# Web visualization and MCP server
-git clone https://github.com/rhylthyme/rhylthyme-web.git
-pip install -e ./rhylthyme-web
 
 # Import plugins (TheMealDB, protocols.io)
 git clone https://github.com/rhylthyme/rhylthyme-importers.git
@@ -69,14 +110,6 @@ rhylthyme-cli-runner/        # Command-line interface
 │   └── environment_schemas.py # Environment type schemas
 └── pyproject.toml
 
-rhylthyme-web/               # Web visualization
-├── src/rhylthyme_web/
-│   ├── app.py              # Flask web application
-│   ├── web/                # DAG visualizer
-│   ├── mcp/                # MCP server
-│   └── rhylthyme/          # Core library
-└── pyproject.toml
-
 rhylthyme-importers/         # Import plugins
 ├── src/rhylthyme_importers/
 │   ├── themealdb.py        # TheMealDB importer
@@ -86,6 +119,13 @@ rhylthyme-importers/         # Import plugins
 rhylthyme-examples/          # Example programs and environments
 ├── programs/               # Example programs
 └── environments/           # Environment catalogs
+```
+
+## Development Installation
+
+```bash
+pip install -e ./rhylthyme-spec[dev]
+pip install -e ./rhylthyme-cli-runner[dev]
 ```
 
 ## Troubleshooting
@@ -104,10 +144,3 @@ rhylthyme-examples/          # Example programs and environments
 
 - Ensure the schema package is up to date
 - Use `rhylthyme validate program.json --verbose` for details
-
-## Development Installation
-
-```bash
-pip install -e ./rhylthyme-spec[dev]
-pip install -e ./rhylthyme-cli-runner[dev]
-```

@@ -58,6 +58,8 @@ Programs are defined in JSON and describe workflows with tracks, steps, timing d
 
 ### Variable Duration
 
+A step with a flexible time range. Auto-completes at `defaultSeconds` unless manually completed earlier (after `minSeconds`). Adding a `triggerName` enables a "Mark Complete" button in the UI.
+
 ```json
 {
   "type": "variable",
@@ -75,6 +77,40 @@ Programs are defined in JSON and describe workflows with tracks, steps, timing d
 | `maxSeconds` | number (>= 0) | Yes | Maximum duration in seconds |
 | `defaultSeconds` | number | No | Default duration in seconds |
 | `optimalSeconds` | number | No | Optimal duration in seconds |
+| `triggerName` | string | No | When set, shows a manual "Mark Complete" button. The step auto-completes at `defaultSeconds` if not completed manually. |
+
+**Variable with manual completion trigger:**
+
+```json
+{
+  "type": "variable",
+  "minSeconds": 45,
+  "maxSeconds": 180,
+  "defaultSeconds": 120,
+  "triggerName": "monitoring-done"
+}
+```
+
+### Indefinite Duration
+
+A step that runs until the user manually marks it complete. There is no automatic end time. Use `defaultSeconds` to set the initial display width on the timeline.
+
+```json
+{
+  "type": "indefinite",
+  "defaultSeconds": 120,
+  "triggerName": "watching-done"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `type` | `"indefinite"` | Yes | Duration type |
+| `defaultSeconds` | number | Yes | Display duration on timeline and placeholder for planning |
+| `triggerName` | string | No | Name for the completion trigger |
+
+!!! note
+    Indefinite steps block program completion -- the program cannot finish until all indefinite steps are manually marked complete.
 
 ## Start Trigger Types
 
@@ -112,7 +148,7 @@ Step starts after another step ends plus a buffer time.
 
 ### `manual`
 
-Step must be triggered manually by the user.
+Step waits for the user to click a "Start Step" button. Until started, the step slides forward on the timeline. Same-track predecessors must complete before the start button appears.
 
 ```json
 {"type": "manual"}
@@ -145,16 +181,18 @@ Step triggers when another step is aborted.
 
 ## Complete Example
 
+This example demonstrates all duration types (fixed, variable, indefinite) and trigger types (programStart, afterStep, afterStepWithBuffer, manual).
+
 ```json
 {
   "programId": "pasta-dinner",
   "name": "Pasta Dinner",
-  "description": "A simple pasta dinner program",
+  "description": "A pasta dinner showing all duration and trigger types",
   "version": "1.0.0",
   "tracks": [
     {
       "trackId": "cooking",
-      "name": "Cooking Track",
+      "name": "Cooking",
       "steps": [
         {
           "stepId": "boil-water",
@@ -171,10 +209,24 @@ Step triggers when another step is aborted.
             "type": "variable",
             "minSeconds": 480,
             "maxSeconds": 720,
-            "defaultSeconds": 600
+            "defaultSeconds": 600,
+            "triggerName": "pasta-done"
           },
           "startTrigger": {"type": "afterStep", "stepId": "boil-water"}
         },
+        {
+          "stepId": "plate",
+          "name": "Plate and Serve",
+          "task": "preparation",
+          "duration": {"type": "fixed", "seconds": 120},
+          "startTrigger": {"type": "manual"}
+        }
+      ]
+    },
+    {
+      "trackId": "sauce",
+      "name": "Sauce",
+      "steps": [
         {
           "stepId": "make-sauce",
           "name": "Make Sauce",
@@ -183,11 +235,15 @@ Step triggers when another step is aborted.
           "startTrigger": {"type": "programStart"}
         },
         {
-          "stepId": "plate",
-          "name": "Plate and Serve",
-          "task": "preparation",
-          "duration": {"type": "fixed", "seconds": 120},
-          "startTrigger": {"type": "manual"}
+          "stepId": "simmer",
+          "name": "Simmer and Reduce",
+          "task": "cooking",
+          "duration": {
+            "type": "indefinite",
+            "defaultSeconds": 300,
+            "triggerName": "sauce-ready"
+          },
+          "startTrigger": {"type": "afterStepWithBuffer", "stepId": "make-sauce", "bufferSeconds": 30}
         }
       ]
     }
@@ -211,4 +267,3 @@ Step triggers when another step is aborted.
 
 - [CLI Commands Reference](cli.md)
 - [Environment Schema Reference](environment-schema.md)
-- [Examples](../examples.md)

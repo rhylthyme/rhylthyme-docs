@@ -204,7 +204,6 @@ rhylthyme environment-info TYPE
 
 ## Related Documentation
 
-- [Installation Guide](../installation.md)
-- [Quick Start Guide](../quick-start.md)
+- [Installation](installation.md)
 - [Program Schema Reference](schema.md)
 - [Environment Schema Reference](environment-schema.md)

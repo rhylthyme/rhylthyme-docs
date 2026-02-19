@@ -39,14 +39,9 @@ Command-line interface and interactive program execution.
 - `environment_loader.py` - Environment catalog loading
 - `environment_schemas.py` - Environment type definitions
 
-### rhylthyme-web
+### Web App
 
-Web visualization, MCP server, and AI chat.
-
-- `app.py` - Flask application with embedded HTML/JS (single-file app)
-- `web/web_visualizer.py` - D3.js DAG visualization generator
-- `mcp/server.py` - MCP server for AI tool integration
-- `rhylthyme/` - Core library for program manipulation
+The web app at [www.rhylthyme.com](https://www.rhylthyme.com) provides browser-based visualization, AI chat, and program execution. It is a Flask application with D3.js visualization and an MCP server for AI tool integration.
 
 ### rhylthyme-importers
 
@@ -96,5 +91,5 @@ External API (TheMealDB/protocols.io) → Importer Plugin → Rhylthyme Program 
 ## Related Documentation
 
 - [Contributing Guide](contributing.md)
-- [CLI Reference](../api/cli.md)
-- [Program Schema](../api/schema.md)
+- [CLI Reference](cli.md)
+- [Program Schema](schema.md)

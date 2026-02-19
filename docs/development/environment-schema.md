@@ -110,6 +110,5 @@ Environments define resource constraints and capabilities. They are **completely
 
 ## Related Documentation
 
-- [Environment Guide](../environment-guide.md)
 - [Program Schema Reference](schema.md)
 - [CLI Commands Reference](cli.md)

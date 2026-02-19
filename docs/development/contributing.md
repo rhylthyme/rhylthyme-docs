@@ -3,10 +3,9 @@
 ## Getting Started
 
 ```bash
-# Clone all repos
+# Clone the repos
 git clone https://github.com/rhylthyme/rhylthyme-spec.git
 git clone https://github.com/rhylthyme/rhylthyme-cli-runner.git
-git clone https://github.com/rhylthyme/rhylthyme-web.git
 git clone https://github.com/rhylthyme/rhylthyme-importers.git
 git clone https://github.com/rhylthyme/rhylthyme-examples.git
 
@@ -17,7 +16,6 @@ source .venv/bin/activate
 # Install in development mode
 pip install -e ./rhylthyme-spec[dev]
 pip install -e ./rhylthyme-cli-runner[dev]
-pip install -e ./rhylthyme-web
 pip install -e ./rhylthyme-importers[dev]
 ```
 
@@ -46,6 +44,5 @@ cd rhylthyme-examples && pytest
 
 - [rhylthyme-spec](https://github.com/rhylthyme/rhylthyme-spec)
 - [rhylthyme-cli-runner](https://github.com/rhylthyme/rhylthyme-cli-runner)
-- [rhylthyme-web](https://github.com/rhylthyme/rhylthyme-web)
 - [rhylthyme-importers](https://github.com/rhylthyme/rhylthyme-importers)
 - [rhylthyme-examples](https://github.com/rhylthyme/rhylthyme-examples)
