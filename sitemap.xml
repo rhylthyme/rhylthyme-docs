@@ -2,102 +2,106 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.rhylthyme.com/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/privacy/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/terms/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/development/architecture/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/development/cli/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/development/contributing/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/development/environment-schema/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/development/installation/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/development/schema/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/getting-started/concepts/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/getting-started/examples/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.rhylthyme.com/getting-started/glossary/</loc>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/getting-started/quick-start/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/ios-app/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/ios-app/account/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/ios-app/chat/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/ios-app/getting-started/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/ios-app/home/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/ios-app/visualization/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/web-app/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/web-app/account/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/web-app/chat/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/web-app/getting-started/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/web-app/manual-controls/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/web-app/mcp/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
     <url>
          <loc>https://docs.rhylthyme.com/web-app/visualization/</loc>
-         <lastmod>2026-02-19</lastmod>
+         <lastmod>2026-02-22</lastmod>
     </url>
 </urlset>
