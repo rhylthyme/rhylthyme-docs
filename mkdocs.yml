@@ -46,6 +46,7 @@ nav:
     - Concepts: getting-started/concepts.md
     - Quick Start: getting-started/quick-start.md
     - Examples: getting-started/examples.md
+    - Glossary: getting-started/glossary.md
   - Web App:
     - Overview: web-app/index.md
     - Getting Started: web-app/getting-started.md

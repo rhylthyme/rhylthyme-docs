@@ -177,5 +177,6 @@ When you set an `environmentType` on a program, the web app displays it in the p
 
 - [Quick Start](quick-start.md) -- Walk through the Breakfast Schedule example
 - [Examples](examples.md) -- More example programs to explore
+- [Glossary](glossary.md) -- Comprehensive reference of all Rhylthyme terms
 - [Manual Controls](../web-app/manual-controls.md) -- Interactive manual start and completion
 - [Program Schema Reference](../development/schema.md) -- Full specification of all fields and types

@@ -28,6 +28,7 @@ Rhylthyme lets you model complex workflows as **programs** composed of parallel 
 - **[Core Concepts](getting-started/concepts.md)** -- Programs, tracks, steps, durations, triggers, and resources
 - **[Quick Start](getting-started/quick-start.md)** -- Walk through the Breakfast Schedule example
 - **[Examples](getting-started/examples.md)** -- Built-in examples across kitchen, lab, airport, and bakery environments
+- **[Glossary](getting-started/glossary.md)** -- Comprehensive reference of all Rhylthyme terminology
 - **[Web App Guide](web-app/index.md)** -- Full documentation for the web app
 - **[iOS App Guide](ios-app/index.md)** -- Full documentation for the iOS app
 
