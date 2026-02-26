@@ -2,49 +2,25 @@
 
 The Rhylthyme MCP (Model Context Protocol) server lets AI assistants like Claude create and visualize Rhylthyme schedules directly. MCP is an open standard that enables AI models to call external tools — in this case, Rhylthyme's visualization and recipe import capabilities.
 
-## Remote Server (Zero Install)
+## Setup Requirements
 
-The fastest way to connect Rhylthyme to Claude is through the hosted remote server at `mcp.rhylthyme.com`. No installation required.
+**Local installation is required** for full MCP functionality. The remote endpoint at `mcp.rhylthyme.com` is a status/information endpoint only.
 
-### Claude Desktop
+## Local Server Installation
 
-1. Open **Claude Desktop**
-2. Go to **Settings** > **Connectors** > **Add custom connector**
-3. Enter the URL: `https://mcp.rhylthyme.com/mcp`
-4. Click **Add**
-
-That's it. Claude can now create schedule visualizations and import recipes.
-
-### Claude Code
-
-Add a `.mcp.json` file to your project root:
-
-```json
-{
-  "mcpServers": {
-    "rhylthyme": {
-      "type": "http",
-      "url": "https://mcp.rhylthyme.com/mcp"
-    }
-  }
-}
-```
-
-Claude Code will automatically connect to the Rhylthyme MCP server when working in that project.
-
-### Claude.ai
-
-Remote MCP servers also work with [claude.ai](https://claude.ai) integrations that support custom connectors. The same URL applies: `https://mcp.rhylthyme.com/mcp`
-
-## Local Server (pip install)
-
-If you prefer to run the MCP server locally (e.g., for development or offline use):
+### Installation
 
 ```bash
-pip install rhylthyme-web[mcp]
+pip install "rhylthyme[mcp]"
 ```
 
-Then add to your Claude Desktop config (`~/.config/Claude/claude_desktop_config.json` on Linux, `~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
+### Claude Desktop Setup
+
+Add to your Claude Desktop config file:
+
+**macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+**Linux:** `~/.config/Claude/claude_desktop_config.json`
+**Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
@@ -56,7 +32,35 @@ Then add to your Claude Desktop config (`~/.config/Claude/claude_desktop_config.
 }
 ```
 
-The local server opens visualizations directly in your browser and saves them to `~/.rhylthyme/visualizations/`.
+Restart Claude Desktop after saving the config.
+
+### Claude Code Setup
+
+For Claude Code (CLI tool), add a `.mcp.json` file to your project root:
+
+```json
+{
+  "mcpServers": {
+    "rhylthyme": {
+      "command": "rhylthyme-mcp"
+    }
+  }
+}
+```
+
+### Testing the Connection
+
+After setup, test the connection by asking Claude:
+- "What Rhylthyme tools are available?"
+- "Create a simple breakfast schedule"
+
+The server runs locally and opens visualizations directly in your browser.
+
+## Remote Status Endpoint
+
+The endpoint `https://mcp.rhylthyme.com` provides status information and setup instructions but does **not** provide functional MCP tools. It will direct you to install the local server for actual functionality.
+
+**For web-based scheduling without MCP setup, visit [www.rhylthyme.com](https://www.rhylthyme.com)**
 
 ## Available Tools
 
@@ -99,9 +103,10 @@ Claude will confirm resource constraints (e.g., "You have 1 oven, 4 stovetop bur
 
 ## Compatibility
 
-The Rhylthyme MCP server works with any MCP-compatible client:
+The local Rhylthyme MCP server works with MCP-compatible clients that support command-based servers:
 
-- [Claude Desktop](https://claude.ai/download)
-- [Claude Code](https://claude.ai/code) (via `.mcp.json`)
-- [Claude.ai](https://claude.ai) (via integrations)
-- Any client supporting MCP Streamable HTTP transport
+- [Claude Desktop](https://claude.ai/download) ✅
+- [Claude Code](https://claude.ai/code) ✅ (via `.mcp.json`)
+- Any client supporting MCP stdio transport ✅
+
+**Note:** HTTP-based MCP clients may not work with the command-based local server. For web-based access, use [www.rhylthyme.com](https://www.rhylthyme.com) directly.
