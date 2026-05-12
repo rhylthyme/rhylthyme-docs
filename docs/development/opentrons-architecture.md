@@ -46,10 +46,10 @@ class CommandEvent:
     line: Optional[int]         # source line, when known
 ```
 
-Growth is purely additive: phase 4 introduced `mount='flex_96'` and
-`mount='gripper'` without touching the duration model or the AST
-parser. Phase 3 introduced `module_id` similarly. Don't break this
-shape — every consumer is fine reading new fields as `None` defaults.
+Growth here is purely additive — `mount='flex_96'`, `mount='gripper'`,
+and `module_id` were each added without touching the duration model
+or the AST parser. Don't break this shape: every consumer is fine
+reading a new field as a `None` default.
 
 ## Per-module responsibilities
 
@@ -166,6 +166,6 @@ needs.
 - `make docs-check` regenerates the duration-model table into
   `docs/opentrons.md` and exits non-zero if the file changes. Wire
   this into CI so doc drift fails the build.
-- The Phase 1-5 test suite (45 tests) covers every recognised
+- The importer test suite covers every recognised
   command + entry point. Don't merge a change that removes coverage
   without replacing it.

@@ -1,11 +1,9 @@
 # Opentrons importer — user reference
 
 End-user documentation for the Opentrons Protocol API (.py) importer.
-Quickstart lives in the [package README](https://github.com/rhylthyme/rhylthyme-importers/blob/main/README.md); for the
-architecture/contributor docs see
-[`opentrons-architecture.md`](./opentrons-architecture.md) (coming in
-Phase 6). Implementation phasing lives in
-[`plans/opentrons-importer.md`](https://github.com/rhylthyme/rhylthyme-web/issues/5).
+Quickstart lives in the [package README](https://github.com/rhylthyme/rhylthyme-importers/blob/main/README.md); contributor /
+architecture notes live in
+[`opentrons-architecture.md`](./opentrons-architecture.md).
 
 ## Supported features
 
@@ -57,7 +55,7 @@ Each row maps to one `CommandEvent` per call.
 | `protocol.load_labware(...)` | ✅ | setup, emits no step |
 | `protocol.load_adapter(...)` | ✅ | setup, emits no step |
 | `protocol.load_instrument(...)` | ✅ | setup, emits no step |
-| `protocol.load_module(...)` | ✅ | setup, emits no step (module commands are Phase 3) |
+| `protocol.load_module(...)` | ✅ | setup, emits no step (module commands run on the module's own track — see below) |
 | `protocol.delay(seconds=N, minutes=M, msg=...)` | ✅ | renders as a fixed-duration step on the `Protocol` track; `task: delay` |
 | `protocol.pause(msg=...)` | ✅ | renders as an indefinite-duration step on the `Protocol` track |
 | `protocol.home()` | ✅ | renders on the `Protocol` track |
