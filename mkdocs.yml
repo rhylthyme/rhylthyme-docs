@@ -68,6 +68,9 @@ nav:
     - Program Schema: development/schema.md
     - Environment Schema: development/environment-schema.md
     - Architecture: development/architecture.md
+    - Importers:
+      - Opentrons (user reference): development/opentrons.md
+      - Opentrons (architecture): development/opentrons-architecture.md
     - Contributing: development/contributing.md
   - Legal:
     - Privacy Policy: privacy.md
