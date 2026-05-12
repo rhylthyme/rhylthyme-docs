@@ -1,9 +1,68 @@
 # Opentrons importer — user reference
 
 End-user documentation for the Opentrons Protocol API (.py) importer.
-Quickstart lives in the [package README](https://github.com/rhylthyme/rhylthyme-importers/blob/main/README.md); contributor /
-architecture notes live in
+Contributor / architecture notes live in
 [`opentrons-architecture.md`](./opentrons-architecture.md).
+
+## Quickstart — try it in 30 seconds
+
+Save the following as `trivial.py` (a working 4-step Opentrons protocol):
+
+```python
+metadata = {
+    'protocolName': 'Trivial single-aspirate-and-dispense',
+    'apiLevel': '2.13',
+}
+
+def run(protocol):
+    tips = protocol.load_labware('opentrons_96_tiprack_300ul', 1)
+    plate = protocol.load_labware('corning_96_wellplate_360ul_flat', 2)
+    pipette = protocol.load_instrument('p300_single_gen2', 'left',
+                                       tip_racks=[tips])
+
+    pipette.pick_up_tip()
+    pipette.aspirate(100, plate['A1'])
+    pipette.dispense(100, plate['B1'])
+    pipette.drop_tip()
+```
+
+Three ways to import it — pick whichever fits:
+
+### 1. Web app (no install)
+
+1. Go to [kitchen.rhylthyme.com](https://kitchen.rhylthyme.com/).
+2. In the left sidebar, expand **Upload Program**.
+3. Drag your `trivial.py` onto the drop zone (or click the zone and pick
+   the file). `.py` files are listed alongside `.json`, `.yaml`,
+   `.pptx`, and `.cook` as accepted formats.
+4. The visualization appears in the main pane: one
+   **Left: P300 single-channel** track with four steps —
+   `Pickup Tip → Aspirate → Dispense → Drop Tip`.
+
+### 2. CLI
+
+```bash
+pip install rhylthyme-importers
+rhylthyme-import-opentrons trivial.py | jq .
+```
+
+Prints the same program JSON the web upload renders.
+
+### 3. MCP (Claude Desktop and other agents)
+
+Once the Rhylthyme MCP connector is wired into your client, call the
+`import_from_source` tool with:
+
+```json
+{ "source": "opentrons", "action": "import", "text": "<your .py source>" }
+```
+
+Pass a public `.py` URL via `"query": "<url>"` instead of `"text"` if
+you'd rather not paste the source.
+
+Larger example protocols live in the [worked examples](#worked-examples)
+section below — those `.py` files double as the importer's golden-fixture
+test inputs, so they stay in sync with the code.
 
 ## Supported features
 
