@@ -1,6 +1,6 @@
 # Terms of Service
 
-**Last updated:** February 9, 2026
+**Last updated:** May 20, 2026
 **Effective date:** February 1, 2026
 
 ---
@@ -106,6 +106,48 @@ The Rhylthyme JSON program format specification is made available for use in cre
 ### Feedback
 
 If you provide us with feedback, suggestions, or ideas about the Service, you grant us a non-exclusive, perpetual, irrevocable, royalty-free license to use that feedback for any purpose without obligation to you.
+
+### Recipes and Procedural Content
+
+A significant portion of the Service involves recipes, lab protocols, workout
+routines, and event run-of-shows. Users sometimes ask whether these qualify as
+copyrighted material when imported, displayed, or translated by the Service.
+Our position, consistent with established United States copyright law,
+is as follows:
+
+- **Lists of ingredients are not copyrightable.** Under [17 U.S.C. §102(b)](https://www.law.cornell.edu/uscode/text/17/102),
+  copyright protection does not extend to any "idea, procedure, process,
+  system, method of operation, concept, principle, or discovery." The U.S.
+  Copyright Office has stated explicitly that "mere listings of ingredients
+  as in recipes" are not subject to copyright (Copyright Office Circular 33,
+  "Works Not Protected by Copyright"). This was further confirmed by the
+  Seventh Circuit in *Publications International, Ltd. v. Meredith Corp.*,
+  88 F.3d 473 (7th Cir. 1996), which held that a yogurt-recipe ingredient
+  list lacked the originality required for copyright protection.
+- **Procedural steps are likewise not copyrightable** when described as the
+  factual sequence of operations needed to prepare a dish, run an experiment,
+  perform a workout, or coordinate an event. The §102(b) "procedure / process /
+  method of operation" exclusion applies directly.
+- **What IS protectable** is the surrounding **creative expression** — the
+  introductory anecdote, the headnote, the photographs, the personality of the
+  prose, the editorial selection and arrangement of a cookbook as a compilation.
+  We respect those rights and do not reproduce them verbatim.
+
+In practice this means: when the Service displays an ingredient list or a
+sequence of procedural steps that originated on another site, we may show
+them faithfully — they are factual content, not copyrighted material. We will
+not reproduce the surrounding creative prose, headnote, or photographs of the
+source verbatim, and we link back to the original source so users can read
+that creative material in its original context.
+
+If you import content into Rhylthyme that contains copyrighted creative
+expression (e.g., a publisher's headnote or a chef's personal narrative
+attached to a recipe), you are responsible for ensuring you have the right
+to do so. The Service does not vet imported content for third-party rights.
+
+If you are a rights-holder who believes content on the Service infringes your
+copyright, please contact us at the address in the "Contact Us" section and
+we will respond promptly.
 
 ## Third-Party Services
 
