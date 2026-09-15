@@ -81,6 +81,142 @@ Click on a program to load and visualize it. The save state is preserved, so sub
 
 Click the visibility icon on any saved program to toggle between public and private.
 
+## Runs
+
+A **run** is one execution of a program. When you play a program in the
+live timeline player, the player records what actually happened and saves
+it beside the program in your library, so the next time you open it you can
+see how long it really took rather than only how long it was supposed to
+take. The full field-by-field reference is the
+[runs schema](../development/runs-schema.md).
+
+The **Runs** list under the player shows, newest first:
+
+- when the run started;
+- how it ended — `completed` (every step finished), `aborted` (you pressed
+  Stop part-way) or `abandoned` (you closed the page mid-run);
+- the actual total against the planned total, with the deviation;
+- a **JSON** button that shows the whole record.
+
+### What a run record contains
+
+- The program's id and a content hash of the exact program JSON that was
+  run, so a later edit to the program does not rewrite history.
+- The planned start, end and duration of every step, frozen at the moment
+  you pressed Start.
+- The actual start and end of every step, and what ended it: you marking it
+  done, its timer expiring, another step's hand-off, or an abort.
+- How long the clock was paused while each step was running, including time
+  the page spent in the background or the phone spent asleep.
+- Which runtime wrote the record (web player or terminal runner), its
+  version, whether the clock was wall-clock or simulated, and the playback
+  speed.
+- A copy of the program's own metadata (serves, source URL, ...) and your
+  answers to any **variance factors** the author declared — nothing you did
+  not enter yourself. If a program asks what is different about this run
+  (turkey weight, oven type, sample count), the player puts a short form
+  above the timeline the first time you press Start; every field is optional
+  and the answers go into the record. See
+  [manual controls](manual-controls.md#before-you-start-variance-factors).
+
+There is no free text in a run record unless you type a note on a step.
+
+### Runs while signed out
+
+If you play a program without signing in, the record is kept **in your
+browser only** (`localStorage`, newest 20 runs) and never sent anywhere. A
+**Save this run?** prompt appears under the player; signing in uploads the
+runs held in the browser to your library and clears them from local
+storage. Clearing your browser data deletes them.
+
+### Who can see your runs, and deleting them
+
+Runs are **private to you**, even for a program you have made public: a
+public program can be cooked by anyone, and each person's runs stay their
+own. Sharing a program does not share its runs.
+
+- Via MCP: `list_runs` and `load_run` return your own runs and nobody
+  else's (see [MCP Server](mcp.md)).
+- Deleting a run: `DELETE /api/mcp/runs/<run_id>` with your access token.
+- Deleting a program deletes its runs with it.
+- No run of yours leaves your account unless you contribute it, per run,
+  with the checkbox described next.
+
+### Turning your runs into better durations
+
+Once a program has runs, its durations are checkable — and correctable.
+Under the Runs list, signed in and with at least one recorded run, a
+**Calibrate from my runs** card appears.
+
+Pressing **Calibrate from my runs** asks the server what your runs imply.
+Nothing changes: you get a table with one row per step — how many of your
+runs measured it, what the program says now, what the runs propose, and the
+difference — plus a line saying what accepting the lot would do to the total
+time. Every step with a number to propose is ticked; untick the ones you
+disagree with.
+
+**Apply the checked steps** asks you to confirm, in the page rather than in a
+pop-up, and tells you exactly which steps it is about to change. Saying yes
+does two things:
+
+1. writes the proposed durations into the program, each one stamped with
+   `calibratedFrom: {runs, asOf, programVersion}` — how many runs it came
+   from, when, and the hash of the plan those runs executed;
+2. saves that program to your library, replacing the version that was there.
+
+It is an ordinary save, so it is the same program in the same place; only the
+durations moved, and the stamp says why. Steps carrying the stamp get a green
+badge in the Runs card from then on, so a calibrated duration is never
+mistaken for one you wrote.
+
+Nothing else is touched. The runs themselves are untouched, your other
+programs are untouched, and the proposal is never applied on its own —
+declining leaves the program exactly as it was. The rules the proposal
+follows (a range is never narrowed, a fixed step is never given a new number,
+a step with fewer than five measurements is skipped) are set out in
+[Calibrate from runs](visualization.md#calibrate-from-runs).
+
+### Contributing runs to the public catalog
+
+Under the player there is a checkbox, **Contribute this run to the public
+catalog**. It is **off** unless you turn it on, it applies to the runs you
+record from then on, and the setting is remembered on that device only
+(nothing about it is stored on your account). It appears once you are signed
+in, because a contribution is made with your own credentials.
+
+With it on, finishing a run stores **two** records: the full one in your own
+library, as before, and a second, narrower copy in the public catalog. The
+public copy contains:
+
+- the canonical hash of the program JSON that was run — the only key it is
+  stored under;
+- the program's `programId` and the run's own id and timestamps;
+- which runtime ran it, its version, the clock mode and the speed;
+- the planned and actual start and end of every step, what ended each step,
+  when its trigger fired, what it waited on, and how long it was paused;
+- `serves`, `actors`, `environmentType` and your answers to the program's
+  declared variance factors.
+
+It does **not** contain your user id (there is no owner column on the public
+table at all), the id of your library entry, or any note you typed on a
+step — notes are the one place a run record can hold free text, and they are
+removed before the copy is made. Nothing else from the program's metadata
+rides along either: no source URL, no title, no ingredient list.
+
+Two consequences worth knowing before you tick it:
+
+- **A contribution cannot be withdrawn.** Because the row records no owner,
+  there is nothing to identify your contribution by. Deleting the run from
+  your library, or your whole account, does not remove the contributed copy.
+- **It is keyed by the exact program JSON.** Edit the program and its
+  contributed runs no longer match it, which is the point: a plan and the
+  record of a plan being executed stay tied to each other.
+
+Anyone — signed in or not — can read contributed runs for a program version:
+`GET /api/public/runs?programHash=sha256:…`, or the MCP tool
+`list_public_runs` (see [MCP Server](mcp.md#list_public_runs)). What is
+stored is also set out in the [privacy policy](../privacy.md#execution-records-runs).
+
 ## Sharing Programs
 
 Sharing creates a permanent link that anyone can use to view your program.

@@ -50,6 +50,39 @@ A bakery program managing multiple dough batches through mixing, proofing, and b
 - **Environment**: Bakery
 - **Concepts demonstrated**: Resource constraints on ovens and mixers, buffers between steps
 
+### Three Trays, One Oven
+
+Three trays of cookies through one oven onto a rack that holds two. Each tray
+starts cooling as it comes out (`instances: "each"`), boxing waits for all
+three (`instances: "all"`), and `maxInFlight: 2` holds the third bake until a
+rack slot is free.
+
+- **File**: `rhylthyme-examples/programs/cookies_three_trays.json`
+- **Environment**: Kitchen
+- **Concepts demonstrated**: Per-instance chains, an explicit barrier, an
+  in-flight limit distinct from `maxConcurrent`
+
+### Twelve Samples, One Rotor
+
+Twelve samples aliquoted into a centrifuge rotor that holds six, spun and
+unloaded per sample, then pooled into two parallel thermocycler runs.
+
+- **File**: `rhylthyme-examples/programs/pcr_twelve_samples.json`
+- **Environment**: Laboratory
+- **Concepts demonstrated**: `maxInFlight: 6` on the rotor chain alongside
+  `thermocycler maxConcurrent: 2`; a barrier feeding a replicated step
+
+### Four Arrivals, Two Taxiway Slots
+
+Four aircraft land five minutes apart, taxi in and dock per aircraft; the
+apron holds two, so the third landing waits for the first aircraft to clear
+the gate. Baggage handling waits for every arrival.
+
+- **File**: `rhylthyme-examples/programs/airport_landings_taxi_gate.json`
+- **Environment**: Logistics
+- **Concepts demonstrated**: `maxInFlight` over a staggered replicate, where
+  the stagger delay is a minimum gap the gate may push out
+
 ![Example programs loaded in the web app](../assets/screenshots/examples-list.png)
 <!-- TODO: Capture screenshot of the Examples section in the sidebar -->
 

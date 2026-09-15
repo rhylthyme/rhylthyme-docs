@@ -67,7 +67,11 @@ nav:
     - CLI Commands: development/cli.md
     - Program Schema: development/schema.md
     - Environment Schema: development/environment-schema.md
+    - Runs Schema: development/runs-schema.md
     - Architecture: development/architecture.md
+    - Reports:
+      - Duration evaluation (catalog): development/reports/duration-evaluation-catalog.md
+      - Duration evaluation (synthetic): development/reports/duration-evaluation-synthetic.md
     - Importers:
       - Opentrons (user reference): development/opentrons.md
       - Opentrons (architecture): development/opentrons-architecture.md

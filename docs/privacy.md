@@ -51,6 +51,83 @@ Profile pictures are stored in Supabase Storage and associated with your account
 
 When you use the AI chat feature, the messages you send are transmitted to the Anthropic API for processing. These messages may include program content you choose to share within the chat context.
 
+### Text You Submit for Import
+
+Some import features send text to a model to be read. When you paste a
+recipe, protocol or run sheet into the **import text** feature (the
+`import_text` MCP tool, or `POST /api/import` with `source: "llm-text"`),
+or ask for an imported program to be **enriched** into parallel tracks,
+that text — and, for enrichment, the imported program's step list — is
+transmitted to the Anthropic API for processing. We do not store the
+submitted text beyond the request: what is retained is the resulting
+program, if you save it, and one audit row recording that the import
+happened (your user id, the time, whether it succeeded, the model used
+and the resulting program id), which is what enforces the daily import
+limit. The text itself is not written to that row.
+
+### Execution Records (Runs)
+
+When you play a program in the live timeline player, the player records
+what actually happened during that run and, if you are signed in, saves it
+to your account beside the program. One record contains:
+
+- the program's id and a content hash of the program JSON that was run;
+- the planned start, end and duration of every step, frozen when you
+  pressed Start, and the actual start and end of every step;
+- what ended each step (you marking it done, a timer expiring, a hand-off
+  from another step, or an abort), and how long the clock was paused while
+  each step was running — including time the page spent in the background;
+- which runtime recorded it (web player or terminal runner), its version,
+  whether it used the wall clock, and the playback speed;
+- a copy of the program's own metadata (for example serves and source URL)
+  and, where a program's author declares them, the answers you give to
+  variance factors at run start.
+
+A run record contains no free text unless you type a note on a step, and no
+location, contacts or device identifiers. **Runs are private to you**, even
+for a program you have made public, and sharing a program does not share
+its runs. You can delete any run at any time
+(`DELETE /api/mcp/runs/<run_id>`); deleting a program deletes its runs with
+it; deleting your account deletes them all.
+
+If you play a program **without signing in**, the record is kept in your
+browser's local storage (the newest 20 runs) and is not transmitted to us
+at all. Signing in offers to upload those runs to your account; declining
+leaves them in the browser, and clearing your browser data deletes them.
+
+**Contributing a run to the public catalog is opt-in per run.** Under the
+player there is a checkbox, *Contribute this run to the public catalog*,
+which is off unless you turn it on and is remembered on that device only. It
+is never on by default, and we never contribute a run you did not tick it
+for.
+
+With it on, finishing a run stores a second, narrower copy of the record in
+a separate public table (`public_runs`). A contributed record contains
+**exactly**:
+
+- the canonical hash of the program JSON that was run — the only key the row
+  is stored under — and the program's own `programId`;
+- the run's id, schema version, start and end timestamps and outcome;
+- the runtime that recorded it, its version, the clock mode and the speed;
+- per step: the planned start, end and duration, the actual start and end,
+  what ended the step, when its trigger fired, which steps it waited on, and
+  how many seconds it was paused;
+- `serves`, `actors`, `environmentType`, and your answers to the variance
+  factors the program's author declared.
+
+It contains **no user id** — the public table has no owner column at all —
+no id of your library entry, and **no notes**: the one field of a run record
+that can hold free text you typed is removed before the copy is made. No
+other program metadata is carried either: no source URL, no title, no
+ingredient list.
+
+Because a contributed row identifies nobody, a contribution **cannot be
+withdrawn**: deleting the run from your library, or deleting your account,
+does not remove it. Contributed runs are readable by anyone
+(`GET /api/public/runs?programHash=…`) and exist so that a program many
+people run can be calibrated against what actually happens rather than
+against its author's guess.
+
 ### iOS Device Permissions
 
 The iOS application may request access to the following device capabilities. Each is optional and only used when you engage the corresponding feature:
@@ -115,7 +192,7 @@ We use the following third-party services to operate the Service:
 | Service | Purpose | Their Privacy Policy |
 |---------|---------|---------------------|
 | **Supabase** | Authentication and database hosting | [supabase.com/privacy](https://supabase.com/privacy) |
-| **Anthropic** | AI chat processing (Claude API) | [anthropic.com/privacy](https://www.anthropic.com/privacy) |
+| **Anthropic** | AI chat processing, and reading text you submit for import or enrichment (Claude API) | [anthropic.com/privacy](https://www.anthropic.com/privacy) |
 | **Vercel** | Web application hosting | [vercel.com/legal/privacy-policy](https://vercel.com/legal/privacy-policy) |
 | **Google** | OAuth authentication provider | [policies.google.com/privacy](https://policies.google.com/privacy) |
 | **Apple** | Sign-In authentication provider | [apple.com/privacy](https://www.apple.com/privacy/) |
@@ -172,6 +249,7 @@ We will respond to data rights requests within 30 days.
 - **Program data** is retained until you delete it or request account deletion.
 - **Media files** attached to steps are retained until you remove them or request account deletion.
 - **Shared programs** remain accessible via their share links until you unshare or delete them.
+- **Run records** are retained until you delete the run, delete the program it belongs to, or request account deletion. Runs kept in a signed-out browser are never transmitted to us.
 - **Usage data** is retained in aggregate form and is not linked to individual accounts after 90 days.
 - **AI chat messages** are not stored by us after your session ends. Anthropic's retention of API data is governed by their privacy policy and data processing terms.
 

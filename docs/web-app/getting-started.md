@@ -97,3 +97,34 @@ Once a program is loaded (by any method), the web app:
 4. Shows **Save**, **Share**, and **Download** buttons in the top-right corner of the main area.
 
 The program is now stored in memory (as `currentProgram`) and remains available for download, saving to your account, or sharing until you load a different program.
+
+## Enriching an Import
+
+Importers read a source document's *structure*, not its meaning. A recipe or a protocols.io protocol comes back as **one track**: every step chained one after another, in the order the document listed them. That is a faithful transcription, but it is rarely how the work is actually carried out — while the blot blocks, you prepare the antibody; while the turkey roasts, you make the gravy.
+
+The **Enrich** option on an import asks a language model to do the part the importer cannot: work out which steps belong on parallel tracks, and what each one actually waits for.
+
+### What it does
+
+| Kept exactly as imported | Inferred by enrichment |
+|---|---|
+| Every step, with its name, task and duration | Which track each step belongs to |
+| The program's id, name and source URL | Every step's start trigger, including cross-track ones |
+| The words each step came from (`metadata.sourceSpan`) | Steps the source never stated — a preheat, a warm-up, a cooling wait |
+
+Anything the model *adds* is flagged `metadata.inferred` so you can tell it apart from what was read out of the source, and the program records `metadata.source.enriched` with the model that did it. The result is run through the same validator the Editor uses, with up to two automatic correction rounds.
+
+### Cost and limits
+
+Enrichment costs one model call (plus up to two correction calls), so:
+
+- **Sign-in is required**, as it is for every import.
+- **20 enrichments per day per account.** Over the cap, the import is refused with "Daily enrich limit reached"; the quota is separate from the ordinary import quota and resets on a rolling 24 hours.
+- **A failed enrichment never loses your import.** If the model is unavailable, the server has no API key, or the enriched program will not validate after two correction rounds, you get the plain one-track import back with a note explaining why.
+
+### Where to find it
+
+- **API:** `POST /api/import` with `{"source": "protocolsio", "url": "…", "enrich": true}`. The response is `{program, enrichment}`, where `enrichment` is `{added, changed, iterations, tracks, model, tokens}` — or `{error}` when it did not run. `POST /api/url` accepts `enrich` too and visualizes the enriched program directly.
+- **MCP:** `import_from_source` takes an `enrich` boolean alongside `action: "import"` — see [MCP Server](mcp.md).
+
+Enrichment is a suggestion, not a verdict. Open the enriched program in the **Editor** view and check the triggers before you run it against a real clock.

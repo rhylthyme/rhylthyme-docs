@@ -118,6 +118,32 @@ Triggers create the dependency structure of a program. For instance, you can't c
 ![DAG view showing step dependencies created by triggers](../assets/screenshots/triggers-dag.png)
 <!-- TODO: Capture screenshot of DAG view highlighting dependency arrows between steps -->
 
+## Instances, Per-Instance Chains and Barriers
+
+A step with `replicates` runs several times; each run is an **instance**
+(`bake-r1`, `bake-r2`, `bake-r3` for `"count": 3`). Program schema
+`0.3.0-alpha` lets a trigger say what happens *per instance* with the
+`instances` field on `afterStep` / `afterStepWithBuffer`:
+
+| `instances` | Meaning |
+|-------------|---------|
+| `"each"` | The step runs once per instance; instance *i* starts when instance *i* of the referenced step ends. Chaining several `"each"` steps builds a **per-instance chain**: each tray cools, then is decorated, on its own clock. |
+| `"all"` (default) | A **barrier**: the step starts once *every* instance has ended and the chain rejoins into a single step. |
+| `"any"` | The step starts when the *first* instance ends. |
+
+```json
+{"stepId": "bake", "replicates": {"count": 3, "mode": "serial"}, "startTrigger": {"type": "afterStep", "stepId": "mix"}},
+{"stepId": "cool", "startTrigger": {"type": "afterStep", "stepId": "bake", "instances": "each"}},
+{"stepId": "box",  "startTrigger": {"type": "afterStep", "stepId": "cool", "instances": "all"}}
+```
+
+Three trays bake one after another; each starts cooling the moment it comes
+out; boxing waits for all three. On the timeline a barrier is drawn as a
+single arrowhead with a bar across it (dashed for `"any"`). The validator
+reports misuse with codes such as `E_INSTANCES_ON_SINGLE` and warns
+(`W_UNBARRIERED_CHAIN`) when a per-instance chain never rejoins although
+later work exists; see the [schema reference](../development/schema.md#validator-codes).
+
 ## Buffers
 
 A **buffer** is a gap between steps. When you use the `afterStepWithBuffer` trigger, the next step doesn't start immediately when the previous one finishes -- it waits for the buffer period first.
@@ -172,6 +198,26 @@ Rhylthyme supports these environment types:
 | **Custom** | Any resource types you define |
 
 When you set an `environmentType` on a program, the web app displays it in the program info bar and uses the appropriate resource types for validation.
+
+## Runs
+
+A program is a **plan**; a **run** is a record of one execution of it. Every duration in a program is the author's estimate, so the CLI runner writes a run record when a run ends: for each step, the planned start and end (frozen when the run began, so later edits to the program do not rewrite history), the actual start and end, what ended the step (a person, the timer, or an abort), when its trigger fired, and any time the clock was paused. Runs are stored beside the program rather than inside it -- `~/.rhylthyme/runs/<programId>/` for the CLI -- and are identified by a hash of the program JSON, so a record always says which version of the plan it measured. `rhylthyme runs show` prints planned vs actual per step; later phases use the accumulated history to calibrate durations and predict them. See the [Runs Schema Reference](../development/runs-schema.md).
+
+Once a program has been run a few times, its history can say what a step
+really takes, and `analyze_schedule` reports that **predicted** duration
+beside the **planned** one: a number, an interval, and how it was
+arrived at. A step with enough runs in the same context -- same version
+of the program, same environment, same answers to the program's declared
+variance factors -- is predicted from the median of those runs; otherwise
+a small per-step model is fitted over every run of the program on the
+factors that actually correlate with how long it took (turkey weight,
+sample count, oven type), and a step whose durations simply scatter is
+marked executor-controlled and not predicted at all, because its length
+is a person's choice rather than a measurement. The plan stays the plan:
+predictions never rewrite the program, and the analysis is computed from
+the authored durations unless you ask for `useDurations: "predicted"`,
+which replans the makespan, the wall-clock itinerary and the critical
+path on the predicted numbers instead.
 
 ## Next Steps
 

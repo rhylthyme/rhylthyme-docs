@@ -3,7 +3,7 @@
 Audience: anyone adding a command, a module kind, a Flex hardware
 feature, or a new entry point. Pairs with
 [`opentrons.md`](./opentrons.md) (user reference) and
-[`plans/opentrons-importer.md`](https://github.com/rhylthyme/rhylthyme-web/issues/5)
+[`plans/opentrons-importer.md`](https://github.com/rhylthyme/rhylthyme-server/issues/5)
 (implementation phasing).
 
 ## Four modules, one data contract

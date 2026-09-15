@@ -21,6 +21,9 @@ Content created using the AI-powered chat interface that uses the Anthropic Clau
 
 ## B
 
+**Barrier**
+A rejoin point after replicated work: a step whose trigger references a replicated (or `"each"`-derived) step with `instances: "all"`, so it starts only when every instance has ended. A plain reference without `instances` is an implicit barrier. Drawn on the timeline as one arrowhead with a bar across it (dashed for `"any"`). Example: `{"type": "afterStep", "stepId": "cool", "instances": "all"}`
+
 **Batch Size** (Legacy)
 Deprecated field; use `replicates` instead. Number of times to replicate a track.
 
@@ -120,6 +123,15 @@ Auto-detection system that chooses the correct importer plugin based on input so
 **Indefinite Duration**
 A step that runs until the user manually marks it complete. No automatic end time. Used for open-ended tasks. Example: `{"type": "indefinite", "defaultSeconds": 120}`
 
+**Instance**
+One run of a replicated step. A step with `"replicates": {"count": 3}` expands into instances `<stepId>-r1`, `-r2`, `-r3`; each carries `instanceOf` (the authored step id) and `instanceIndex`. Parallel and stagger instances live in sub-tracks `<trackId>--<stepId>-r<i>`.
+
+**Instances (trigger field)**
+Optional field on `afterStep` / `afterStepWithBuffer` in schema 0.3.0-alpha: `"each"` (run per instance, paired *i* → *i*), `"all"` (barrier; the default) or `"any"` (start on the first instance).
+
+**In Flight**
+State of a replicated step's instance between its own start and the moment it has ended in *every* `instances: "each"` descendant, that is, once it has arrived at all the barriers hanging off the chain. `replicates.maxInFlight` caps how many instances may be in that state at once: the tray is in flight from going into the oven until it comes off the rack.
+
 **Invalid Step Reference**
 Validation error when a trigger references a non-existent step ID.
 
@@ -148,6 +160,9 @@ The absolute maximum duration a variable step can run, or the upper bound for pl
 
 **maxConcurrent**
 The maximum number of concurrent steps allowed for a task type. For example, a kitchen with 2 stove burners sets `maxConcurrent: 2` for the "stove-burner" task.
+
+**maxInFlight**
+Optional field on step-level `replicates` in schema 0.3.0-alpha: the maximum number of instances that may be *in flight* at once. Unlike `maxConcurrent`, which bounds one task at one instant, it bounds a chain of tasks across time, and it holds the *upstream* step back rather than stranding the downstream one. Example: `{"count": 3, "mode": "serial", "maxInFlight": 2}` for three trays and a rack that holds two.
 
 **Metadata**
 Arbitrary custom key-value data attached to programs, tracks, or steps for application-specific purposes.
@@ -178,6 +193,9 @@ When the schedule requires more concurrent instances of a resource than the `max
 
 **Pause**
 Temporarily stop program execution at the current time. Can be resumed without losing progress.
+
+**Per-Instance Chain**
+A sequence of steps chained with `instances: "each"` off a replicated step, so that instance *i* of every step in the chain follows instance *i* of the previous one (each tray is cooled, then decorated, on its own clock). The chain inherits the instance count and ends at a barrier (`instances: "all"`); the validator warns (`W_UNBARRIERED_CHAIN`) when it never rejoins although later work exists.
 
 **Post-Buffer** (or **Cleanup Time**)
 Time and resources required after a step completes. Represents cleanup, teardown, or transitional work.
@@ -225,6 +243,9 @@ A limit on how many steps of a given task type can run at the same time. Prevent
 
 **Resources View**
 Chart showing resource utilization over time and identifying periods of overutilization.
+
+**Rolling Window**
+What `maxInFlight: k` makes of a `"parallel"` replicate with more than *k* instances: instances 1..*k* start together and each later instance is admitted as an earlier one leaves flight, instead of all of them starting at once.
 
 ## S
 

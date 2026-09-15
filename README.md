@@ -38,6 +38,6 @@ Pushes to `main` auto-deploy via GitHub Actions. See [DEPLOYMENT.md](DEPLOYMENT.
 
 - [rhylthyme-spec](https://github.com/rhylthyme/rhylthyme-spec) - Schema definitions
 - [rhylthyme-cli-runner](https://github.com/rhylthyme/rhylthyme-cli-runner) - CLI and execution
-- [rhylthyme-web](https://github.com/rhylthyme/rhylthyme-web) - Web visualization and MCP
+- [rhylthyme-server](https://github.com/rhylthyme/rhylthyme-server) - Web visualization and MCP
 - [rhylthyme-importers](https://github.com/rhylthyme/rhylthyme-importers) - Import plugins
 - [rhylthyme-examples](https://github.com/rhylthyme/rhylthyme-examples) - Examples
