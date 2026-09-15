@@ -55,13 +55,6 @@ nav:
     - AI Chat: web-app/chat.md
     - Account & Sharing: web-app/account.md
     - MCP Server: web-app/mcp.md
-  - iOS App:
-    - Overview: ios-app/index.md
-    - Getting Started: ios-app/getting-started.md
-    - Home Tab: ios-app/home.md
-    - Visualization: ios-app/visualization.md
-    - Chat: ios-app/chat.md
-    - Account & Settings: ios-app/account.md
   - Development:
     - Installation: development/installation.md
     - CLI Commands: development/cli.md
@@ -79,6 +72,10 @@ nav:
   - Legal:
     - Privacy Policy: privacy.md
     - Terms of Service: terms.md
+
+# The iOS app pages are hidden until their screenshots exist.
+exclude_docs: |
+  ios-app/**
 
 # Plugins
 plugins:

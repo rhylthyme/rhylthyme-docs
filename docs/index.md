@@ -6,7 +6,7 @@ Rhylthyme is a framework for defining, visualizing, and executing real-time sche
 
 Open **[www.rhylthyme.com](https://www.rhylthyme.com)** -- no installation needed. Load an example, create a schedule with AI chat, or upload your own program JSON.
 
-Rhylthyme is also available as an [iOS app](ios-app/index.md).
+An iOS app is also available; its guide will be published here when ready.
 
 ## What is Rhylthyme?
 
@@ -30,7 +30,6 @@ Rhylthyme lets you model complex workflows as **programs** composed of parallel 
 - **[Examples](getting-started/examples.md)** -- Built-in examples across kitchen, lab, airport, and bakery environments
 - **[Glossary](getting-started/glossary.md)** -- Comprehensive reference of all Rhylthyme terminology
 - **[Web App Guide](web-app/index.md)** -- Full documentation for the web app
-- **[iOS App Guide](ios-app/index.md)** -- Full documentation for the iOS app
 
 ## For Developers
 
