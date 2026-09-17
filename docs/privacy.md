@@ -37,6 +37,10 @@ We automatically collect certain technical information when you use the Service:
 - IP address and approximate geographic location.
 - Timestamps of interactions with the Service.
 
+### MCP Connector Usage
+
+When an AI assistant uses the Rhylthyme MCP connector (mcp.rhylthyme.com and its kitchen, lab, events and gym endpoints), we record each request so we can see which tools are used and whether they work. Each record holds the tool or feature requested, the name and version the assistant app reports for itself (for example Claude Desktop), whether the request succeeded, how long it took, and the country derived from the connection. To count distinct users without storing IP addresses, we keep a one-way salted hash of the IP address and browser user agent. If you are logged in, the record includes your account ID. We do not record what you asked for, the programs or text you send, or your access token.
+
 ### Profile Information
 
 If you choose to set up a profile, you may provide:
