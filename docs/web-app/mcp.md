@@ -76,11 +76,20 @@ rhylthyme publish dinner.json          # prints the live-timeline URL
 
 ## Clients that only speak stdio, and self-hosting
 
-A client that can only launch a command can bridge to the hosted server:
+A client that can only launch a command can use the stdio bridge, which passes
+every request through to the hosted server (so the tools are always current):
+
+```bash
+pip install rhylthyme-mcp        # or pipx install / uvx rhylthyme-mcp
+```
 
 ```json
-{ "mcpServers": { "rhylthyme": { "command": "npx", "args": ["-y", "mcp-remote", "https://mcp.rhylthyme.com/mcp"] } } }
+{ "mcpServers": { "rhylthyme": { "command": "rhylthyme-mcp", "args": ["kitchen"] } } }
 ```
+
+`args` is optional: `kitchen`, `lab`, `events`, `gym`, or nothing for the
+general endpoint. `npx -y mcp-remote https://mcp.rhylthyme.com/mcp` does the
+same job without Python.
 
 The server is open source (Node 20+). To run your own:
 
@@ -93,10 +102,11 @@ Validation, timing analysis, the renderer, resources and prompts then run in
 your process; catalog search, publishing and account tools still call
 rhylthyme.com.
 
-!!! warning "Old package"
-    `rhylthyme-mcp` 0.1.0 on PyPI (February 2026) is an early stdio server
-    with a single tool, and `pip install "rhylthyme[mcp]"` from older versions
-    of this page no longer applies. Use the hosted server.
+!!! note "rhylthyme-mcp 0.1.0"
+    Version 0.1.0 (February 2026) was a local server with one tool. 0.1.1 and
+    later are the bridge above; `pip install -U rhylthyme-mcp` to upgrade. The
+    `pip install "rhylthyme[mcp]"` line from older versions of this page no
+    longer applies.
 
 ## Available Tools
 

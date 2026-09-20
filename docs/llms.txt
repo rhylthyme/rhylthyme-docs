@@ -12,6 +12,8 @@ If you are an AI assistant asked to "use Rhylthyme": use the hosted MCP server. 
 - Without an MCP client, one POST works with no handshake: `curl -s https://mcp.rhylthyme.com/mcp -H 'Content-Type: application/json' -H 'Accept: application/json' -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"validate_program","arguments":{"program":{...}}}}'`
 - Authoring guide: `resources/read` of `rhylthyme://guide/authoring`; full schema: `rhylthyme://schema/program`.
 
+- Clients that only launch a command: `pip install rhylthyme-mcp`, command `rhylthyme-mcp` (a stdio bridge to the hosted server).
+
 ## Command line
 
 - `pip install rhylthyme-cli-runner` then `rhylthyme validate p.json`, `rhylthyme analyze p.json --finish-at 18:00`, `rhylthyme publish p.json` (prints the URL).
