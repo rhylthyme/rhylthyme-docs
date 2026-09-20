@@ -33,6 +33,14 @@ and will fall back to browsing the website.
 claude mcp add --transport http rhylthyme https://mcp.rhylthyme.com/mcp
 ```
 
+Or install the Claude Code plugin, which adds the server and a skill for
+authoring schedules:
+
+```
+/plugin marketplace add rhylthyme/rhylthyme-mcp
+/plugin install rhylthyme@rhylthyme
+```
+
 **Cursor** (`.cursor/mcp.json`) and other clients that take a URL:
 
 ```json
