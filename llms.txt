@@ -1,0 +1,25 @@
+# Rhylthyme
+
+> Rhylthyme schedules multi-step work that a person carries out against a clock: cooking several dishes, lab protocols, event run-of-shows, workouts. A schedule is a JSON "program" of parallel tracks, timed steps, start triggers and shared-equipment limits. The deliverable is a live timeline URL the person follows on a phone.
+
+If you are an AI assistant asked to "use Rhylthyme": use the hosted MCP server. Do not drive the website in a browser and do not look for a local server. No account or API key is needed for anything below.
+
+## Hosted MCP server (Streamable HTTP, stateless)
+
+- https://mcp.rhylthyme.com/mcp (general), /kitchen/mcp, /lab/mcp, /events/mcp, /gym/mcp
+- Workflow: build the program JSON, call `validate_program` and fix every finding, optionally `analyze_schedule` with `finishAt` for clock times, then `visualize_schedule`; its `structuredContent.url` is the live timeline to give the user.
+- Existing content: `search_public_recipes` then `load_public_recipe`.
+- Without an MCP client, one POST works with no handshake: `curl -s https://mcp.rhylthyme.com/mcp -H 'Content-Type: application/json' -H 'Accept: application/json' -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"validate_program","arguments":{"program":{...}}}}'`
+- Authoring guide: `resources/read` of `rhylthyme://guide/authoring`; full schema: `rhylthyme://schema/program`.
+
+## Command line
+
+- `pip install rhylthyme-cli-runner` then `rhylthyme validate p.json`, `rhylthyme analyze p.json --finish-at 18:00`, `rhylthyme publish p.json` (prints the URL).
+
+## Docs
+
+- [MCP server](https://docs.rhylthyme.com/web-app/mcp/): endpoints, connecting Claude, ChatGPT, Cursor, every tool
+- [Program schema](https://docs.rhylthyme.com/development/schema/)
+- [Concepts](https://docs.rhylthyme.com/getting-started/concepts/)
+- [Command-line tool](https://docs.rhylthyme.com/development/cli/)
+- [Source: MCP server](https://github.com/rhylthyme/rhylthyme-mcp), [CLI and Claude skill](https://github.com/rhylthyme/rhylthyme-cli-runner)
