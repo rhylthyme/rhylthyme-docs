@@ -1,66 +1,102 @@
 # MCP Server
 
-The Rhylthyme MCP (Model Context Protocol) server lets AI assistants like Claude create and visualize Rhylthyme schedules directly. MCP is an open standard that enables AI models to call external tools — in this case, Rhylthyme's visualization and recipe import capabilities.
+Rhylthyme runs a **hosted MCP server**. There is nothing to install: connect
+your assistant to a URL and it can validate, analyze and publish schedules as
+live timelines.
 
-## Setup Requirements
+| Endpoint | For |
+|---|---|
+| `https://mcp.rhylthyme.com/mcp` | anything (cooking, lab, events, workouts) |
+| `https://mcp.rhylthyme.com/kitchen/mcp` | cooking; adds `cook_recipe` |
+| `https://mcp.rhylthyme.com/lab/mcp` | lab protocols; adds `run_protocol` |
+| `https://mcp.rhylthyme.com/events/mcp` | run-of-shows; adds `plan_event` |
+| `https://mcp.rhylthyme.com/gym/mcp` | workouts; adds `start_workout` |
 
-**Local installation is required** for full MCP functionality. The remote endpoint at `mcp.rhylthyme.com` is a status/information endpoint only.
+Transport is Streamable HTTP. Every public tool works with **no account and no
+API key**. Saving to your own library, recorded runs and imports use your
+Rhylthyme account through OAuth 2.1 (the assistant shows a Connect button and
+you sign in with Google, Apple or email).
 
-## Local Server Installation
+## Connect
 
-### Installation
+**Claude (claude.ai, desktop, mobile)**: Settings → Connectors → *Add custom
+connector* → paste an endpoint URL.
+
+**ChatGPT**: Settings → Apps & Connectors → Advanced settings → turn on
+*Developer mode*, then *Create* a connector with an endpoint URL as the MCP
+server URL. Until a connector is added ChatGPT cannot call Rhylthyme's tools
+and will fall back to browsing the website.
+
+**Claude Code**
 
 ```bash
-pip install "rhylthyme[mcp]"
+claude mcp add --transport http rhylthyme https://mcp.rhylthyme.com/mcp
 ```
 
-### Claude Desktop Setup
-
-Add to your Claude Desktop config file:
-
-**macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-**Linux:** `~/.config/Claude/claude_desktop_config.json`
-**Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+**Cursor** (`.cursor/mcp.json`) and other clients that take a URL:
 
 ```json
-{
-  "mcpServers": {
-    "rhylthyme": {
-      "command": "rhylthyme-mcp"
-    }
-  }
-}
+{ "mcpServers": { "rhylthyme": { "url": "https://mcp.rhylthyme.com/mcp" } } }
 ```
 
-Restart Claude Desktop after saving the config.
+Then ask for what you want: "Plan Thanksgiving dinner for 8 with one oven,
+eating at 6 pm." The assistant builds the program, checks it, and gives you a
+link to a live timeline.
 
-### Claude Code Setup
+## No connector? (for AI agents and scripts)
 
-For Claude Code (CLI tool), add a `.mcp.json` file to your project root:
+If you are an assistant without a Rhylthyme connector, do not drive the website
+in a browser and do not look for a local server. Use one of these; neither
+needs an account.
+
+**One HTTP request.** The server is stateless, so a single JSON-RPC POST works
+with no handshake:
+
+```bash
+curl -s https://mcp.rhylthyme.com/mcp \
+  -H 'Content-Type: application/json' -H 'Accept: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call",
+       "params":{"name":"visualize_schedule","arguments":{"program": PROGRAM_JSON}}}'
+```
+
+The result's `structuredContent.url` is the live timeline. Call
+`validate_program` the same way first and fix what it reports; call
+`analyze_schedule` with `finishAt` for clock times; `tools/list` lists
+everything. The program format is on the [schema page](../development/schema.md),
+and `resources/read` of `rhylthyme://guide/authoring` returns a one-page guide.
+
+**The command-line tool** (Python 3.12+):
+
+```bash
+pip install rhylthyme-cli-runner
+rhylthyme validate dinner.json
+rhylthyme analyze dinner.json --finish-at 18:00
+rhylthyme publish dinner.json          # prints the live-timeline URL
+```
+
+## Clients that only speak stdio, and self-hosting
+
+A client that can only launch a command can bridge to the hosted server:
 
 ```json
-{
-  "mcpServers": {
-    "rhylthyme": {
-      "command": "rhylthyme-mcp"
-    }
-  }
-}
+{ "mcpServers": { "rhylthyme": { "command": "npx", "args": ["-y", "mcp-remote", "https://mcp.rhylthyme.com/mcp"] } } }
 ```
 
-### Testing the Connection
+The server is open source (Node 20+). To run your own:
 
-After setup, test the connection by asking Claude:
-- "What Rhylthyme tools are available?"
-- "Create a simple breakfast schedule"
+```bash
+git clone https://github.com/rhylthyme/rhylthyme-mcp && cd rhylthyme-mcp
+npm install && PORT=3000 npm start      # http://localhost:3000/mcp
+```
 
-The server runs locally and opens visualizations directly in your browser.
+Validation, timing analysis, the renderer, resources and prompts then run in
+your process; catalog search, publishing and account tools still call
+rhylthyme.com.
 
-## Remote Status Endpoint
-
-The endpoint `https://mcp.rhylthyme.com` provides status information and setup instructions but does **not** provide functional MCP tools. It will direct you to install the local server for actual functionality.
-
-**For web-based scheduling without MCP setup, visit [www.rhylthyme.com](https://www.rhylthyme.com)**
+!!! warning "Old package"
+    `rhylthyme-mcp` 0.1.0 on PyPI (February 2026) is an early stdio server
+    with a single tool, and `pip install "rhylthyme[mcp]"` from older versions
+    of this page no longer applies. Use the hosted server.
 
 ## Available Tools
 
@@ -386,7 +422,7 @@ place: [rhylthyme-cli-runner's README, "Evaluating prompts"](https://github.com/
 
 ## Example Usage
 
-Try these prompts in Claude Desktop or claude.ai after connecting:
+Try these prompts after connecting:
 
 - "Create a schedule for making chicken tikka masala with naan bread"
 - "Plan a Thanksgiving dinner with turkey, mashed potatoes, green beans, and pumpkin pie"
@@ -398,13 +434,10 @@ Claude will confirm resource constraints (e.g., "You have 1 oven, 4 stovetop bur
 
 ## Compatibility
 
-The local Rhylthyme MCP server works with MCP-compatible clients that support command-based servers:
-
-- [Claude Desktop](https://claude.ai/download) ✅
-- [Claude Code](https://claude.ai/code) ✅ (via `.mcp.json`)
-- Any client supporting MCP stdio transport ✅
-
-**Note:** HTTP-based MCP clients may not work with the command-based local server. For web-based access, use [www.rhylthyme.com](https://www.rhylthyme.com) directly.
+Any MCP client that supports Streamable HTTP can use the hosted server:
+Claude (all apps), Claude Code, ChatGPT (developer-mode connectors), Cursor,
+the Claude and OpenAI APIs' MCP connectors, and the MCP Inspector. The server
+is listed in the MCP Registry as `com.rhylthyme/rhylthyme`.
 
 ## Importing pasted text
 
