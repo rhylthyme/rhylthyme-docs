@@ -33,19 +33,45 @@ and will fall back to browsing the website.
 claude mcp add --transport http rhylthyme https://mcp.rhylthyme.com/mcp
 ```
 
-Or install the Claude Code plugin, which adds the server and a skill for
-authoring schedules:
+**Cursor** (`.cursor/mcp.json`) and other clients that take a URL:
+
+```json
+{ "mcpServers": { "rhylthyme": { "url": "https://mcp.rhylthyme.com/mcp" } } }
+```
+
+### Claude Code plugin
+
+The plugin is the quickest way in for Claude Code. One install connects the
+hosted server and adds a skill that teaches Claude how to write a schedule
+well: extract the steps before relating them, validate, check for conflicts,
+work back from a deadline, and hand you a live timeline.
+
+In Claude Code:
 
 ```
 /plugin marketplace add rhylthyme/rhylthyme-mcp
 /plugin install rhylthyme@rhylthyme
 ```
 
-**Cursor** (`.cursor/mcp.json`) and other clients that take a URL:
+Or from a shell:
 
-```json
-{ "mcpServers": { "rhylthyme": { "url": "https://mcp.rhylthyme.com/mcp" } } }
+```bash
+claude plugin marketplace add rhylthyme/rhylthyme-mcp
+claude plugin install rhylthyme@rhylthyme
 ```
+
+| What you get | |
+|---|---|
+| MCP server | `https://mcp.rhylthyme.com/mcp`: `validate_program`, `analyze_schedule`, `visualize_schedule`, catalog search and the rest, with no account |
+| Skill | `rhylthyme`: authoring order, a complete example, fixes for the commonest validation findings, and references for the program format, the command line and worked examples |
+
+Update with `claude plugin marketplace update rhylthyme` then
+`claude plugin update rhylthyme@rhylthyme`; remove with
+`claude plugin uninstall rhylthyme@rhylthyme`. The marketplace is the
+[rhylthyme-mcp](https://github.com/rhylthyme/rhylthyme-mcp) repository
+(`.claude-plugin/marketplace.json`); the skill's source is in
+[rhylthyme-cli-runner](https://github.com/rhylthyme/rhylthyme-cli-runner/tree/main/skills/rhylthyme)
+and can also be copied into `~/.claude/skills/` by hand.
 
 Then ask for what you want: "Plan Thanksgiving dinner for 8 with one oven,
 eating at 6 pm." The assistant builds the program, checks it, and gives you a

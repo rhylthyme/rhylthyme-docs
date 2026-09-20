@@ -8,6 +8,22 @@ Open **[www.rhylthyme.com](https://www.rhylthyme.com)** -- no installation neede
 
 An iOS app is also available; its guide will be published here when ready.
 
+## Use It from Claude or ChatGPT
+
+Rhylthyme runs a hosted [MCP server](web-app/mcp.md), so an assistant can build
+a schedule in conversation and hand you a live timeline. In Claude Code,
+install the plugin (the server plus a skill for authoring schedules):
+
+```
+/plugin marketplace add rhylthyme/rhylthyme-mcp
+/plugin install rhylthyme@rhylthyme
+```
+
+In Claude, ChatGPT, Cursor or any other MCP client, add
+`https://mcp.rhylthyme.com/mcp` as a connector. No account or API key is
+needed. Details, including what to do when an assistant has no connector, are
+on the [MCP Server](web-app/mcp.md) page.
+
 ## What is Rhylthyme?
 
 Rhylthyme lets you model complex workflows as **programs** composed of parallel **tracks** and sequential **steps**, with timing dependencies and resource constraints. Programs are defined in JSON and can be visualized as interactive timelines, run with real-time execution controls, or generated from natural language using the AI chat.
@@ -21,7 +37,7 @@ Rhylthyme lets you model complex workflows as **programs** composed of parallel 
 - **Manual Controls**: Steps that wait for user interaction -- manual start, variable duration, indefinite tasks
 - **Resource Management**: Define constraints (e.g., 2 stove burners, 1 oven) and see utilization over time
 - **Save & Share**: Sign in to save programs, share links, and browse public schedules
-- **MCP Integration**: Use Rhylthyme as a tool in Claude Desktop or Claude Code
+- **MCP Integration**: A hosted MCP server and a Claude Code plugin, so Claude, ChatGPT and other assistants can author, check and publish schedules
 
 ## Learn More
 

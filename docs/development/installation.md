@@ -81,6 +81,22 @@ rhylthyme run program.json --time-scale 10 --auto-start
 
 See the [CLI Commands Reference](cli.md) for the full list of commands and options.
 
+## Claude Plugin and Skill
+
+If you work in Claude Code, the plugin gives Claude the hosted MCP tools and a
+skill for writing schedules, with nothing else to install:
+
+```
+/plugin marketplace add rhylthyme/rhylthyme-mcp
+/plugin install rhylthyme@rhylthyme
+```
+
+The command-line tool on this page and the MCP server are different things:
+the CLI is a program you run on files in a terminal (and the only one with a
+terminal runner and local run records); the MCP server is what an assistant
+calls. `rhylthyme analyze`, `publish` and `generate` are themselves clients of
+that server. See [MCP Server](../web-app/mcp.md).
+
 ## Optional Packages
 
 ```bash
