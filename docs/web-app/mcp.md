@@ -102,7 +102,7 @@ and `resources/read` of `rhylthyme://guide/authoring` returns a one-page guide.
 **The command-line tool** (Python 3.12+):
 
 ```bash
-pip install rhylthyme-cli-runner
+pip install rhylthyme
 rhylthyme validate dinner.json
 rhylthyme analyze dinner.json --finish-at 18:00
 rhylthyme publish dinner.json          # prints the live-timeline URL

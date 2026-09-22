@@ -42,8 +42,8 @@ Three ways to import it — pick whichever fits:
 ### 2. CLI
 
 ```bash
-pip install rhylthyme-importers
-rhylthyme-import-opentrons trivial.py | jq .
+pip install rhylthyme
+rhylthyme import trivial.py -o trivial.json     # or: rhylthyme-import-opentrons trivial.py | jq .
 ```
 
 Prints the same program JSON the web upload renders.
