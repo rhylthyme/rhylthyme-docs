@@ -1,11 +1,11 @@
 # Privacy Policy
 
-**Last updated:** February 15, 2026
+**Last updated:** September 25, 2026
 **Effective date:** February 1, 2026
 
 ---
 
-This Privacy Policy describes how Rhylthyme ("we," "us," or "our") collects, uses, and protects your information when you use the Rhylthyme website, web application, and iOS application (collectively, the "Service"). By using the Service, you agree to the collection and use of information as described in this policy.
+This Privacy Policy describes how Rhylthyme ("we," "us," or "our") collects, uses, and protects your information when you use the Rhylthyme website, web application, iOS application, command-line tools, and MCP connector (collectively, the "Service"). By using the Service, you agree to the collection and use of information as described in this policy.
 
 ## Information We Collect
 
@@ -68,6 +68,31 @@ program, if you save it, and one audit row recording that the import
 happened (your user id, the time, whether it succeeded, the model used
 and the resulting program id), which is what enforces the daily import
 limit. The text itself is not written to that row.
+
+### Import Review
+
+When you ask for an imported program to be **reviewed** (the `review_program`
+MCP tool, `rhylthyme import --review`, or the review shown on the website after
+an import while you are signed in), the program and the source text it was
+imported from are sent to a language model that reports what looks wrong. The
+review runs on OpenAI's model through OpenRouter (or, if that is unavailable,
+on the Anthropic API). As with import, we do not store the submitted text: we
+keep one audit row (your user id, the time, whether it succeeded and the model
+used), which enforces the daily review limit. The review itself is returned to
+you and not stored.
+
+### Lab Instruments and Bridges
+
+If you connect a lab machine with `rhylthyme bridge` (the rhylthyme-galago
+integration with galago-tools), that machine keeps a few rows in your account
+up to date so you can watch and steer its runs on the Bridges page: the
+workcell's name, the name, type and status of each instrument, a heartbeat, and
+the current run's steps, their status and any instrument error, plus the
+commands you send from the page (pause, resume, retry, skip, abort, start) and
+their outcome. Instrument network addresses, ports and configuration never
+leave the lab machine, and error messages are scrubbed of them. These rows are
+visible only to you. Run records written on the lab machine stay there unless
+you upload them.
 
 ### Execution Records (Runs)
 
@@ -197,6 +222,8 @@ We use the following third-party services to operate the Service:
 |---------|---------|---------------------|
 | **Supabase** | Authentication and database hosting | [supabase.com/privacy](https://supabase.com/privacy) |
 | **Anthropic** | AI chat processing, and reading text you submit for import or enrichment (Claude API) | [anthropic.com/privacy](https://www.anthropic.com/privacy) |
+| **OpenRouter** | Routing import review requests to the reviewing model | [openrouter.ai/privacy](https://openrouter.ai/privacy) |
+| **OpenAI** | The model that reviews imported programs against their source | [openai.com/policies/privacy-policy](https://openai.com/policies/privacy-policy/) |
 | **Vercel** | Web application hosting | [vercel.com/legal/privacy-policy](https://vercel.com/legal/privacy-policy) |
 | **Google** | OAuth authentication provider | [policies.google.com/privacy](https://policies.google.com/privacy) |
 | **Apple** | Sign-In authentication provider | [apple.com/privacy](https://www.apple.com/privacy/) |
@@ -255,6 +282,8 @@ We will respond to data rights requests within 30 days.
 - **Shared programs** remain accessible via their share links until you unshare or delete them.
 - **Run records** are retained until you delete the run, delete the program it belongs to, or request account deletion. Runs kept in a signed-out browser are never transmitted to us.
 - **Usage data** is retained in aggregate form and is not linked to individual accounts after 90 days.
+- **Bridge data** (lab machines, their current run and the commands sent to them) is kept until you delete it or request account deletion; each bridge's run state is overwritten by its next run.
+- **Import and review text** is not stored; only the audit row described above is kept.
 - **AI chat messages** are not stored by us after your session ends. Anthropic's retention of API data is governed by their privacy policy and data processing terms.
 
 Upon account deletion, we will remove your personal data within 30 days, except where retention is required by law.
@@ -284,4 +313,4 @@ If you have questions or concerns about this Privacy Policy or our data practice
 
 ---
 
-*This privacy policy applies to the Rhylthyme website, web application, and iOS application.*
+*This privacy policy applies to the Rhylthyme website, web application, iOS application, command-line tools, and MCP connector.*
