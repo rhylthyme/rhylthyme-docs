@@ -17,6 +17,44 @@ API key**. Saving to your own library, recorded runs and imports use your
 Rhylthyme account through OAuth 2.1 (the assistant shows a Connect button and
 you sign in with Google, Apple or email).
 
+## What it does
+
+Rhylthyme schedules work that has to happen against a clock, with several
+things going at once: a dinner on one oven, a lab protocol around an
+incubator, a conference run-of-show, an interval workout. A schedule is a
+*program*: parallel tracks of timed steps, with dependencies between steps and
+limits on shared equipment. Through the MCP server an assistant can:
+
+- **validate** a program and explain every problem with a suggested fix;
+- **analyze** it: when each step starts and ends, the total length, the
+  critical path, resource conflicts, and clock times worked back from a
+  deadline such as "everything ready at 6 pm";
+- **publish** it as a live timeline on rhylthyme.com that anyone can follow on
+  a phone, or return a static Gantt image;
+- **import** recipes and protocols from a URL or from pasted text, and check
+  the import against its source;
+- **search** a public catalog of recipes, lab protocols, event templates and
+  workouts;
+- with your account, **save** programs, look at **recorded runs**, and
+  **calibrate** step durations from how long they really took.
+
+## Sign-in and accounts
+
+The public tools need no account: validate, analyze, publish, preview,
+equipment limits, the public catalog, contributed runs, the renderer, and
+searching import sources. **Importing** (from a URL or pasted text), the
+import **review**, and your **library** (saved programs, recorded runs,
+calibration) use your free rhylthyme.com account.
+
+Sign-in is **OAuth 2.1** with PKCE and dynamic client registration, so your
+assistant registers itself and no client ID is needed. When a tool needs your
+account the server answers with an OAuth challenge and the assistant shows a
+Connect or sign-in button; you sign in with Google, Apple or an emailed
+one-time code and approve access. In Claude, choose **Sign in when needed**
+("Required when the server asks") when adding the connector. Assistants that
+cannot connect accounts can use the `login` tool, which returns a sign-in link
+and accepts the token you paste back (it lasts about an hour).
+
 ## Connect
 
 **Claude (claude.ai, desktop, mobile)**: Settings → Connectors → *Add custom
@@ -143,6 +181,30 @@ rhylthyme.com.
     longer applies.
 
 ## Available Tools
+
+| Tool | What it does | Account |
+|---|---|---|
+| `validate_program` | Check a program: ids, dangling or circular dependencies, overlapping steps, missing resource limits, durations; each finding has a fix | no |
+| `analyze_schedule` | Start and end of every step, total length, critical path, resource conflicts, slack; clock times from `finishAt` / `startAt` | no |
+| `visualize_schedule` | Publish a program as a live, shareable timeline and return its URL, an ASCII Gantt and an itinerary | no |
+| `preview_timeline` | A static Gantt image of a program (planned against actual with a run) | no |
+| `create_environment` | Describe a workspace's equipment limits (one oven, two centrifuges) as resource constraints | no |
+| `search_public_recipes` | Search the public catalog by name or keyword | no |
+| `load_public_recipe` | Open a catalog entry: summary and live-timeline URL | no |
+| `list_public_runs` | Anonymous runs others contributed for one exact program version | no |
+| `get_renderer_source` | The open-source timeline renderer (Apache-2.0, about 90 KB) for pages that cannot load scripts | no |
+| `import_from_source` | Search, import or pick a random recipe or protocol (TheMealDB, Spoonacular, protocols.io, Opentrons, Benchling, Cooklang) | import and random: yes; search: no |
+| `import_text` | Turn pasted text (recipe, protocol, run sheet, training plan) into a validated program | yes |
+| `review_program` | A model checks an imported program against its source and reports what looks wrong | yes |
+| `login` | Sign-in link and token, for assistants that cannot connect accounts | no |
+| `save_program` | Save a program to your library | yes |
+| `list_my_programs` / `load_program` | List and open your saved programs | yes |
+| `list_runs` / `load_run` | Your recorded runs of a program, planned against actual | yes |
+| `calibrate_program` | Propose durations from your recorded runs | yes |
+| `cook_recipe`, `whats_for_dinner` (kitchen); `run_protocol`, `random_protocol` (lab); `plan_event`, `random_event_template` (events); `start_workout`, `surprise_workout` (gym) | Find, or pick at random, a public catalog entry and return its live timeline in one call | no |
+
+Every tool has a title and read-only or destructive annotations. The sections
+below describe the ones with more to them.
 
 ### `visualize_schedule`
 
@@ -475,6 +537,45 @@ Try these prompts after connecting:
 - "Three trays of cookies, one oven, the cooling rack holds two"
 
 Claude will confirm resource constraints (e.g., "You have 1 oven, 4 stovetop burners — correct?") before generating the visualization.
+
+## Data and privacy
+
+- The MCP server calls only Rhylthyme's own API. Import tools fetch public
+  recipes and protocols from their sources (TheMealDB, Spoonacular,
+  protocols.io, Cooklang URLs) or read content you supply (Opentrons scripts,
+  Benchling). `import_text` and `review_program` send the text you paste (and
+  the program being reviewed) to a model provider (OpenRouter) to extract and
+  check steps; no other tool sends anything to a model provider.
+- Request logging records the method, tool name, argument names, a few fixed
+  values (import source, action, environment type), timing and a hashed
+  client id: no free text, programs or conversation content.
+- Programs and runs are stored only when you save them, and only you can see
+  them unless you publish or share. `visualize_schedule` and
+  `preview_timeline` create a public share link, as their descriptions say.
+- Timeline images are drawn from program data by the open-source renderer;
+  no AI-generated images, audio or video. No payments, ads or sponsored
+  content.
+
+Details, retention and deletion are in the [privacy policy](../privacy.md).
+
+## Troubleshooting
+
+| Symptom | What to do |
+|---|---|
+| A tool says it needs your Rhylthyme account | Connect the account when the assistant offers (in Claude, the connector's authentication must be **Sign in when needed**); otherwise ask the assistant to use `login` and paste the token back. Tokens from `login` last about an hour. |
+| The connector was added with "No sign-in" | Remove it and add it again with **Sign in when needed**; public tools keep working either way. |
+| `visualize_schedule` refuses a program | It validates first. The reply lists each problem with a fix; `validate_program` shows the same list. |
+| An import has odd durations or missing steps | Ask for a review (`review_program`); it compares the program with the source text and lists what looks wrong. |
+| "Not a public program" or "not found" when opening an id | Catalog ids come from `search_public_recipes`; your own programs from `list_my_programs`. |
+| A catalog search is slow for a very common word | Add a second word ("chicken curry" rather than "chicken"). |
+| Your client only supports stdio | Use the [stdio bridge](#clients-that-only-speak-stdio-and-self-hosting). |
+| Anything else | Check the server is up: `curl -s https://mcp.rhylthyme.com/.well-known/oauth-protected-resource`; then contact support (below). |
+
+## Support
+
+- Email: [support@rhylthyme.com](mailto:support@rhylthyme.com)
+- Issues: [github.com/rhylthyme/rhylthyme-mcp/issues](https://github.com/rhylthyme/rhylthyme-mcp/issues)
+- Source (Apache-2.0): [github.com/rhylthyme/rhylthyme-mcp](https://github.com/rhylthyme/rhylthyme-mcp)
 
 ## Compatibility
 

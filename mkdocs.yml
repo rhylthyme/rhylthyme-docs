@@ -96,6 +96,7 @@ plugins:
         'api/cli.md': 'development/cli.md'
         'api/schema.md': 'development/schema.md'
         'api/environment-schema.md': 'development/environment-schema.md'
+        'mcp.md': 'web-app/mcp.md'
 
 # Extra
 extra:
