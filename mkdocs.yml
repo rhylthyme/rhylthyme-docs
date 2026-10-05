@@ -61,6 +61,7 @@ nav:
     - Program Schema: development/schema.md
     - Environment Schema: development/environment-schema.md
     - Runs Schema: development/runs-schema.md
+    - Lab Instruments: development/instruments.md
     - Architecture: development/architecture.md
     - Reports:
       - Duration evaluation (catalog): development/reports/duration-evaluation-catalog.md

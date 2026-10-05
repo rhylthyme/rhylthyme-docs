@@ -37,6 +37,7 @@ rhylthyme validate [OPTIONS] PROGRAM_FILES...
 | `--verbose, -v` | Verbose validation output |
 | `--json, -j` | Output results in JSON format |
 | `--strict, -s` | Enable strict validation mode |
+| `--workcell FILE` | Check instrument steps against a lab's workcell: tools, commands, params, limits and command policies |
 
 **Examples:**
 
@@ -82,6 +83,9 @@ rhylthyme run [OPTIONS] PROGRAM
 | `--auto-start` | Automatically start program execution |
 | `--runs-dir PATH` | Where to write the run record (default: `$RHYLTHYME_RUNS_DIR` or `~/.rhylthyme/runs`) |
 | `--no-record` | Do not write a run record |
+| `--workcell FILE` | Workcell mapping the program's instrument tools to galago-tools or LabMCP instruments; required for programs with instrument steps (see [Lab Instruments](instruments.md)) |
+| `--live` | Run instrument steps on real hardware instead of simulated: shows a pre-flight and asks you to type `live` |
+| `--confirm-live` | Answer the `--live` question in advance (scripts) |
 
 **Interactive Controls:**
 
@@ -233,6 +237,20 @@ built in: convert the SVG with `rsvg-convert` or a browser.
 
 ---
 
+## `bridge`
+
+Runs a program on a workcell and shows it live on your rhylthyme.com Bridges
+page (needs `rhylthyme login`), where you can pause, resume, retry or skip a
+failed step, and abort. Without `PROGRAM`, waits for runs started from the
+page. Tool addresses never leave the machine.
+
+```bash
+rhylthyme bridge PROGRAM --workcell lab.json [--live]
+rhylthyme bridge --workcell lab.json [--allow-live]
+```
+
+See [Lab Instruments](instruments.md).
+
 ## `plan`
 
 Optimizes a program schedule to reduce resource conflicts.
@@ -252,6 +270,7 @@ rhylthyme plan [OPTIONS] INPUT OUTPUT
 |--------|-------------|
 | `-e, --environment PATH` | Environment file for resource constraints |
 | `--verbose, -v` | Verbose output |
+| `--workcell FILE` | Estimate instrument steps that have no duration from their tools (flagged in `metadata.durationEstimate`) |
 
 **Examples:**
 

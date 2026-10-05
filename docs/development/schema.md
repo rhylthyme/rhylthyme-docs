@@ -39,6 +39,31 @@ Programs are defined in JSON and describe workflows with tracks, steps, timing d
 | `resources` | array | No | Resource requirements |
 | `notes` | string | No | Additional notes |
 | `metadata` | object | No | Additional metadata |
+| `instrument` | Instrument | No | Calls to a lab instrument (see [Instrument steps](#instrument-steps)) |
+
+## Instrument steps
+
+A step's `instrument` names a workcell tool and what to send it; the local
+workcell maps the tool to a galago-tools or LabMCP instrument (see
+[Lab Instruments](instruments.md)).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `tool` | string | Workcell tool name; required. The default tool of every action |
+| `command` | string | One blocking call: the step ends when it replies |
+| `params` | object | Parameters of `command` |
+| `toolType` | string | What the tool is, so its calls can be checked without a workcell: a galago tool type (`bioshake`) or a LabMCP server package (`labmcp-ika`) |
+| `timeoutSeconds` | number | Fail the step if `command` has not replied after this long |
+| `start` | array of actions | Sent in order when the step starts (and again on retry) |
+| `until` | action | One call whose reply ends the step, instead of `command` |
+| `end` | array of actions | Sent in order when the step ends: by timer, operator or reply |
+| `onAbort` | array of actions | Sent if the step fails or the run is aborted, instead of the default safe stops |
+
+An action is `{command, params?, tool?, timeoutSeconds?}`; `tool` defaults to
+the step's. `command` and `until` are exclusive, and a step needs at least
+one of `command`, `until`, `start` or `end`. A step with `command` or `until`
+and no `duration` ends on the reply and is planned with an estimate; one with
+only `start`/`end` actions runs on its own `duration`.
 
 ## Duration Types
 

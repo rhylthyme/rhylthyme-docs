@@ -91,6 +91,12 @@ whether or not any factor was declared.
 | `notes` | string | No | Free text entered by the executor; stripped before any public contribution |
 | `predictedAnchorSeconds` | number ≥ 0 | No | On a step with a **negative** `offsetSeconds`: the predicted duration used to project its anchor's end instead of the anchor's authored `defaultSeconds` — see [Predicted offsets](#predicted-offsets) |
 
+An instrument step also carries `instrument` (see [Instrument calls](#instrument-calls)), and `endedBy` may be `instrument` (the instrument replied to the step's command or until call) or `skipped` (an instrument call failed and the operator marked the step done).
+
+### Instrument calls
+
+`instrument` is `{tool, command, replies}`: the step's tool, its command (or until command; empty for a step with only start/end actions), and one entry per reply, retries included: `{attempt, at, code, errorMessage?, metadata?, phase?, tool?, command?}`. `phase` says which call it answers (`start`, `call`, `until`, `end`, `onAbort`, or `pause`/`resume` when the schedule paused the tool), with that call's `tool` and `command`; `metadata` is the data the instrument returned. Safe stops sent when the step failed or the run was aborted are `onAbort` replies. Tool addresses are never recorded.
+
 `endedBy` is the field that makes history useful: for variable and indefinite steps only `executor` endings say how long the work really took, whereas `timer` endings only confirm that the timer worked.
 
 ## Example
