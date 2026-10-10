@@ -40,6 +40,7 @@ Programs are defined in JSON and describe workflows with tracks, steps, timing d
 | `notes` | string | No | Additional notes |
 | `metadata` | object | No | Additional metadata |
 | `instrument` | Instrument | No | Calls to a lab instrument (see [Instrument steps](#instrument-steps)) |
+| `alerts` | array of Alert | No | Notifications at moments of the step (see [Alerts](#alerts)) |
 
 ## Instrument steps
 
@@ -64,6 +65,56 @@ the step's. `command` and `until` are exclusive, and a step needs at least
 one of `command`, `until`, `start` or `end`. A step with `command` or `until`
 and no `duration` ends on the reply and is planned with an estimate; one with
 only `start`/`end` actions runs on its own `duration`.
+
+## Alerts
+
+A step's `alerts` (package 0.2.3-alpha, both program schemas) are
+notifications the live runner shows the person at a moment of that step: an
+in-page banner and chime on the web, and a phone notification from the iOS and
+Android apps while the app is in the background.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `event` | `"start"` \| `"end"` | The moment of this step the alert is anchored to; required |
+| `offsetSeconds` | number or string | Signed seconds from that moment: negative = before (`-120`, `"-2m"`), positive = after (`"30s"`, `"1h30m"`). Default 0 |
+| `message` | string | Plain text of 1-200 characters. When omitted the runner shows a default such as "Ends in 2 min" or "Done" |
+| `level` | `"notice"` \| `"alarm"` | Default `notice`. `alarm` may ring as a device alarm (iOS AlarmKit, Android full-screen alarm) when the person has enabled alarms; otherwise it behaves as `notice` |
+
+```json
+{
+  "stepId": "preheat",
+  "name": "Preheat the oven",
+  "startTrigger": { "type": "programStart" },
+  "duration": { "type": "fixed", "seconds": 600 },
+  "alerts": [
+    { "event": "end", "offsetSeconds": "-2m", "message": "Get the tray ready" },
+    { "event": "end", "level": "alarm" }
+  ]
+}
+```
+
+An alert fires once per run, when the program clock reaches its anchor plus
+the offset. The anchor is the step's actual start or end once it has
+happened, and its projected start or end before that, so alert times move
+with the schedule. Alerts are self-anchored: they never name another step,
+and replicate expansion gives every instance its own copy. A pause holds
+every alert, and stop resets them.
+
+Some anchors cannot be projected, and their alerts never fire. The validators
+warn about them:
+
+| Code | Severity | Meaning |
+|------|----------|---------|
+| `W_ALERT_BEFORE_MANUAL_START` | warning | `event: "start"` with a negative offset on a step whose `startTrigger` is `manual`: its start is not known in advance |
+| `W_ALERT_BEFORE_INDEFINITE_END` | warning | `event: "end"` with a negative offset on an `indefinite` step: it has no projected end |
+| `W_ALERT_BEFORE_PROGRAM_START` | warning | `event: "start"` with a negative offset that would fall before the program starts (a `programStart` step, or a `programStartOffset` shorter than the offset) |
+| `E_ALERT_BAD_OFFSET` | error | `offsetSeconds` is neither a number nor a time string |
+
+An alert at or after the start of a manual step fires relative to its actual
+start, and one at or after the end of an indefinite step fires relative to its
+actual end. `analyze_schedule` (MCP) reports each step's projectable alerts
+with their planned times (`atSeconds`, and `at` when a wall-clock anchor is
+given).
 
 ## Duration Types
 
