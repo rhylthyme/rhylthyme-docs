@@ -35,7 +35,7 @@ offset):
 | `event` | yes | | `"start"` or `"end"`: the moment of this step the alert is anchored to |
 | `offsetSeconds` | no | `0` | Seconds from that moment: a number (`-120`) or a time string (`"-2m"`, `"30s"`, `"1h30m"`). Negative is before, positive is after |
 | `message` | no | see below | Plain text, 1 to 200 characters |
-| `level` | no | `"notice"` | `"notice"` or `"alarm"`. An alarm can ring as a device alarm in the apps when the person has turned on **Use Alarms**. Otherwise it is shown like a notice, except that the web banner stays until dismissed |
+| `level` | no | `"notice"` | `"notice"` or `"alarm"`. An alarm can ring as a device alarm in the apps when the person has turned on **Use Alarms**. On the web an alarm banner stays until dismissed and the chime plays three times |
 
 The full field reference is in the
 [Program Schema Reference](../development/schema.md#alerts). Alerts need
@@ -146,14 +146,23 @@ tool) warn about them:
 | `W_ALERT_BEFORE_PROGRAM_START` | warning | A `start` alert with a negative offset that would fall before the program starts: a `programStart` step, or a `programStartOffset` shorter than the offset | Shorten the offset, or delay the step with `programStartOffset` |
 | `E_ALERT_BAD_OFFSET` | error | `offsetSeconds` is neither a number nor a readable time string (for example `"soon"`) | Use a number of seconds or a string such as `"-2m"` |
 
-For example, `validate_program` reports:
+For example, `rhylthyme validate` reports:
 
 ```
-[W_ALERT_BEFORE_MANUAL_START] Alert 0 on step 'b' fires 30 s before the step
-starts, but the step starts manually, so its start cannot be predicted and the
-alert never fires. (fix: Anchor it on the end of the step before, or use
-offsetSeconds >= 0.)
+Warnings:
+  - [W_ALERT_BEFORE_MANUAL_START] Alert 0 on step 'b' fires 30 s before the
+    step starts, but the step starts manually, so its start cannot be predicted
+    and the alert never fires. (fix: Anchor it on the end of the step before,
+    or use offsetSeconds >= 0.)
 ```
+
+The `validate_program` MCP tool reports the same codes and fixes, formatted
+as a Markdown list.
+
+Alerts that break the format (an unknown `event` or `level`, an empty or
+over-long `message`, an unknown key, an empty `alerts` array) fail schema
+validation. The hosted `validate_program` tool reports these as `bad_alert`
+errors with a fix for each.
 
 Warnings do not make a program invalid. The alert is simply ignored at run
 time.
