@@ -77,6 +77,8 @@ The Settings tab lets you manage your profile and app preferences.
 | Setting | Description | Options |
 |---------|-------------|---------|
 | **Time Format** | Controls how timestamps are displayed in the visualization and itinerary | 12-hour (default) or 24-hour |
+| **Program Alerts** | Sends the alerts a program sets on its steps as notifications while Rhylthyme is in the background. See [Alerts and Notifications](../web-app/alerts.md#ios-app) | On (default) or off |
+| **Use Alarms** | Rings alarm-level alerts as alarms through silent mode and Do Not Disturb (iOS 26 or later) | On or off (default) |
 
 ### Sign Out
 

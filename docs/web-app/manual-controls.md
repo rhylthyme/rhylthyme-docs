@@ -232,6 +232,15 @@ Steps can combine manual start with variable or indefinite duration:
 
 This step requires the user to click Start, then runs with a variable duration that can be completed manually after 30 seconds or auto-completes at 75 seconds.
 
+## Alerts on Manual Steps
+
+A program can also set [alerts](alerts.md) on its steps, such as a heads-up
+two minutes before a step ends. On a manual-start step, an alert at or after
+the start fires once you press **Start Step**, and on an indefinite step an
+alert at or after the end fires once you press **Mark Complete**. Alerts
+*before* either moment cannot be predicted and never fire; see
+[Alerts that can never fire](alerts.md#alerts-that-can-never-fire).
+
 ## Cross-Track Dependencies
 
 Steps on different tracks can depend on manual steps. When a manual step is completed, its dependent steps on other tracks begin immediately. The grey S-curve connectors in the timeline view update their positions in real-time as steps are pushed or completed during execution.

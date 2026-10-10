@@ -52,6 +52,7 @@ nav:
     - Getting Started: web-app/getting-started.md
     - Visualization: web-app/visualization.md
     - Manual Controls: web-app/manual-controls.md
+    - Alerts & Notifications: web-app/alerts.md
     - AI Chat: web-app/chat.md
     - Account & Sharing: web-app/account.md
     - MCP Server: web-app/mcp.md

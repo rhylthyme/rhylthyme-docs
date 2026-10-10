@@ -276,6 +276,7 @@ The Settings modal (accessible from the gear icon in the execution panel) allows
 - **Theme** -- Color scheme and visual preferences
 - **Timeline display** -- Scale, zoom, and label options
 - **Execution defaults** -- Default speed and auto-start behavior
+- **Alerts** -- Program alerts, alert sound and browser notifications (see [Alerts and Notifications](alerts.md))
 
 Settings are persisted in browser cookies so they carry over between sessions.
 

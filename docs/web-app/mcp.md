@@ -240,6 +240,9 @@ of that path.
 - Per-track slack, with instance sub-tracks as their own rows tagged
   `parentTrackId`; steps carry `instanceOf` / `instanceIndex`.
 - Wall-clock times for every step when you pass `finishAt` or `startAt`.
+- `alerts` on each step: the planned fire time of every step alert that
+  can be placed on the plan (see
+  [Alerts and Notifications](alerts.md#planning-with-analyze_schedule-mcp)).
 
 **Analysing against your own history.** Once a program has been run, the
 planned durations are checkable. Pass `history` (run records, as

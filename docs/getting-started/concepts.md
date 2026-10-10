@@ -225,4 +225,5 @@ path on the predicted numbers instead.
 - [Examples](examples.md) -- More example programs to explore
 - [Glossary](glossary.md) -- Comprehensive reference of all Rhylthyme terms
 - [Manual Controls](../web-app/manual-controls.md) -- Interactive manual start and completion
+- [Alerts and Notifications](../web-app/alerts.md) -- Step alerts on the web, iOS and Android
 - [Program Schema Reference](../development/schema.md) -- Full specification of all fields and types

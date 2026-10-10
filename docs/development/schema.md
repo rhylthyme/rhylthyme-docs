@@ -116,6 +116,9 @@ actual end. `analyze_schedule` (MCP) reports each step's projectable alerts
 with their planned times (`atSeconds`, and `at` when a wall-clock anchor is
 given).
 
+See [Alerts and Notifications](../web-app/alerts.md) for how each runner
+delivers alerts and the settings that control them.
+
 ## Duration Types
 
 ### Fixed Duration

@@ -89,4 +89,5 @@ The AI will generate a complete Rhylthyme program with tracks, steps, triggers, 
 - [Core Concepts](concepts.md) -- Programs, tracks, steps, triggers, environments
 - [Visualization Guide](../web-app/visualization.md) -- In-depth guide to all five views
 - [Manual Controls](../web-app/manual-controls.md) -- Steps that require user interaction
+- [Alerts and Notifications](../web-app/alerts.md) -- Reminders a program sets on its steps
 - [Examples](examples.md) -- More example programs to explore
