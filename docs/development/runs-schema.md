@@ -47,7 +47,7 @@ The web player (`<rhylthyme-timeline>`) writes the same document. It emits a `rt
 - UTF-8, non-ASCII characters left unescaped,
 - integral numbers written without a fractional part (`1.0` → `1`).
 
-Python: `rhylthyme_cli_runner.history.program_version(program)`. JavaScript: `rhylthyme-timeline/tools/hash-program.js`. Both reproduce `rhylthyme-timeline/test/fixtures/hash-parity.json` over the example corpus. The hash is taken over the program as authored (before replicate expansion or environment overrides).
+Python: `rhylthyme.history.program_version(program)`. JavaScript: `rhylthyme-timeline/tools/hash-program.js`. Both reproduce `rhylthyme-timeline/test/fixtures/hash-parity.json` over the example corpus. The hash is taken over the program as authored (before replicate expansion or environment overrides).
 
 ### userTags
 
@@ -136,7 +136,7 @@ An instrument step also carries `instrument` (see [Instrument calls](#instrument
 Most of what a run record contains is not a measurement of how long the work
 takes, and pooling it with what is would poison every statistic computed from
 it. One filter decides, implemented once in Python
-(`rhylthyme_cli_runner.history.usable`) and once in JavaScript
+(`rhylthyme.history.usable`) and once in JavaScript
 (`rhylthyme-server/mcp-api/history.js`), with a parity fixture
 (`rhylthyme-cli-runner/tests/fixtures/history/usable-cases.json`) asserted by
 both test suites.
@@ -169,7 +169,7 @@ value-free vocabulary: `outcome-not-completed`, `clock-not-wall`, `speed-not-1`,
 `ended-by-trigger`, `ended-by-abort`, `ended-by-none`.
 
 ```python
-from rhylthyme_cli_runner.history import is_usable_run, usable_steps
+from rhylthyme.history import is_usable_run, usable_steps
 
 usable, reason = is_usable_run(record)          # (True, None) when usable
 for step, reason in usable_steps(record):       # reason is None when measured
@@ -278,7 +278,7 @@ them, recording `runs`, `asOf` and the `programVersion` the measurements were
 taken against.
 
 ```python
-from rhylthyme_cli_runner.history import (
+from rhylthyme.history import (
     list_runs, propose_calibration, apply_calibration,
 )
 
@@ -337,7 +337,7 @@ for the lookup order and where the code lives.
 ## Validating a record
 
 ```python
-from rhylthyme_cli_runner.history import validate_run
+from rhylthyme.history import validate_run
 errors = validate_run(record)   # [] when valid
 ```
 

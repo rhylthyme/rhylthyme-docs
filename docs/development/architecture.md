@@ -28,12 +28,13 @@ Schema definitions and validation logic.
 - `validation.py` - Schema and semantic validation
 - `types.py` - Python type definitions
 
-### rhylthyme-cli-runner
+### rhylthyme
 
-Command-line interface and interactive program execution.
+The core library and command-line interface (formerly rhylthyme-cli-runner).
 
-- `cli.py` - Click-based CLI with commands: validate, run, plan, environments
-- `program_runner.py` - Real-time program execution engine with terminal UI
+- `cli/main.py` - Click-based CLI with commands: validate, run, plan, environments
+- `cli/tui.py` - Interactive terminal UI for running programs
+- `program_runner.py` - Real-time program execution engine
 - `program_planner.py` - Schedule optimization
 - `validate_program.py` - Program validation
 - `environment_loader.py` - Environment catalog loading
@@ -145,8 +146,8 @@ URL, and has nothing to fetch.
 **The turns.** `templates.py` is a byte-for-byte copy of the templates
 `mcp-api/prompts.js` sends MCP hosts, checked by a parity test that runs
 `node` against the JS, so the structure that runs server-side is the
-structure that ships (rhylthyme-server must not import
-rhylthyme-cli-runner, where the evaluation harness keeps its own copy).
+structure that ships (rhylthyme-server must not depend on
+the `rhylthyme` package, where the evaluation harness keeps its own copy).
 `import_text` runs T1 (read-back) and T2 (model check) as a conversation,
 scoring each 2/1/0 with one retry; T3 (extraction with source spans) once,
 or once per chunk; then T4 (tracks, triggers, question refinement) as a
@@ -173,7 +174,7 @@ record per execution (see [Runs Schema](runs-schema.md)), stored beside
 the program. Reading it back is split into small pure modules, because
 two runtimes write runs and two languages read them.
 
-**Python** — `rhylthyme_cli_runner.history`: `hash` (the canonical
+**Python** — `rhylthyme.history`: `hash` (the canonical
 `programVersion`), `recorder` (builds records from runner events), `store`
 (the on-disk layout and schema validation), `usable` (the shared
 usable-run filter), `report` (the inferentiality verdicts), `calibrate`
@@ -201,11 +202,11 @@ Badosa et al. (2019) §3:
 
 **Three copies of the same rule, and how they are kept honest.** The
 usable-run filter and the prediction lookup exist once per language, and
-the Python lookup exists twice: `rhylthyme-server` must not import
-`rhylthyme-cli-runner` (the same rule that produced the copied prompt
+the Python lookup exists twice: `rhylthyme-server` must not depend on
+the `rhylthyme` package (the same rule that produced the copied prompt
 templates in `_prompting/templates.py`), but Phase 7 needs the lookup
 inside the runner. So `rhylthyme_server/rhylthyme/predict.py` is the
-source of truth and `rhylthyme_cli_runner/history/predict.py` is a
+source of truth and `rhylthyme/history/predict.py` is a
 byte-identical copy, checked by `tools/check_mirrors.sh`. The module is
 standalone — it imports nothing from either package and carries its own
 copy of the usable-run filter and the percentile definition, which

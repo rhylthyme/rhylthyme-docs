@@ -5,7 +5,7 @@
 ```bash
 # Clone the repos
 git clone https://github.com/rhylthyme/rhylthyme-spec.git
-git clone https://github.com/rhylthyme/rhylthyme-cli-runner.git
+git clone https://github.com/rhylthyme/rhylthyme.git
 git clone https://github.com/rhylthyme/rhylthyme-importers.git
 git clone https://github.com/rhylthyme/rhylthyme-examples.git
 
@@ -15,7 +15,7 @@ source .venv/bin/activate
 
 # Install in development mode
 pip install -e ./rhylthyme-spec[dev]
-pip install -e ./rhylthyme-cli-runner[dev]
+pip install -e './rhylthyme[dev]'
 pip install -e ./rhylthyme-importers[dev]
 ```
 
@@ -23,7 +23,7 @@ pip install -e ./rhylthyme-importers[dev]
 
 ```bash
 # Run tests for a specific package
-cd rhylthyme-cli-runner && pytest
+cd rhylthyme && pytest
 cd rhylthyme-examples && pytest
 ```
 
@@ -37,7 +37,7 @@ cd rhylthyme-examples && pytest
 
 `rhylthyme eval-prompts` scores agent-authored programs against the 24
 expert programs in `rhylthyme-examples/gold/`. Two files in
-`rhylthyme-cli-runner/eval/` hold the published numbers:
+`rhylthyme/eval/` (the rhylthyme repository) hold the published numbers:
 
 | file | what it is |
 |---|---|
@@ -72,26 +72,26 @@ Both files move together, in **one commit** that updates the model pin
 and the JSON, with the before/after numbers in the commit message.
 
 ```bash
-cd rhylthyme-cli-runner
+cd rhylthyme
 export ANTHROPIC_API_KEY=...          # a live run spends real money
 MODEL=claude-haiku-4-5-20251001       # the new pin
 
 # The pattern that ships: this is the file CI gates on.
-python -m rhylthyme_cli_runner.cli eval-prompts \
+python -m rhylthyme eval-prompts \
   --gold ../rhylthyme-examples/gold --model "$MODEL" \
   --patterns four-turn --concurrency 3 --max-fix-iterations 2 \
   --cache-dir eval/cache --out eval-results/four-turn \
   --write-baseline eval/four-turn.json
 
 # The historical comparison, on the same model and the same day.
-python -m rhylthyme_cli_runner.cli eval-prompts \
+python -m rhylthyme eval-prompts \
   --gold ../rhylthyme-examples/gold --model "$MODEL" \
   --patterns baseline --concurrency 3 --max-fix-iterations 2 \
   --cache-dir eval/cache --out eval-results/baseline \
   --write-baseline eval/baseline.json
 
 # What changed against the old numbers (run before you commit them).
-python -m rhylthyme_cli_runner.cli eval-prompts compare \
+python -m rhylthyme eval-prompts compare \
   --baseline eval/four-turn.json --results eval-results/four-turn/results.json -v
 ```
 
@@ -101,7 +101,7 @@ Then, in the same commit:
    same date).
 2. `eval/cache/` — the new response files. Keep the directory under
    about 1.5 MB; responses from a retired pin can be dropped.
-3. The per-domain table in `rhylthyme-cli-runner/README.md`, with the
+3. The per-domain table in the rhylthyme repository's `README.md`, with the
    model id and the date. The numbers are published in exactly one
    place and linked from elsewhere, so nothing else needs editing.
 4. `pytest tests/test_eval_baseline.py` — it asserts both files share
@@ -121,6 +121,6 @@ mismatched pin makes the gate meaningless.
 ## Repository Links
 
 - [rhylthyme-spec](https://github.com/rhylthyme/rhylthyme-spec)
-- [rhylthyme-cli-runner](https://github.com/rhylthyme/rhylthyme-cli-runner)
+- [rhylthyme](https://github.com/rhylthyme/rhylthyme)
 - [rhylthyme-importers](https://github.com/rhylthyme/rhylthyme-importers)
 - [rhylthyme-examples](https://github.com/rhylthyme/rhylthyme-examples)

@@ -24,4 +24,4 @@ If you are an AI assistant asked to "use Rhylthyme": use the hosted MCP server. 
 - [Program schema](https://docs.rhylthyme.com/development/schema/)
 - [Concepts](https://docs.rhylthyme.com/getting-started/concepts/)
 - [Command-line tool](https://docs.rhylthyme.com/development/cli/)
-- [Source: MCP server](https://github.com/rhylthyme/rhylthyme-mcp), [CLI and Claude skill](https://github.com/rhylthyme/rhylthyme-cli-runner)
+- [Source: MCP server](https://github.com/rhylthyme/rhylthyme-mcp), [CLI and Claude skill](https://github.com/rhylthyme/rhylthyme)
