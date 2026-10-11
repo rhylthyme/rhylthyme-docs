@@ -67,6 +67,9 @@ Sequence of steps linked by dependencies, creating a critical path through the p
 **Download**
 Export program as a JSON file to the user's computer (no sign-in required).
 
+**Dropped Run**
+A run the player stopped watching while steps were still running: its program was replaced, or the `<rhylthyme-timeline>` element was removed from the page for good. Each running step ends with `by: "dropped"`, which is not a stop: the person may still be doing it. The run record keeps those steps open with outcome `abandoned`. See [Player events](../development/player-events.md#1-dropped-runs).
+
 **Duplicate Step ID**
 Validation error when two steps have the same `stepId` within a program.
 
@@ -194,6 +197,9 @@ When the schedule requires more concurrent instances of a resource than the `max
 **Pause**
 Temporarily stop program execution at the current time. Can be resumed without losing progress.
 
+**Player Events**
+The DOM events the `<rhylthyme-timeline>` player fires for its host page (`rt-start`, `rt-step-began`, `rt-step-ended`, `rt-seek`, `rt-complete`, `rt-run-record` and others), with their delivery rules. See [Player events](../development/player-events.md).
+
 **Per-Instance Chain**
 A sequence of steps chained with `instances: "each"` off a replicated step, so that instance *i* of every step in the chain follows instance *i* of the previous one (each tray is cooled, then decorated, on its own clock). The chain inherits the instance count and ends at a barrier (`instances: "all"`); the validator warns (`W_UNBARRIERED_CHAIN`) when it never rejoins although later work exists.
 
@@ -249,6 +255,9 @@ What `maxInFlight: k` makes of a `"parallel"` replicate with more than *k* insta
 
 ## S
 
+**Run Record**
+The record of one run of a program (rhylthyme-spec's runs schema): each step's planned and actual start and end, what ended it (`endedBy`: `timer`, `executor`, `trigger`, `abort`), and the run's outcome (`completed`, `aborted`, `abandoned`). The player emits it as `rt-run-record`; `rhylthyme run` writes it too.
+
 **Same-Track Prerequisite**
 For manual-start steps, the "Start Step" button only appears after the previous step in the same track completes.
 
@@ -287,6 +296,9 @@ Defines when a step begins. Different trigger types create the dependency struct
 
 **Step**
 A single task within a track. Each step has a name, task type, duration, and start trigger. Steps are the atomic units of a program.
+
+**Step Transition**
+A step beginning or ending during a run. The player reports each one once per run, with what caused it (`by`): `plan` or `person` for a begin; `timer`, `person`, `trigger`, `abort` or `dropped` for an end. See [Player events](../development/player-events.md#by-what-caused-a-step-to-begin-or-end).
 
 **Stop**
 End execution and reset the program to the beginning.

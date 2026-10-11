@@ -1,0 +1,24 @@
+{
+  "name": "rhylthyme-docs-tests",
+  "private": true,
+  "description": "Runs the code snippets of the Rhylthyme docs; not published.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "pretest": "node tests/setup.js",
+    "test": "node --test --test-concurrency=4 \"tests/**/*.test.js\"",
+    "pretest:snippets": "node tests/setup.js",
+    "test:snippets": "node --test --test-concurrency=4 \"tests/snippets/**/*.test.js\""
+  },
+  "devDependencies": {
+    "@rhylthyme/timeline": "2.0.0-beta.7",
+    "esbuild": "0.28.2",
+    "playwright": "1.64.0",
+    "react-dom18": "npm:react-dom@18.3.1",
+    "react-dom19": "npm:react-dom@19.3.0",
+    "react18": "npm:react@18.3.1",
+    "react19": "npm:react@19.3.0"
+  }
+}

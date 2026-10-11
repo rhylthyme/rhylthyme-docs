@@ -1,3 +1,5 @@
 site/
 .vercel
 .DS_Store
+node_modules/
+tests/.cache/

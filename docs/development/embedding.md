@@ -2,8 +2,9 @@
 
 Everything on this page uses code that already ships: the
 [`@rhylthyme/timeline`](https://github.com/rhylthyme/rhylthyme-timeline)
-package (timing engine, SVG renderer and the `<rhylthyme-timeline>` player
-element, zero dependencies) and the hosted MCP server at
+package (timing engine, SVG renderer, the `<rhylthyme-timeline>` player
+element and the validator, with zero dependencies and TypeScript types)
+and the hosted MCP server at
 `mcp.rhylthyme.com`. Pick the section that matches what you need:
 
 | You want | Use | Runs |
@@ -12,9 +13,10 @@ element, zero dependencies) and the hosted MCP server at
 | A picture of the schedule | [Static chart](#2-static-chart) | browser or Node |
 | Start and end times to drive your own UI | [Timings only](#3-timings-only) | browser or Node |
 | Validation, analysis or a shareable link from your server | [Hosted service](#4-hosted-service-from-a-backend) | your backend |
+| The same validation and analysis with no server | [In the browser](#5-validate-and-analyze-in-the-browser) | browser or Node |
 
-The examples load the package from jsDelivr, pinned to `2.0.0-beta.5`.
-In a bundled app, `npm install @rhylthyme/timeline@2.0.0-beta.5` instead.
+The examples load the package from jsDelivr, pinned to `2.0.0-beta.7`.
+In a bundled app, `npm install @rhylthyme/timeline@2.0.0-beta.7` instead.
 Each HTML snippet runs as-is when saved to an empty `.html` file and opened
 in a browser.
 
@@ -22,11 +24,12 @@ in a browser.
 
 Two script tags (the engine first, then the element) and one tag:
 
+<!-- snippet: player-html -->
 ```html
 <!doctype html>
 <meta charset="utf-8">
-<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.5/src/index.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.5/src/element.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.7/src/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.7/src/element.js"></script>
 
 <rhylthyme-timeline
   src="https://raw.githubusercontent.com/rhylthyme/rhylthyme/main/examples/recipe/birthday-party.json"
@@ -35,8 +38,8 @@ Two script tags (the engine first, then the element) and one tag:
 <script>
   const el = document.querySelector('rhylthyme-timeline');
   el.addEventListener('rt-load', () => console.log('loaded', el.timings));
-  el.addEventListener('rt-step-start', (e) => console.log('started', e.detail.stepId, 'at', e.detail.time));
-  el.addEventListener('rt-step-complete', (e) => console.log('done', e.detail.stepId, 'at', e.detail.time));
+  el.addEventListener('rt-step-began', (e) => console.log('began', e.detail.stepId, 'at', e.detail.time, 'by', e.detail.by));
+  el.addEventListener('rt-step-ended', (e) => console.log('ended', e.detail.stepId, 'at', e.detail.time, 'by', e.detail.by));
   el.addEventListener('rt-complete', (e) => console.log('all done at', e.detail.time));
 </script>
 ```
@@ -59,36 +62,36 @@ paused), `startStep(id)`, `completeStep(id)`. Read-only properties:
 `currentTime`, `status`, `timings`, `stepStates`.
 
 Events bubble and cross the shadow boundary; times are seconds from the
-start of the program, in `event.detail.time`:
+start of the program. To follow a run, listen to `rt-step-began` and
+`rt-step-ended`: they fire once per step per run, for every step, with
+what caused each transition (`by`). [Player events](player-events.md)
+lists every event and the rules for dropped runs, seeking and stopping.
 
 | Event | When | `detail` |
 |---|---|---|
 | `rt-load` | the program is loaded and planned | `program` |
 | `rt-start`, `rt-pause`, `rt-tick` | playback starts, pauses, advances | `time` |
-| `rt-stop` | playback is stopped | |
-| `rt-step-start` | a person starts a step that waits for them: a manual gate or a negative-offset hand-off (its *Start* button, or `startStep(id)`). Steps that start on their own do not fire it; read `stepStates` on `rt-tick` for those. | `stepId`, `time` |
-| `rt-step-complete` | a step that waits for a person is finished (*Done*, or `completeStep(id)`), or a variable step reaches its maximum | `stepId`, `time`, `automatic` |
+| `rt-step-began` | any step begins (once per run) | `stepId`, `time`, `by` |
+| `rt-step-ended` | any step ends (once per run) | `stepId`, `time`, `by` |
+| `rt-seek` | `seek()` moved the playhead | `from`, `to` |
 | `rt-complete` | every step is done | `time` |
+| `rt-stop` | playback is stopped | |
+| `rt-run-record` | once per run: the run record | `record`, `outcome` |
+
+`rt-step-start` and `rt-step-complete` still fire, but only for steps a
+person starts or the player finishes; see
+[Older step events](player-events.md#older-step-events).
 
 ### In React
 
 The element is a standard Web Component, so React needs no wrapper
-package. `element.js` reads the engine from `window.Rhylthyme`, which a
-bundler does not set (it imports the engine as a module), so put it there
-first in a small setup module:
+package: import it once and it registers itself. A component that sets
+the program as a property and forwards two events works in React 18 and
+19:
 
-```js
-// rhylthyme-setup.js
-import Rhylthyme from '@rhylthyme/timeline';
-window.Rhylthyme = Rhylthyme;
-```
-
-Then a component that sets the program as a property and forwards two
-events. It works in React 18 and 19:
-
+<!-- snippet: react-component -->
 ```jsx
 import { useEffect, useRef } from 'react';
-import './rhylthyme-setup.js';           // must come before the element
 import '@rhylthyme/timeline/element';   // registers <rhylthyme-timeline>
 
 export function RhylthymeTimeline({ program, speed = 1, onStepComplete, onComplete }) {
@@ -114,17 +117,20 @@ export function RhylthymeTimeline({ program, speed = 1, onStepComplete, onComple
 
 Use it as `<RhylthymeTimeline program={program} onComplete={() => ...} />`.
 Without a bundler, load the two script tags from section 1 in your HTML
-and drop the three imports.
+and drop the element import. In TypeScript, the package's types give
+`document.querySelector('rhylthyme-timeline')` the element's methods and
+typed `rt-*` events.
 
 ## 2. Static chart
 
 In the browser, `renderTimeline(container, program, options)` draws the
 same SVG the CLI's `rhylthyme render` writes:
 
+<!-- snippet: static-chart-html -->
 ```html
 <!doctype html>
 <meta charset="utf-8">
-<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.5/src/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.7/src/index.js"></script>
 
 <div id="chart"></div>
 
@@ -138,8 +144,9 @@ same SVG the CLI's `rhylthyme render` writes:
 ```
 
 In Node, `renderTimelineSvg(program, options)` returns the SVG as a string
-(`npm install @rhylthyme/timeline@2.0.0-beta.5`):
+(`npm install @rhylthyme/timeline@2.0.0-beta.7`):
 
+<!-- snippet: static-chart-node -->
 ```js
 const fs = require('fs');
 const { renderTimelineSvg } = require('@rhylthyme/timeline');
@@ -148,9 +155,8 @@ const program = JSON.parse(fs.readFileSync('birthday-party.json', 'utf8'));
 fs.writeFileSync('birthday-party.svg', renderTimelineSvg(program, { style: 'publication' }));
 ```
 
-The module is UMD: `require()` gives every function by name, and an ES
-module import gives them on the default export
-(`import Rhylthyme from '@rhylthyme/timeline'`). Options include `style`
+`require()` and ES module imports both give every function by name
+(`import { renderTimelineSvg } from '@rhylthyme/timeline'`). Options include `style`
 (`classic`, `web`, `publication`), `palette`, `colorBy` (`track` or `task`),
 `startAt` (wall-clock axis), `legend`, `title` and `width`; the full table
 is in the [package README](https://github.com/rhylthyme/rhylthyme-timeline#3-the-static-svg-rendertimelinesvg-node-and-rendertimeline-browser).
@@ -160,10 +166,11 @@ is in the [package README](https://github.com/rhylthyme/rhylthyme-timeline#3-the
 `computeStepTimings(program)` resolves every trigger and returns start and
 end seconds per step, for drawing your own UI or scheduling notifications:
 
+<!-- snippet: timings-html -->
 ```html
 <!doctype html>
 <meta charset="utf-8">
-<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.5/src/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.7/src/index.js"></script>
 
 <pre id="out"></pre>
 
@@ -212,9 +219,17 @@ send CORS headers, so call it from your server, not from page JavaScript.
 | `visualize_schedule` | `program` | `url` (a public live-timeline link), `shareId`, `imageUrl`, `makespanSeconds` |
 
 `visualize_schedule` publishes: anyone with the link can open the timeline.
+Each finding in `errors` and `warnings` has a `code`; the
+[finding codes reference](finding-codes.md) explains the codes, with an
+example and a fix. It lists the codes of the package's validator
+([section 5](#5-validate-and-analyze-in-the-browser)); the hosted server
+still runs its own copy, which also reports a few older structure codes
+that are not listed there (`missing_program_id`, `missing_step_id` and
+the like, where the package reports `schema_required`).
 
 With curl:
 
+<!-- snippet: mcp-curl -->
 ```bash
 curl -s https://mcp.rhylthyme.com/mcp \
   -H 'Content-Type: application/json' \
@@ -231,6 +246,7 @@ curl -s https://mcp.rhylthyme.com/mcp \
 
 With `fetch` (Node 18 or newer, or any server runtime with `fetch`):
 
+<!-- snippet: mcp-fetch -->
 ```js
 async function rhylthyme(tool, args) {
   const res = await fetch('https://mcp.rhylthyme.com/mcp', {
@@ -265,3 +281,110 @@ console.log(plan.makespanSeconds, plan.steps.map((s) => [s.name, s.startAt]));
 Save it as `rhylthyme.mjs` and run `node rhylthyme.mjs`. Every tool,
 including the catalog search and account tools, is listed in the
 [MCP server reference](../web-app/mcp.md).
+
+## 5. Validate and analyze in the browser
+
+The validator and analyzer behind `validate_program` and
+`analyze_schedule` also ship in the package, as
+`@rhylthyme/timeline/schedule`, so a page can check a program and plan it
+without calling any server. The findings and `fix` hints follow the hosted
+tools', and every code this validator reports is in the
+[finding codes reference](finding-codes.md). The hosted server still runs
+its own copy, whose codes differ in places (it reports
+`missing_program_id` where this one reports `schema_required`, for one).
+In a page, `browser/schedule.js` is one script
+(about 470 KB, most of it the catalogue of lab instruments it checks)
+that sets `window.RhylthymeSchedule`:
+
+<!-- snippet: schedule-browser -->
+```html
+<!doctype html>
+<meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.7/browser/schedule.js"></script>
+
+<pre id="out"></pre>
+
+<script>
+  const program = {
+    schemaVersion: '0.1.0',
+    programId: 'tea',
+    name: 'Tea and toast',
+    tracks: [
+      { trackId: 'tea', name: 'Tea', steps: [
+        { stepId: 'boil', name: 'Boil water', startTrigger: { type: 'programStart' },
+          duration: { type: 'fixed', seconds: 180 }, task: 'kettle' },
+        { stepId: 'steep', name: 'Steep', startTrigger: { type: 'afterStep', stepId: 'boil' },
+          duration: { type: 'fixed', seconds: '4m' } },
+      ] },
+      { trackId: 'toast', name: 'Toast', steps: [
+        { stepId: 'toast', name: 'Toast bread', startTrigger: { type: 'afterStep', stepId: 'boil', offsetSeconds: '-2m' },
+          duration: { type: 'fixed', seconds: 150 }, task: 'toaster' },
+      ] },
+    ],
+    resourceConstraints: [{ task: 'kettle', maxConcurrent: 1 }],
+  };
+
+  const { validateProgram, analyzeSchedule } = RhylthymeSchedule;
+  const lines = [];
+
+  const check = validateProgram(program);
+  lines.push('valid: ' + check.valid);
+  for (const e of check.errors) lines.push(`${e.code}: ${e.message}\n  fix: ${e.fix}`);
+
+  // Fix what it reported, then plan backwards from a finish time.
+  program.resourceConstraints.push({ task: 'toaster', maxConcurrent: 1 });
+  const plan = analyzeSchedule(program, { finishAt: '2026-11-26T08:00:00Z' });
+  lines.push('valid now: ' + validateProgram(program).valid);
+  lines.push('takes ' + plan.makespan + '; critical path: ' + plan.criticalPath.join(' → '));
+  for (const s of plan.steps) lines.push(`${s.startAt}  ${s.name}`);
+
+  document.getElementById('out').textContent = lines.join('\n');
+</script>
+```
+
+It prints:
+
+<!-- snippet: schedule-browser-output -->
+```text
+valid: false
+task_not_constrained: Task "toaster" is used by steps but has no resourceConstraint.
+  fix: Add {task:"toaster", maxConcurrent:N}. Every task used in a step needs a matching constraint.
+valid now: true
+takes 7m; critical path: boil → steep
+2026-11-26T07:53:00.000Z  Boil water
+2026-11-26T07:54:00.000Z  Toast bread
+2026-11-26T07:56:00.000Z  Steep
+```
+
+In a bundled app or in Node, import it instead; the functions are typed:
+
+<!-- snippet: schedule-esm-import -->
+```js
+import { validateProgram, analyzeSchedule } from '@rhylthyme/timeline/schedule';
+```
+
+`analyzeSchedule` also takes `startAt` instead of `finishAt`, and
+`history` (recorded runs) to add predicted durations. The result has
+`makespanSeconds`, `criticalPath`, `bindingConstraints`,
+`resourceConflicts` (each with a `fix`), `steps` and `tracks`.
+
+The module also exports `findingCodes`, the catalogue the
+[finding codes reference](finding-codes.md) is generated from: per code its
+severity, summary, explanation, an example and the fix, so an app can show
+more than the one-line message:
+
+<!-- snippet: finding-codes-explain -->
+```js
+import { validateProgram, findingCodes } from '@rhylthyme/timeline/schedule';
+
+for (const f of validateProgram(program).errors) {
+  const about = findingCodes.codes[f.code];
+  console.log(`${f.code}: ${f.message}\n  ${about.explanation}\n  fix: ${f.fix}`);
+}
+```
+
+The JavaScript validator and the Python one in the `rhylthyme` package
+are tested against each other on every example program, so a program
+this page accepts is one `rhylthyme validate` accepts. One rule differs
+today: a task without a resource constraint is an error here but only a
+`--strict` error in Python.
