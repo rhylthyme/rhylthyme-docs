@@ -527,7 +527,7 @@ before extracting helps, and relationships are the weak component. The
 evaluation harness in `rhylthyme` (`rhylthyme eval-prompts`)
 scores both this structure and the previous single-message prompt
 against an expert gold set. The measured numbers live in exactly one
-place: [rhylthyme's README, "Evaluating prompts"](https://github.com/rhylthyme/rhylthyme#evaluating-prompts).
+place: [Evaluating prompts](../development/evaluating-prompts.md).
 
 ## Example Usage
 

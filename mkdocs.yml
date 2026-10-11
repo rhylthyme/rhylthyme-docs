@@ -46,6 +46,8 @@ nav:
     - Concepts: getting-started/concepts.md
     - Quick Start: getting-started/quick-start.md
     - Examples: getting-started/examples.md
+    - Getting the Examples: getting-started/getting-the-examples.md
+    - rhylthyme and rhylthyme-mcp: getting-started/rhylthyme-and-rhylthyme-mcp.md
     - Glossary: getting-started/glossary.md
   - Web App:
     - Overview: web-app/index.md
@@ -59,6 +61,8 @@ nav:
   - Development:
     - Installation: development/installation.md
     - CLI Commands: development/cli.md
+    - Command Reference: development/command-reference.md
+    - Evaluating Prompts: development/evaluating-prompts.md
     - Program Schema: development/schema.md
     - Environment Schema: development/environment-schema.md
     - Runs Schema: development/runs-schema.md
