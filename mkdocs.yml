@@ -68,6 +68,7 @@ nav:
     - Runs Schema: development/runs-schema.md
     - Lab Instruments: development/instruments.md
     - Embed Rhylthyme in your app: development/embedding.md
+    - Player events: development/player-events.md
     - Architecture: development/architecture.md
     - Reports:
       - Duration evaluation (catalog): development/reports/duration-evaluation-catalog.md

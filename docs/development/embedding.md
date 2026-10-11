@@ -15,8 +15,8 @@ and the hosted MCP server at
 | Validation, analysis or a shareable link from your server | [Hosted service](#4-hosted-service-from-a-backend) | your backend |
 | The same validation and analysis with no server | [In the browser](#5-validate-and-analyze-in-the-browser) | browser or Node |
 
-The examples load the package from jsDelivr, pinned to `2.0.0-beta.6`.
-In a bundled app, `npm install @rhylthyme/timeline@2.0.0-beta.6` instead.
+The examples load the package from jsDelivr, pinned to `2.0.0-beta.7`.
+In a bundled app, `npm install @rhylthyme/timeline@2.0.0-beta.7` instead.
 Each HTML snippet runs as-is when saved to an empty `.html` file and opened
 in a browser.
 
@@ -27,8 +27,8 @@ Two script tags (the engine first, then the element) and one tag:
 ```html
 <!doctype html>
 <meta charset="utf-8">
-<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.6/src/index.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.6/src/element.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.7/src/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.7/src/element.js"></script>
 
 <rhylthyme-timeline
   src="https://raw.githubusercontent.com/rhylthyme/rhylthyme/main/examples/recipe/birthday-party.json"
@@ -37,8 +37,8 @@ Two script tags (the engine first, then the element) and one tag:
 <script>
   const el = document.querySelector('rhylthyme-timeline');
   el.addEventListener('rt-load', () => console.log('loaded', el.timings));
-  el.addEventListener('rt-step-start', (e) => console.log('started', e.detail.stepId, 'at', e.detail.time));
-  el.addEventListener('rt-step-complete', (e) => console.log('done', e.detail.stepId, 'at', e.detail.time));
+  el.addEventListener('rt-step-began', (e) => console.log('began', e.detail.stepId, 'at', e.detail.time, 'by', e.detail.by));
+  el.addEventListener('rt-step-ended', (e) => console.log('ended', e.detail.stepId, 'at', e.detail.time, 'by', e.detail.by));
   el.addEventListener('rt-complete', (e) => console.log('all done at', e.detail.time));
 </script>
 ```
@@ -61,16 +61,25 @@ paused), `startStep(id)`, `completeStep(id)`. Read-only properties:
 `currentTime`, `status`, `timings`, `stepStates`.
 
 Events bubble and cross the shadow boundary; times are seconds from the
-start of the program, in `event.detail.time`:
+start of the program. To follow a run, listen to `rt-step-began` and
+`rt-step-ended`: they fire once per step per run, for every step, with
+what caused each transition (`by`). [Player events](player-events.md)
+lists every event and the rules for dropped runs, seeking and stopping.
 
 | Event | When | `detail` |
 |---|---|---|
 | `rt-load` | the program is loaded and planned | `program` |
 | `rt-start`, `rt-pause`, `rt-tick` | playback starts, pauses, advances | `time` |
-| `rt-stop` | playback is stopped | |
-| `rt-step-start` | a person starts a step that waits for them: a manual gate or a negative-offset hand-off (its *Start* button, or `startStep(id)`). Steps that start on their own do not fire it; read `stepStates` on `rt-tick` for those. | `stepId`, `time` |
-| `rt-step-complete` | a step that waits for a person is finished (*Done*, or `completeStep(id)`), or a variable step reaches its maximum | `stepId`, `time`, `automatic` |
+| `rt-step-began` | any step begins (once per run) | `stepId`, `time`, `by` |
+| `rt-step-ended` | any step ends (once per run) | `stepId`, `time`, `by` |
+| `rt-seek` | `seek()` moved the playhead | `from`, `to` |
 | `rt-complete` | every step is done | `time` |
+| `rt-stop` | playback is stopped | |
+| `rt-run-record` | once per run: the run record | `record`, `outcome` |
+
+`rt-step-start` and `rt-step-complete` still fire, but only for steps a
+person starts or the player finishes; see
+[Older step events](player-events.md#older-step-events).
 
 ### In React
 
@@ -118,7 +127,7 @@ same SVG the CLI's `rhylthyme render` writes:
 ```html
 <!doctype html>
 <meta charset="utf-8">
-<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.6/src/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.7/src/index.js"></script>
 
 <div id="chart"></div>
 
@@ -132,7 +141,7 @@ same SVG the CLI's `rhylthyme render` writes:
 ```
 
 In Node, `renderTimelineSvg(program, options)` returns the SVG as a string
-(`npm install @rhylthyme/timeline@2.0.0-beta.6`):
+(`npm install @rhylthyme/timeline@2.0.0-beta.7`):
 
 ```js
 const fs = require('fs');
@@ -156,7 +165,7 @@ end seconds per step, for drawing your own UI or scheduling notifications:
 ```html
 <!doctype html>
 <meta charset="utf-8">
-<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.6/src/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.7/src/index.js"></script>
 
 <pre id="out"></pre>
 
@@ -272,7 +281,7 @@ that sets `window.RhylthymeSchedule`:
 ```html
 <!doctype html>
 <meta charset="utf-8">
-<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.6/browser/schedule.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.7/browser/schedule.js"></script>
 
 <pre id="out"></pre>
 
