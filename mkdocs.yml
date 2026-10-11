@@ -63,6 +63,7 @@ nav:
     - Environment Schema: development/environment-schema.md
     - Runs Schema: development/runs-schema.md
     - Lab Instruments: development/instruments.md
+    - Embed Rhylthyme in your app: development/embedding.md
     - Architecture: development/architecture.md
     - Reports:
       - Duration evaluation (catalog): development/reports/duration-evaluation-catalog.md
