@@ -132,7 +132,9 @@ curl -s https://mcp.rhylthyme.com/mcp \
 ```
 
 The result's `structuredContent.url` is the live timeline. Call
-`validate_program` the same way first and fix what it reports; call
+`validate_program` the same way first and fix what it reports (the
+[finding codes reference](../development/finding-codes.md) explains each
+code); call
 `analyze_schedule` with `finishAt` for clock times; `tools/list` lists
 everything. The program format is on the [schema page](../development/schema.md),
 and `resources/read` of `rhylthyme://guide/authoring` returns a one-page guide.
@@ -184,7 +186,7 @@ rhylthyme.com.
 
 | Tool | What it does | Account |
 |---|---|---|
-| `validate_program` | Check a program: ids, dangling or circular dependencies, overlapping steps, missing resource limits, durations; each finding has a fix | no |
+| `validate_program` | Check a program: ids, dangling or circular dependencies, overlapping steps, missing resource limits, durations; each finding has a code and a fix ([every code](../development/finding-codes.md)) | no |
 | `analyze_schedule` | Start and end of every step, total length, critical path, resource conflicts, slack; clock times from `finishAt` / `startAt` | no |
 | `visualize_schedule` | Publish a program as a live, shareable timeline and return its URL, an ASCII Gantt and an itinerary | no |
 | `preview_timeline` | A static Gantt image of a program (planned against actual with a run) | no |
