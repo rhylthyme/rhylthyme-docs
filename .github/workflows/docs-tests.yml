@@ -1,0 +1,52 @@
+name: Docs tests
+
+# Builds the site strictly and runs every test under tests/: the docs snippets
+# (tests/snippets/, see tests/README.md) and any other *.test.js.
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0   # git-revision-date-localized reads the history
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install MkDocs
+      run: pip install -r requirements.txt
+
+    # Before npm test: tests/snippets/site-markers.test.js checks site/.
+    - name: Build documentation (strict)
+      run: mkdocs build --strict
+
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+
+    - name: Install test dependencies
+      run: npm ci
+
+    - name: Install Chromium
+      run: npx playwright install --with-deps chromium
+
+    - name: Run tests
+      run: npm test
+      env:
+        RHYLTHYME_LIVE_MCP: '1'

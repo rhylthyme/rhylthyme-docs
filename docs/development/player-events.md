@@ -12,6 +12,7 @@ so you can listen on the element or on any ancestor. Every time in an
 event is in **program-clock seconds**: seconds since the program's start
 as the player counts them, not wall-clock time and not milliseconds.
 
+<!-- snippet: events-listen -->
 ```js
 const el = document.querySelector('rhylthyme-timeline');
 el.addEventListener('rt-step-began', (e) => console.log(e.detail.stepId, 'began at', e.detail.time, 'by', e.detail.by));
@@ -219,6 +220,7 @@ use `rt-step-began` and `rt-step-ended`.
 
 ## Example: an ELN that ticks off its own steps
 
+<!-- snippet: eln-example -->
 ```js
 // stepIds already copied into the ELN, e.g. with itinerary(program)
 const eln = new Map();   // stepId -> the ELN's own step id

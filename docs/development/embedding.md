@@ -24,6 +24,7 @@ in a browser.
 
 Two script tags (the engine first, then the element) and one tag:
 
+<!-- snippet: player-html -->
 ```html
 <!doctype html>
 <meta charset="utf-8">
@@ -88,6 +89,7 @@ package: import it once and it registers itself. A component that sets
 the program as a property and forwards two events works in React 18 and
 19:
 
+<!-- snippet: react-component -->
 ```jsx
 import { useEffect, useRef } from 'react';
 import '@rhylthyme/timeline/element';   // registers <rhylthyme-timeline>
@@ -124,6 +126,7 @@ typed `rt-*` events.
 In the browser, `renderTimeline(container, program, options)` draws the
 same SVG the CLI's `rhylthyme render` writes:
 
+<!-- snippet: static-chart-html -->
 ```html
 <!doctype html>
 <meta charset="utf-8">
@@ -143,6 +146,7 @@ same SVG the CLI's `rhylthyme render` writes:
 In Node, `renderTimelineSvg(program, options)` returns the SVG as a string
 (`npm install @rhylthyme/timeline@2.0.0-beta.7`):
 
+<!-- snippet: static-chart-node -->
 ```js
 const fs = require('fs');
 const { renderTimelineSvg } = require('@rhylthyme/timeline');
@@ -162,6 +166,7 @@ is in the [package README](https://github.com/rhylthyme/rhylthyme-timeline#3-the
 `computeStepTimings(program)` resolves every trigger and returns start and
 end seconds per step, for drawing your own UI or scheduling notifications:
 
+<!-- snippet: timings-html -->
 ```html
 <!doctype html>
 <meta charset="utf-8">
@@ -217,6 +222,7 @@ send CORS headers, so call it from your server, not from page JavaScript.
 
 With curl:
 
+<!-- snippet: mcp-curl -->
 ```bash
 curl -s https://mcp.rhylthyme.com/mcp \
   -H 'Content-Type: application/json' \
@@ -233,6 +239,7 @@ curl -s https://mcp.rhylthyme.com/mcp \
 
 With `fetch` (Node 18 or newer, or any server runtime with `fetch`):
 
+<!-- snippet: mcp-fetch -->
 ```js
 async function rhylthyme(tool, args) {
   const res = await fetch('https://mcp.rhylthyme.com/mcp', {
@@ -278,6 +285,7 @@ same as the hosted tools'. In a page, `browser/schedule.js` is one script
 (about 470 KB, most of it the catalogue of lab instruments it checks)
 that sets `window.RhylthymeSchedule`:
 
+<!-- snippet: schedule-browser -->
 ```html
 <!doctype html>
 <meta charset="utf-8">
@@ -325,6 +333,7 @@ that sets `window.RhylthymeSchedule`:
 
 It prints:
 
+<!-- snippet: schedule-browser-output -->
 ```text
 valid: false
 task_not_constrained: Task "toaster" is used by steps but has no resourceConstraint.
@@ -338,6 +347,7 @@ takes 7m; critical path: boil → steep
 
 In a bundled app or in Node, import it instead; the functions are typed:
 
+<!-- snippet: schedule-esm-import -->
 ```js
 import { validateProgram, analyzeSchedule } from '@rhylthyme/timeline/schedule';
 ```
