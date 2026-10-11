@@ -12,8 +12,9 @@ npm test
 
 ## Docs snippets
 
-Every fenced code block in the pages listed in `tests/snippets.config` has
-an HTML comment right before it (blank lines in between are fine):
+Every fenced code block in the pages listed in `tests/snippets.config`,
+including blocks in lists, admonitions and blockquotes, has an HTML comment
+right before it (blank lines in between are fine):
 
 ```markdown
 <!-- snippet: player-html -->
@@ -23,16 +24,21 @@ an HTML comment right before it (blank lines in between are fine):
 <!-- snippet: skip — pseudo-code, calls functions the reader writes -->
 ```
 
-- `<!-- snippet: <id> -->`: a test in `tests/snippets/` runs this block. It
+- `<!-- snippet: <id> -->`: a test under `tests/` runs this block. It
   gets the code with `snippet('<id>')` (from `tests/snippets/lib/docs.js`),
   so the page is the only copy. Ids are lowercase letters, digits and
   dashes, unique across the configured pages.
 - `<!-- snippet: skip — <reason> -->`: the block is illustrative. The
-  reason is required.
+  reason is required. The separator is an em or en dash, or a hyphen with
+  spaces around it; `skip-list` is an id, not a skip.
 
 `tests/snippets/coverage.test.js` fails on an unmarked block, a marker not
-in front of a block, a duplicate id, an id no test file calls
-`snippet('<id>')` with, and a `snippet('<id>')` with no marked block. The
+in front of a block, a duplicate id, an id no `.js` file under `tests/` calls
+`snippet('<id>')` with, and a `snippet('<id>')` with no marked block. A
+call counts only in code that can run: `tests/snippets/lib/coverage.js`
+runs each file through esbuild first, which drops comments, dead branches
+and functions nothing calls. An id built at runtime (`snippet(name)`) is not
+seen; write the literal id. The
 markers are comments, so the site does not show them;
 `site-markers.test.js` checks a `site/` built by `mkdocs build`.
 

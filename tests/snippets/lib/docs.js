@@ -6,7 +6,8 @@
 //   <!-- snippet: <id> -->              the block is run by a test that calls snippet('<id>')
 //   <!-- snippet: skip — <reason> -->   the block is illustrative; the reason is required
 //
-// The marker is the last non-blank line before the opening fence.
+// The marker is the last non-blank line before the opening fence. Fences
+// inside blockquotes count too (the marker may be inside or before the quote).
 
 const fs = require('fs');
 const path = require('path');
@@ -16,7 +17,10 @@ const CONFIG = path.join(ROOT, 'tests', 'snippets.config');
 
 const MARKER = /^<!--\s*snippet:\s*(.*?)\s*-->$/;
 const ID = /^[a-z0-9][a-z0-9-]*$/;
-const SKIP = /^skip(?:\s*[—–-]+\s*(\S.*))?$/;
+// "skip", then an em or en dash, or a hyphen with space on both sides, then
+// the reason. "skip-list" is an id, not a skip.
+const SKIP = /^skip(?:(?:\s*[—–]\s*|\s+-+\s+)(\S.*))?$/;
+const QUOTE = /^ {0,3}> ?/;
 
 function configPages() {
   return fs
@@ -37,10 +41,25 @@ function parseMarker(text) {
   return { kind: 'id', id: text };
 }
 
+// Strips up to `max` blockquote markers ("> ") off the front of a line.
+function unquote(line, max = Infinity) {
+  let depth = 0;
+  while (depth < max && QUOTE.test(line)) {
+    line = line.replace(QUOTE, '');
+    depth++;
+  }
+  return { text: line, depth };
+}
+
 // Every fenced block of a page, with its marker, and every marker that is not
 // in front of a block.
 function parsePage(rel) {
-  const lines = fs.readFileSync(path.join(ROOT, rel), 'utf8').split('\n');
+  return parseText(rel, fs.readFileSync(path.join(ROOT, rel), 'utf8'));
+}
+
+function parseText(rel, text) {
+  const raw = text.split('\n');
+  const lines = raw.map((l) => unquote(l).text);
   const blocks = [];
   const orphanMarkers = [];
   let lastNonBlank = -1; // index of the last non-blank line outside a fence
@@ -56,11 +75,16 @@ function parsePage(rel) {
       continue;
     }
     const [, indent, fence, lang] = open;
+    // Lines inside the fence lose only the quote markers the opening fence had,
+    // so a code line starting with ">" keeps it.
+    const depth = unquote(raw[i]).depth;
+    const inner = (k) => unquote(raw[k], depth).text;
     const close = new RegExp(`^\\s*${fence[0] === '`' ? '`' : '~'}{${fence.length},}\\s*$`);
     let j = i + 1;
-    while (j < lines.length && !close.test(lines[j])) j++;
-    const code = lines
+    while (j < lines.length && !close.test(inner(j))) j++;
+    const code = raw
       .slice(i + 1, j)
+      .map((_, k) => inner(i + 1 + k))
       .map((l) => (l.startsWith(indent) ? l.slice(indent.length) : l.trimStart()))
       .join('\n');
     const prev = lastNonBlank >= 0 ? lines[lastNonBlank].trim() : '';
@@ -127,4 +151,4 @@ function pinnedVersion() {
   return [...seen.keys()][0];
 }
 
-module.exports = { ROOT, configPages, parsePage, parseMarker, allBlocks, snippet, pinnedVersion };
+module.exports = { ROOT, configPages, parsePage, parseText, parseMarker, allBlocks, snippet, pinnedVersion };

@@ -2,11 +2,13 @@
 // Every fenced code block in the pages of tests/snippets.config carries a
 // marker, and every snippet id is run by a test:
 //
-//   <!-- snippet: <id> -->              a test in tests/snippets/ calls snippet('<id>')
+//   <!-- snippet: <id> -->              a test under tests/ calls snippet('<id>')
 //   <!-- snippet: skip — <reason> -->   illustrative only, with the reason
 //
 // Fails on an unmarked block, a malformed or misplaced marker, a duplicate id,
-// an id no test runs, and a test asking for an id no page has.
+// an id no test runs, and a test asking for an id no page has. A call counts
+// only in code that can run (see lib/coverage.js): not in a comment, a dead
+// branch or a function nothing calls.
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
@@ -14,20 +16,9 @@ const fs = require('fs');
 const path = require('path');
 const { ROOT, allBlocks, configPages, pinnedVersion } = require('./lib/docs');
 const env = require('./lib/env');
+const { idsUsedByTests } = require('./lib/coverage');
 
 const where = (b) => `${b.page}:${b.line}`;
-
-// The ids the test files ask for: literal snippet('<id>') calls.
-function idsUsedByTests() {
-  const used = new Map();
-  const call = new RegExp(['snippet', String.raw`\(\s*['"]([^'"]+)['"]\s*\)`].join(''), 'g');
-  for (const f of fs.readdirSync(__dirname).filter((f) => f.endsWith('.test.js') && f !== path.basename(__filename))) {
-    for (const m of fs.readFileSync(path.join(__dirname, f), 'utf8').matchAll(call)) {
-      if (!used.has(m[1])) used.set(m[1], f);
-    }
-  }
-  return used;
-}
 
 test('the pages in tests/snippets.config exist', () => {
   const pages = configPages();
@@ -62,7 +53,7 @@ test('every snippet id is run by a test', () => {
   const used = idsUsedByTests();
   const untested = allBlocks()
     .blocks.filter((b) => b.marker && b.marker.id && !used.has(b.marker.id))
-    .map((b) => `${b.marker.id} (${where(b)}) is not run by any test in tests/snippets/`);
+    .map((b) => `${b.marker.id} (${where(b)}) is not run by any test under tests/`);
   assert.deepEqual(untested, []);
 });
 
