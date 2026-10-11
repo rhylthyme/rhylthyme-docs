@@ -219,6 +219,13 @@ send CORS headers, so call it from your server, not from page JavaScript.
 | `visualize_schedule` | `program` | `url` (a public live-timeline link), `shareId`, `imageUrl`, `makespanSeconds` |
 
 `visualize_schedule` publishes: anyone with the link can open the timeline.
+Each finding in `errors` and `warnings` has a `code`; the
+[finding codes reference](finding-codes.md) explains the codes, with an
+example and a fix. It lists the codes of the package's validator
+([section 5](#5-validate-and-analyze-in-the-browser)); the hosted server
+still runs its own copy, which also reports a few older structure codes
+that are not listed there (`missing_program_id`, `missing_step_id` and
+the like, where the package reports `schema_required`).
 
 With curl:
 
@@ -280,8 +287,12 @@ including the catalog search and account tools, is listed in the
 The validator and analyzer behind `validate_program` and
 `analyze_schedule` also ship in the package, as
 `@rhylthyme/timeline/schedule`, so a page can check a program and plan it
-without calling any server. The findings, codes and `fix` hints are the
-same as the hosted tools'. In a page, `browser/schedule.js` is one script
+without calling any server. The findings and `fix` hints follow the hosted
+tools', and every code this validator reports is in the
+[finding codes reference](finding-codes.md). The hosted server still runs
+its own copy, whose codes differ in places (it reports
+`missing_program_id` where this one reports `schema_required`, for one).
+In a page, `browser/schedule.js` is one script
 (about 470 KB, most of it the catalogue of lab instruments it checks)
 that sets `window.RhylthymeSchedule`:
 
@@ -356,6 +367,20 @@ import { validateProgram, analyzeSchedule } from '@rhylthyme/timeline/schedule';
 `history` (recorded runs) to add predicted durations. The result has
 `makespanSeconds`, `criticalPath`, `bindingConstraints`,
 `resourceConflicts` (each with a `fix`), `steps` and `tracks`.
+
+The module also exports `findingCodes`, the catalogue the
+[finding codes reference](finding-codes.md) is generated from: per code its
+severity, summary, explanation, an example and the fix, so an app can show
+more than the one-line message:
+
+```js
+import { validateProgram, findingCodes } from '@rhylthyme/timeline/schedule';
+
+for (const f of validateProgram(program).errors) {
+  const about = findingCodes.codes[f.code];
+  console.log(`${f.code}: ${f.message}\n  ${about.explanation}\n  fix: ${f.fix}`);
+}
+```
 
 The JavaScript validator and the Python one in the `rhylthyme` package
 are tested against each other on every example program, so a program
