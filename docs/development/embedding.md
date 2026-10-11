@@ -15,6 +15,12 @@ and the hosted MCP server at
 | Validation, analysis or a shareable link from your server | [Hosted service](#4-hosted-service-from-a-backend) | your backend |
 | The same validation and analysis with no server | [In the browser](#5-validate-and-analyze-in-the-browser) | browser or Node |
 
+To see the pieces working together, open
+[Potion Night at the Crooked Tower](../demo/potion-night/index.html), a toy
+app in one HTML file: a recipe book that validates and explains, a schedule
+planned back from midnight, the player, and a tower scene driven only by
+the step events. View its source.
+
 The examples load the package from jsDelivr, pinned to `2.0.0-beta.7`.
 In a bundled app, `npm install @rhylthyme/timeline@2.0.0-beta.7` instead.
 Each HTML snippet runs as-is when saved to an empty `.html` file and opened

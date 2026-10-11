@@ -63,3 +63,10 @@ React 18 and 19 are installed side by side as the aliases `react18`,
 `react-dom18`, `react19` and `react-dom19` (hence `legacy-peer-deps` in
 `.npmrc`); `react.test.js` bundles the documented component with esbuild
 once per version.
+
+## The demo
+
+`tests/demo.test.js` plays `docs/demo/potion-night/index.html` (the toy app
+linked from the embedding guide) end to end in Chromium against the pinned
+package, or the tarball: every station lights, every step is logged once,
+the night completes, and the cursed recipe is explained with `findingCodes`.

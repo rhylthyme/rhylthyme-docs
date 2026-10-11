@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Potion Night · a Rhylthyme toy app</title>
+<meta name="description" content="A toy app that embeds @rhylthyme/timeline: a wizard's apprentice brews three potions with one cauldron and one dragon.">
+<style>
+  :root {
+    --night: #1b1530; --ink: #f3eefc; --muted: #b8acd6; --panel: #261d44; --edge: #3d3266;
+    --gold: #f6c453; --glow: #a78bfa; --ok: #5eead4; --warn: #fbbf24; --bad: #fb7185;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: var(--ink); background: var(--night);
+    background-image: radial-gradient(circle at 15% 10%, #3b2a6b 0, transparent 40%),
+                      radial-gradient(circle at 85% 0%, #23345e 0, transparent 35%);
+    font: 16px/1.5 ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
+  a { color: var(--gold); }
+  header h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); margin: 0 0 4px; letter-spacing: .01em; }
+  header p { margin: 0; color: var(--muted); }
+  .stars { position: fixed; inset: 0; pointer-events: none; z-index: -1; opacity: .5;
+    background-image: radial-gradient(1px 1px at 20% 30%, #fff, transparent), radial-gradient(1px 1px at 70% 20%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 40% 70%, #fff, transparent), radial-gradient(1px 1px at 90% 60%, #fff, transparent),
+      radial-gradient(1px 1px at 10% 85%, #fff, transparent); }
+  section { background: var(--panel); border: 1px solid var(--edge); border-radius: var(--radius); padding: 16px; margin-top: 16px; }
+  h2 { font-size: 1.1rem; margin: 0 0 10px; color: var(--gold); }
+  .grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 860px) { .grid { grid-template-columns: 1.1fr .9fr; } }
+  .grid > section { margin-top: 0; }
+
+  .recipes { display: flex; flex-wrap: wrap; gap: 8px; }
+  button {
+    font: inherit; color: var(--night); background: var(--gold); border: 0; border-radius: 999px;
+    padding: 6px 14px; cursor: pointer; font-weight: 600;
+  }
+  button[aria-pressed="false"] { background: transparent; color: var(--ink); border: 1px solid var(--edge); }
+  button:focus-visible, select:focus-visible { outline: 2px solid var(--glow); outline-offset: 2px; }
+  .verdict { margin-top: 12px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--edge); }
+  .verdict.ok { border-color: var(--ok); }
+  .verdict.bad { border-color: var(--bad); }
+  .verdict ul { margin: 8px 0 0; padding-left: 18px; }
+  .verdict li { margin-bottom: 8px; }
+  .code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85em; color: var(--glow); }
+  .why { color: var(--muted); font-size: .9em; display: block; }
+  .sev-warning .code { color: var(--warn); }
+  .sev-error .code { color: var(--bad); }
+
+  .tower { display: grid; gap: 10px; grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 560px) { .tower { grid-template-columns: repeat(4, 1fr); } }
+  .station { border: 1px dashed var(--edge); border-radius: 12px; padding: 10px; text-align: center; min-height: 150px; transition: border-color .3s, background .3s; }
+  .station .who { font-size: 2.6rem; line-height: 1.2; display: inline-block; }
+  .station .label { font-weight: 700; }
+  .station .doing { color: var(--muted); font-size: .85em; min-height: 2.6em; }
+  .station.busy { border-style: solid; border-color: var(--glow); background: rgba(167, 139, 250, .12); }
+  .station.busy[data-task="cauldron"] .who { animation: bubble .9s ease-in-out infinite; }
+  .station.busy[data-task="dragon"] .who { animation: breathe .6s ease-in-out infinite alternate; }
+  .station.busy[data-task="apprentice"] .who { animation: bustle 1.2s ease-in-out infinite; }
+  .station.busy[data-task="person"] { border-color: var(--gold); background: rgba(246, 196, 83, .12); }
+  .station.busy[data-task="person"] .who { animation: hoot 1.4s ease-in-out infinite; }
+  @keyframes bubble { 50% { transform: translateY(-6px) scale(1.06); } }
+  @keyframes breathe { to { transform: rotate(-8deg) scale(1.1); filter: drop-shadow(0 0 10px #fb923c); } }
+  @keyframes bustle { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+  @keyframes hoot { 50% { transform: rotate(10deg); } }
+  @media (prefers-reduced-motion: reduce) { .station .who { animation: none !important; } }
+
+  .counters { display: flex; gap: 16px; margin-top: 10px; color: var(--muted); flex-wrap: wrap; }
+  .counters b { color: var(--ink); }
+  .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; color: var(--muted); }
+  select { font: inherit; background: var(--night); color: var(--ink); border: 1px solid var(--edge); border-radius: 8px; padding: 4px 8px; }
+  rhylthyme-timeline { --rt-bg: #fbf7ff; border-radius: 12px; overflow: hidden; color-scheme: light; }
+
+  ol.plan { margin: 0; padding-left: 0; list-style: none; max-height: 330px; overflow: auto; }
+  ol.plan li { display: grid; grid-template-columns: 5.6em 1fr; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--edge); }
+  ol.plan time { color: var(--gold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  ol.plan .track { color: var(--muted); font-size: .85em; display: block; }
+  ol.plan .gate { color: var(--gold); font-size: .85em; }
+  ol.plan li.done { opacity: .45; }
+  ol.plan li.now { background: rgba(167, 139, 250, .15); }
+
+  ol.log { margin: 0; padding: 0; list-style: none; max-height: 260px; overflow: auto; font-size: .92em; }
+  ol.log li { padding: 3px 0; border-bottom: 1px solid var(--edge); }
+  ol.log .t { color: var(--gold); font-variant-numeric: tabular-nums; margin-right: 6px; }
+  ol.log .by { font-family: ui-monospace, Menlo, monospace; font-size: .8em; color: var(--glow); margin-left: 4px; }
+  .hint { color: var(--muted); font-size: .9em; margin: 6px 0 0; }
+  footer { margin-top: 24px; color: var(--muted); font-size: .9em; }
+  footer code { color: var(--glow); }
+</style>
+</head>
+<body>
+<div class="stars" aria-hidden="true"></div>
+<main>
+  <header>
+    <h1>🌙 Potion Night at the Crooked Tower</h1>
+    <p>A toy app built on <a href="https://www.npmjs.com/package/@rhylthyme/timeline">@rhylthyme/timeline</a>.
+      One apprentice, one cauldron, one temperamental dragon, and three potions due by midnight.
+      <a href="../../development/embedding/">How it is embedded</a> ·
+      <a href="../../development/player-events/">Player events</a></p>
+  </header>
+
+  <section aria-labelledby="book-h">
+    <h2 id="book-h">📖 The recipe book</h2>
+    <div class="recipes" role="group" aria-label="Recipes">
+      <button type="button" data-recipe="potion-night" aria-pressed="true">Potion Night</button>
+      <button type="button" data-recipe="cursed" aria-pressed="false">The Cursed Recipe</button>
+    </div>
+    <div id="verdict" class="verdict" aria-live="polite"></div>
+  </section>
+
+  <section aria-labelledby="tower-h">
+    <h2 id="tower-h">🏰 The tower tonight</h2>
+    <div class="tower" id="tower">
+      <div class="station" data-task="cauldron"><span class="who" aria-hidden="true">🫕</span><div class="label">The cauldron</div><div class="doing">cold</div></div>
+      <div class="station" data-task="dragon"><span class="who" aria-hidden="true">🐉</span><div class="label">Glimmer the dragon</div><div class="doing">napping</div></div>
+      <div class="station" data-task="apprentice"><span class="who" aria-hidden="true">🧙</span><div class="label">The apprentice</div><div class="doing">twiddling thumbs</div></div>
+      <div class="station" data-task="person"><span class="who" aria-hidden="true">🦉</span><div class="label">Waiting for you</div><div class="doing">nothing, yet</div></div>
+    </div>
+    <div class="counters" aria-live="polite">
+      <span>In progress: <b id="n-running">0</b></span>
+      <span>Done: <b id="n-done">0</b></span>
+      <span>Status: <b id="status">resting</b></span>
+    </div>
+  </section>
+
+  <div class="grid" style="margin-top:16px">
+    <section aria-labelledby="player-h">
+      <h2 id="player-h">⏳ Brew along</h2>
+      <rhylthyme-timeline id="player" mode="player" time-format="minutes" speed="30"></rhylthyme-timeline>
+      <p class="hint">The night runs at 30× (change <em>Spell speed</em> in the player). Press <em>Begin the brewing</em>. Some steps wait for you: press <em>Now</em> when
+        Professor Hoot reaches the window, and <em>That's done</em> when the frogs are caught or the
+        elixir stops giggling. The tower and the schedule follow along.</p>
+    </section>
+
+    <section aria-labelledby="plan-h">
+      <h2 id="plan-h">🕯️ Tonight's schedule, done by midnight</h2>
+      <ol class="plan" id="plan"></ol>
+    </section>
+  </div>
+
+  <section aria-labelledby="log-h">
+    <h2 id="log-h">📜 The spell log</h2>
+    <ol class="log" id="log" aria-live="polite"></ol>
+  </section>
+
+  <footer>
+    <p>Everything on this page runs in your browser from three script tags: the engine
+      (<code>src/index.js</code>), the player (<code>src/element.js</code>) and the validator
+      (<code>browser/schedule.js</code>). The recipe book uses <code>validateProgram</code> and
+      <code>findingCodes</code>; the schedule is <code>itinerary(program, { finishAt })</code>; the
+      tower and the log listen only to <code>rt-step-began</code> and <code>rt-step-ended</code>,
+      and know nothing about potions: a station lights up for whatever step holds its resource.
+      View the source; it is one file.</p>
+  </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.7/src/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.7/src/element.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rhylthyme/timeline@2.0.0-beta.7/browser/schedule.js"></script>
+
+<script type="application/json" id="potion-night">
+{
+  "schemaVersion": "0.3.0-alpha",
+  "programId": "potion-night",
+  "name": "Potion Night at the Crooked Tower",
+  "description": "One apprentice, one cauldron, one temperamental dragon, and three potions due by midnight.",
+  "actors": 2,
+  "resourceConstraints": [
+    {
+      "task": "cauldron",
+      "maxConcurrent": 1,
+      "description": "There is exactly one cauldron and it has opinions"
+    },
+    {
+      "task": "dragon",
+      "maxConcurrent": 1,
+      "description": "Glimmer will only breathe on one thing at a time"
+    },
+    {
+      "task": "apprentice",
+      "maxConcurrent": 2,
+      "description": "Two hands, no more"
+    }
+  ],
+  "tracks": [
+    {
+      "trackId": "tonic",
+      "name": "Moonlight Tonic",
+      "steps": [
+        {
+          "stepId": "gather-moonbeams",
+          "name": "Gather moonbeams from the balcony",
+          "task": "apprentice",
+          "startTrigger": {
+            "type": "programStart"
+          },
+          "duration": {
+            "type": "fixed",
+            "seconds": "2m"
+          }
+        },
+        {
+          "stepId": "brew-tonic",
+          "name": "Brew the tonic",
+          "task": "cauldron",
+          "startTrigger": {
+            "type": "afterStep",
+            "stepId": "gather-moonbeams"
+          },
+          "duration": {
+            "type": "fixed",
+            "seconds": "4m"
+          },
+          "alerts": [
+            {
+              "event": "end",
+              "offsetSeconds": "-1m",
+              "message": "The tonic is turning silver: one minute left"
+            }
+          ]
+        },
+        {
+          "stepId": "bottle-tonic",
+          "name": "Bottle the tonic (it hums)",
+          "task": "apprentice",
+          "startTrigger": {
+            "type": "afterStep",
+            "stepId": "brew-tonic"
+          },
+          "duration": {
+            "type": "fixed",
+            "seconds": "1m"
+          }
+        }
+      ]
+    },
+    {
+      "trackId": "elixir",
+      "name": "Frog-Leap Elixir",
+      "steps": [
+        {
+          "stepId": "catch-frogs",
+          "name": "Catch three polite frogs",
+          "task": "apprentice",
+          "startTrigger": {
+            "type": "programStart"
+          },
+          "duration": {
+            "type": "variable",
+            "minSeconds": "1m",
+            "maxSeconds": "4m",
+            "defaultSeconds": "2m",
+            "triggerName": "frogs-caught"
+          }
+        },
+        {
+          "stepId": "toast-flies",
+          "name": "Have Glimmer toast the flies",
+          "task": "dragon",
+          "startTrigger": {
+            "type": "afterStep",
+            "stepId": "catch-frogs"
+          },
+          "duration": {
+            "type": "fixed",
+            "seconds": "2m"
+          }
+        },
+        {
+          "stepId": "brew-elixir",
+          "name": "Brew the elixir",
+          "task": "cauldron",
+          "startTrigger": {
+            "logic": "all",
+            "triggers": [
+              {
+                "type": "afterStep",
+                "stepId": "toast-flies"
+              },
+              {
+                "type": "afterStep",
+                "stepId": "brew-tonic"
+              }
+            ]
+          },
+          "duration": {
+            "type": "fixed",
+            "seconds": "3m"
+          }
+        },
+        {
+          "stepId": "cool-elixir",
+          "name": "Cool the elixir until it stops giggling",
+          "startTrigger": {
+            "type": "afterStep",
+            "stepId": "brew-elixir"
+          },
+          "duration": {
+            "type": "indefinite",
+            "defaultSeconds": "2m",
+            "triggerName": "giggling-stopped"
+          }
+        }
+      ]
+    },
+    {
+      "trackId": "post",
+      "name": "Owl Post",
+      "steps": [
+        {
+          "stepId": "owl-arrives",
+          "name": "Wait for Professor Hoot at the window",
+          "startTrigger": {
+            "type": "manual",
+            "triggerName": "owl-at-window"
+          },
+          "duration": {
+            "type": "fixed",
+            "seconds": "30s"
+          }
+        },
+        {
+          "stepId": "seal-order",
+          "name": "Seal tomorrow's order with dragon wax",
+          "task": "dragon",
+          "startTrigger": {
+            "type": "afterStep",
+            "stepId": "owl-arrives"
+          },
+          "duration": {
+            "type": "fixed",
+            "seconds": "1m"
+          }
+        }
+      ]
+    },
+    {
+      "trackId": "finale",
+      "name": "Midnight",
+      "steps": [
+        {
+          "stepId": "toast",
+          "name": "Raise a tiny glass to a night well brewed",
+          "startTrigger": {
+            "logic": "all",
+            "triggers": [
+              {
+                "type": "afterStep",
+                "stepId": "bottle-tonic"
+              },
+              {
+                "type": "afterStep",
+                "stepId": "cool-elixir"
+              },
+              {
+                "type": "afterStep",
+                "stepId": "seal-order"
+              }
+            ]
+          },
+          "duration": {
+            "type": "fixed",
+            "seconds": "30s"
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<script>
+  'use strict';
+  const { itinerary } = window.Rhylthyme;
+  const { validateProgram, findingCodes } = window.RhylthymeSchedule;
+
+  const potionNight = JSON.parse(document.getElementById('potion-night').textContent);
+
+  // The cursed recipe: the same night with three mistakes in it, to show
+  // what the validator says and how findingCodes explains it.
+  function cursed() {
+    const p = structuredClone(potionNight);
+    p.programId = 'cursed-recipe';
+    p.name = 'The Cursed Recipe';
+    p.resourceConstraints = p.resourceConstraints.filter((r) => r.task !== 'dragon');   // forgot the dragon
+    const steps = p.tracks.flatMap((t) => t.steps);
+    const bottle = steps.find((s) => s.startTrigger.type === 'afterStep' && s.task === 'apprentice');
+    bottle.startTrigger.stepId += '-k';                                                       // a typo
+    const indefinite = steps.find((s) => s.duration && s.duration.type === 'indefinite');
+    delete indefinite.duration.defaultSeconds;                                                // no idea how long
+    return p;
+  }
+
+  const player = document.getElementById('player');
+  // The player's own words, in the tower's voice.
+  player.labels = {
+    start: 'Begin the brewing', resume: 'Back to the cauldron', pause: 'Catch your breath', stop: 'Douse the fire',
+    speed: 'Spell speed', startStep: 'Now: {0}', doneStep: 'That\'s done: {0}',
+    statusStopped: 'resting', statusRunning: 'brewing', statusPaused: 'catching breath', statusCompleted: 'all brewed',
+  };
+
+  const $ = (id) => document.getElementById(id);
+  const fmt = (sec) => `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(Math.round(sec % 60)).padStart(2, '0')}`;
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  // ---- the recipe book: validate, explain -------------------------------
+  function showVerdict(program) {
+    const v = validateProgram(program);
+    const box = $('verdict');
+    box.className = 'verdict ' + (v.valid ? 'ok' : 'bad');
+    if (v.valid && !v.warnings.length) {
+      box.innerHTML = `✨ <b>${esc(program.name)}</b> checks out: ${v.stats.tracks} potions and errands, ${v.stats.steps} steps.`;
+      return v;
+    }
+    const items = [...v.errors.map((f) => ['error', f]), ...v.warnings.map((f) => ['warning', f])].map(([sev, f]) => {
+      const about = findingCodes.codes[f.code];
+      return `<li class="sev-${sev}"><span class="code">${esc(f.code)}</span> ${esc(f.message)}` +
+        (about ? `<span class="why">${esc(about.explanation)}</span>` : '') +
+        (f.fix ? `<span class="why">🪄 Fix: ${esc(f.fix)}</span>` : '') + '</li>';
+    }).join('');
+    box.innerHTML = (v.valid ? `⚠️ <b>${esc(program.name)}</b> will brew, but:` : `💀 <b>${esc(program.name)}</b> would not brew:`) + `<ul>${items}</ul>`;
+    return v;
+  }
+
+  // ---- tonight's schedule: itinerary(), planned back from midnight -------
+  const midnight = new Date(); midnight.setHours(24, 0, 0, 0);
+  function showPlan(program) {
+    const rows = itinerary(program, { finishAt: midnight });
+    $('plan').innerHTML = rows.map((r) => {
+      const at = new Date(r.startAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const gate = r.needsStart ? ' <span class="gate">· waits for you</span>' : (r.needsFinish ? ' <span class="gate">· you say when</span>' : '');
+      return `<li data-step="${esc(r.stepId)}"><time>${at}</time><span>${esc(r.name)}${gate}<span class="track">${esc(r.trackName)}</span></span></li>`;
+    }).join('');
+    return rows;
+  }
+
+  // ---- the tower and the log: rt-step-began / rt-step-ended only ----------
+  let plan = [];
+  const running = new Map();          // stepId -> station keys
+  let done = 0;
+  const IDLE = { cauldron: 'cold', dragon: 'napping', apprentice: 'twiddling thumbs', person: 'nothing, yet' };
+  const ENDED = { timer: 'its time ran out', person: 'you said so', trigger: 'cut short by a hand-off', abort: 'the fire was doused', dropped: 'the page stopped watching' };
+
+  // A step lights the station of its resource, and "Waiting for you" too
+  // when a person has to start or finish it.
+  function stationsFor(stepId) {
+    const row = plan.find((r) => r.stepId === stepId);
+    if (!row) return [];
+    const keys = row.task ? [row.task] : [];
+    if (row.needsStart || row.needsFinish) keys.push('person');
+    return keys;
+  }
+  function paintTower() {
+    for (const el of document.querySelectorAll('.station')) {
+      const key = el.dataset.task;
+      const names = [...running].filter(([, keys]) => keys.includes(key)).map(([id]) => plan.find((r) => r.stepId === id).name);
+      el.classList.toggle('busy', names.length > 0);
+      el.querySelector('.doing').textContent = names.length ? names.join(' · ') : IDLE[key];
+    }
+    $('n-running').textContent = running.size;
+    $('n-done').textContent = done;
+  }
+  function log(time, html) {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="t">${fmt(time)}</span>${html}`;
+    $('log').prepend(li);
+  }
+  function markPlan(stepId, cls) {
+    const li = $('plan').querySelector(`li[data-step="${CSS.escape(stepId)}"]`);
+    if (li) { li.classList.remove('now'); li.classList.add(cls); }
+  }
+
+  player.addEventListener('rt-step-began', (e) => {
+    const { stepId, time, by } = e.detail;
+    running.set(stepId, stationsFor(stepId));
+    markPlan(stepId, 'now');
+    const name = plan.find((r) => r.stepId === stepId)?.name ?? stepId;
+    log(time, `▶ ${esc(name)}<span class="by">${by === 'person' ? 'you started it' : 'on schedule'}</span>`);
+    paintTower();
+  });
+  player.addEventListener('rt-step-ended', (e) => {
+    const { stepId, time, by } = e.detail;
+    running.delete(stepId);
+    if (by !== 'dropped' && by !== 'abort') done += 1;
+    markPlan(stepId, 'done');
+    const name = plan.find((r) => r.stepId === stepId)?.name ?? stepId;
+    log(time, `✓ ${esc(name)}<span class="by">${esc(ENDED[by] || by)}</span>`);
+    paintTower();
+  });
+  player.addEventListener('rt-complete', (e) => log(e.detail.time, '🥂 <b>All brewed. Off to bed.</b>'));
+  player.addEventListener('rt-stop', () => { running.clear(); paintTower(); });
+  for (const ev of ['rt-start', 'rt-pause', 'rt-stop', 'rt-complete', 'rt-load']) {
+    player.addEventListener(ev, () => { $('status').textContent = statusWord(); });
+  }
+
+  // The player's status in the words its labels use.
+  function statusWord() {
+    const s = player.status;
+    return player.labels['status' + s[0].toUpperCase() + s.slice(1)] || s;
+  }
+
+  // ---- wiring ---------------------------------------------------------------
+  function load(which) {
+    const program = which === 'cursed' ? cursed() : potionNight;
+    for (const b of document.querySelectorAll('[data-recipe]')) b.setAttribute('aria-pressed', String(b.dataset.recipe === which));
+    const v = showVerdict(program);
+    if (!v.valid) {
+      if (player.status === 'running' || player.status === 'paused') player.stop();   // douse the fire
+      running.clear(); done = 0; $('log').innerHTML = '';
+      // Nothing to play: leave the last good night on the player, but say so.
+      plan = [];
+      $('plan').innerHTML = '<li><time>—</time><span>No schedule: fix the recipe first.</span></li>';
+      player.style.opacity = '.35';
+      paintTower();
+      return;
+    }
+    player.style.opacity = '';
+    player.program = program;     // replacing a running program ends its steps "dropped"...
+    running.clear(); done = 0; $('log').innerHTML = '';   // ...so start the new night's log after it
+    plan = showPlan(program);
+    paintTower();
+  }
+  document.querySelectorAll('[data-recipe]').forEach((b) => b.addEventListener('click', () => load(b.dataset.recipe)));
+  load('potion-night');
+</script>
+</body>
+</html>
