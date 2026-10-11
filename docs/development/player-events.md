@@ -89,7 +89,8 @@ use the same ids.
 - At the same second, a step's end comes before the begins it makes way
   for, and a zero-length step ends right after its own begin.
 - For a gated step, `rt-step-start` comes just before the matching
-  `rt-step-began`.
+  `rt-step-began`. On a stopped player, `startStep()` first starts a run, so
+  the order is `rt-start`, `rt-step-start`, `rt-step-began`.
 - `start()` delivers the steps that begin at second 0 immediately, not on
   the first tick.
 - When a handler calls back into the element (`completeStep()`,
