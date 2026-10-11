@@ -5,9 +5,15 @@
 Every finding the Rhylthyme validator reports has a `code`, a `message`, a `where` (the step, track or
 path it is about) and a `fix`. This page lists every code: what it means, a program that triggers it,
 and how to fix it. The codes are those of `validateProgram` in
-[`@rhylthyme/timeline/schedule`](embedding.md#5-validate-and-analyze-in-the-browser), the validator
-behind the MCP tool [`validate_program`](../web-app/mcp.md#available-tools) and the checks
-`visualize_schedule` runs before it publishes.
+[`@rhylthyme/timeline/schedule`](embedding.md#5-validate-and-analyze-in-the-browser).
+
+!!! note "The hosted MCP server"
+    The MCP tool [`validate_program`](../web-app/mcp.md#available-tools) and the checks
+    `visualize_schedule` runs before it publishes still use the server's own copy of the
+    validator. It reports many of the codes below, and also these, which this page does not
+    list: `missing_program_id`, `missing_name`, `no_tracks`, `bad_track`, `missing_track_id`, `missing_track_name`, `bad_step`, `missing_step_id`, `missing_step_name`, `missing_start_trigger`, `bad_duration_type`, `fixed_without_seconds`, `variable_without_bounds`, `indefinite_without_default`, `choice_too_few_options` and `bad_alert`.
+    `validateProgram` reports each of those problems as a `schema_*` finding instead (they
+    were removed from it in 2.0.0-beta.7).
 
 Errors make a program invalid; warnings and info notes do not. The **Python** column says what the
 `rhylthyme` package's validator reports for the same program: `rhylthyme validate --json` (the
@@ -595,7 +601,7 @@ Also emits instrument_bad_shape.
 A `false` subschema forbids any value at that path.
 
 !!! note "Not reachable today"
-    No bundled program schema (0.2.0-alpha, 0.3.0-alpha) uses `false (a boolean `false` subschema)` where a failure is reported, so validateProgram cannot emit this code today. The checker supports it so that a schema update that starts using it keeps working; test/finding-codes.test.js fails when that happens, asking for an example here.
+    No bundled program schema (0.2.0-alpha, 0.3.0-alpha) uses a `false` subschema (a boolean schema) where a failure is reported, so validateProgram cannot emit this code today. The checker supports it so that a schema update that starts using it keeps working; test/finding-codes.test.js fails when that happens, asking for an example here.
 
 **Fix.** Remove the value.
 
@@ -1561,8 +1567,8 @@ Tasks and resourceConstraints.
 |---|---|---|---|
 | [`bad_resource_constraint`](#bad_resource_constraint) | error | A resource constraint has an empty task name. | no |
 | [`duplicate_constraint`](#duplicate_constraint) | warning | Two resource constraints name the same task. | no |
-| [`bad_max_concurrent`](#bad_max_concurrent) | error | A resource constraint's maxConcurrent is not an integer >= 1. (not reachable today) | no |
-| [`task_not_constrained`](#task_not_constrained) | error, warning | A task used by steps has no resource constraint. | no |
+| [`bad_max_concurrent`](#bad_max_concurrent) | error | A resource constraint's maxConcurrent is not an integer >= 1. | no |
+| [`task_not_constrained`](#task_not_constrained) | error, warning | A task used by steps has no resource constraint. | `task_not_constrained` (with `--strict`) only |
 | [`unused_constraint`](#unused_constraint) | warning | A resource constraint names a task no step uses. | no |
 
 ### `bad_resource_constraint` {#bad_resource_constraint}
@@ -1621,10 +1627,38 @@ Only one limit can apply to a task; which one wins depends on the reader.
 
 **Error.** A resource constraint's maxConcurrent is not an integer >= 1.
 
-Meant for a maxConcurrent below 1 or not a number.
+The schema reports a bad maxConcurrent itself (schema_minimum, schema_type, schema_required), and this check stays quiet where it has. A program with an instances or replicates error (an E_* code) is checked against the schema as written, and those schema findings do not quiet the checks that follow, so this code is reported next to the schema's.
 
-!!! note "Not reachable today"
-    The schema requires maxConcurrent to be an integer >= 1 and reports it (schema_required, schema_type, schema_minimum); this check stays quiet wherever the schema has spoken. Dead code in validateProgram.
+**Example.** Merged over the [base program](#base-program):
+
+```json
+{
+  "schemaVersion": "0.3.0-alpha",
+  "tracks": [
+    {
+      "trackId": "main",
+      "name": "Main",
+      "steps": [
+        {
+          "stepId": "mix",
+          "name": "Mix",
+          "duration": { "type": "fixed", "seconds": 300 },
+          "startTrigger": { "type": "programStart" }
+        },
+        {
+          "stepId": "cool",
+          "name": "Cool",
+          "duration": { "type": "fixed", "seconds": 300 },
+          "startTrigger": { "type": "afterStep", "stepId": "mix", "instances": "each" }
+        }
+      ]
+    }
+  ],
+  "resourceConstraints": [{ "task": "oven", "maxConcurrent": 0 }]
+}
+```
+
+Also emits E_INSTANCES_ON_SINGLE, schema_minimum and unused_constraint.
 
 **Fix.** Set maxConcurrent to a whole number of at least 1.
 
@@ -1683,7 +1717,7 @@ Every task named by a step (task, tasks, taskResources, buffer taskResources) ne
 
 **Fix.** Add {"task": "<task>", "maxConcurrent": N} to resourceConstraints.
 
-**Python.** Python reports nothing for it. Python checks it only with --strict (strict=True), as an error, whatever the program names.
+**Python.** Python reports nothing for it by default. `rhylthyme validate --strict` reports `task_not_constrained`, as an error. That includes a program that names an environment or actors, where validateProgram reports a warning. The library (validate_program_structured) has no strict mode.
 
 ### `unused_constraint` {#unused_constraint}
 

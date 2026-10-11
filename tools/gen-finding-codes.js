@@ -61,6 +61,19 @@ function loadCatalogue() {
 
 // ---------------------------------------------------------------------
 
+// Codes the hosted MCP server's own validator (rhylthyme-mcp,
+// mcp-api/schedule.js) still reports and @rhylthyme/timeline does not: the
+// logic-check codes 2.0.0-beta.7 replaced with schema_* findings. The page
+// names them so a reader of a hosted finding is not left without an entry;
+// tests/finding-codes-page.test.js checks none of them is catalogued. Drop
+// this list when the hosted server runs @rhylthyme/timeline's validator.
+const HOSTED_ONLY = [
+  'missing_program_id', 'missing_name', 'no_tracks', 'bad_track', 'missing_track_id',
+  'missing_track_name', 'bad_step', 'missing_step_id', 'missing_step_name',
+  'missing_start_trigger', 'bad_duration_type', 'fixed_without_seconds',
+  'variable_without_bounds', 'indefinite_without_default', 'choice_too_few_options', 'bad_alert',
+];
+
 const code = (s) => '`' + s + '`';
 const cell = (s) => String(s).replace(/\|/g, '\\|').replace(/\n/g, ' ');
 // JSON on one line, with a space after each comma and colon.
@@ -89,21 +102,23 @@ function json(v, indent = '', lead = 0) {
 }
 
 function pythonCell(py) {
-  if (py.cli === null && py.library === null) return 'no';
-  if (py.cli === py.library) return code(py.cli);
+  const strict = py.strict ? `${code(py.strict)} (with ${code('--strict')})` : null;
+  if (py.cli === null && py.library === null) return strict ? `${strict} only` : 'no';
   const part = (c, where) => (c === null ? `none (${where})` : `${code(c)} (${where})`);
-  return `${part(py.cli, 'CLI')}, ${part(py.library, 'library')}`;
+  const base = py.cli === py.library ? code(py.cli) : `${part(py.cli, 'CLI')}, ${part(py.library, 'library')}`;
+  return strict ? `${base}; ${strict}` : base;
 }
 
 function pythonLine(py) {
   const sev = py.severity ? `, as ${py.severity === 'error' ? 'an error' : `a ${py.severity}`}` : '';
   let text;
-  if (py.cli === null && py.library === null) text = 'Python reports nothing for it.';
+  if (py.cli === null && py.library === null) text = py.strict ? 'Python reports nothing for it by default.' : 'Python reports nothing for it.';
   else if (py.cli === py.library) text = `Python reports ${code(py.cli)}${sev}.`;
   else {
     const part = (c, where) => (c === null ? `${where} reports nothing` : `${where} reports ${code(c)}`);
     text = `${part(py.cli, '`rhylthyme validate`')}${py.cli !== null ? sev : ''}; ${part(py.library, '`validate_program_structured`')}${py.library !== null && py.library !== 'logic_error' ? sev : ''}.`;
   }
+  if (py.strict) text += ` ${code('rhylthyme validate --strict')} reports ${code(py.strict)}, as an error.`;
   if (py.requires) text += ` Needs ${py.requires.map(code).join(' / ')}.`;
   if (py.note) text += ` ${py.note}`;
   return text;
@@ -134,9 +149,15 @@ function generate(catalogue, version) {
     'Every finding the Rhylthyme validator reports has a `code`, a `message`, a `where` (the step, track or',
     'path it is about) and a `fix`. This page lists every code: what it means, a program that triggers it,',
     'and how to fix it. The codes are those of `validateProgram` in',
-    '[`@rhylthyme/timeline/schedule`](embedding.md#5-validate-and-analyze-in-the-browser), the validator',
-    'behind the MCP tool [`validate_program`](../web-app/mcp.md#available-tools) and the checks',
-    '`visualize_schedule` runs before it publishes.',
+    '[`@rhylthyme/timeline/schedule`](embedding.md#5-validate-and-analyze-in-the-browser).',
+    '',
+    '!!! note "The hosted MCP server"',
+    '    The MCP tool [`validate_program`](../web-app/mcp.md#available-tools) and the checks',
+    '    `visualize_schedule` runs before it publishes still use the server\'s own copy of the',
+    '    validator. It reports many of the codes below, and also these, which this page does not',
+    `    list: ${HOSTED_ONLY.slice(0, -1).map(code).join(', ')} and ${code(HOSTED_ONLY[HOSTED_ONLY.length - 1])}.`,
+    '    `validateProgram` reports each of those problems as a `schema_*` finding instead (they',
+    '    were removed from it in 2.0.0-beta.7).',
     '',
     'Errors make a program invalid; warnings and info notes do not. The **Python** column says what the',
     '`rhylthyme` package\'s validator reports for the same program: `rhylthyme validate --json` (the',
@@ -184,7 +205,7 @@ function generate(catalogue, version) {
   return out.join('\n').replace(/\n{3,}/g, '\n\n').replace(/\n*$/, '\n');
 }
 
-module.exports = { loadPackage, loadCatalogue, generate, PAGE };
+module.exports = { loadPackage, loadCatalogue, generate, PAGE, HOSTED_ONLY };
 
 if (require.main === module) {
   const { catalogue, version } = loadCatalogue();

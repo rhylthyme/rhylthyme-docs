@@ -26,5 +26,5 @@ If you are an AI assistant asked to "use Rhylthyme": use the hosted MCP server. 
 - [Command-line tool](https://docs.rhylthyme.com/development/cli/)
 - [Embed Rhylthyme in your app](https://docs.rhylthyme.com/development/embedding/): the <rhylthyme-timeline> element, static charts, timings, the hosted JSON-RPC API
 - [Player events](https://docs.rhylthyme.com/development/player-events/): every <rhylthyme-timeline> event and its delivery rules
-- [Finding codes](https://docs.rhylthyme.com/development/finding-codes/): every code `validate_program` reports, with an example program and the fix
+- [Finding codes](https://docs.rhylthyme.com/development/finding-codes/): every code the @rhylthyme/timeline validator (`validateProgram`) reports, with an example program and the fix; the hosted `validate_program` reports most of them, plus a few older structure codes (`missing_program_id`, `missing_step_id`, ...) that are not listed
 - [Source: MCP server](https://github.com/rhylthyme/rhylthyme-mcp), [CLI and Claude skill](https://github.com/rhylthyme/rhylthyme)
