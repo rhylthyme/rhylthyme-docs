@@ -42,7 +42,7 @@ Three ways to import it — pick whichever fits:
 ### 2. CLI
 
 ```bash
-pip install rhylthyme
+pip install 'rhylthyme[importers]'
 rhylthyme import trivial.py -o trivial.json     # or: rhylthyme-import-opentrons trivial.py | jq .
 ```
 

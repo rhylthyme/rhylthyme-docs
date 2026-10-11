@@ -108,7 +108,7 @@ Update with `claude plugin marketplace update rhylthyme` then
 `claude plugin uninstall rhylthyme@rhylthyme`. The marketplace is the
 [rhylthyme-mcp](https://github.com/rhylthyme/rhylthyme-mcp) repository
 (`.claude-plugin/marketplace.json`); the skill's source is in
-[rhylthyme-cli-runner](https://github.com/rhylthyme/rhylthyme-cli-runner/tree/main/skills/rhylthyme)
+[rhylthyme](https://github.com/rhylthyme/rhylthyme/tree/main/skills/rhylthyme)
 and can also be copied into `~/.claude/skills/` by hand.
 
 Then ask for what you want: "Plan Thanksgiving dinner for 8 with one oven,
@@ -524,10 +524,10 @@ The prompt structure follows Almuntashiri, Ibáñez & Chapman
 (ProvenanceWeek '25), who measured prompt patterns for extracting
 structured records from text: confirming the source and the target model
 before extracting helps, and relationships are the weak component. The
-evaluation harness in `rhylthyme-cli-runner` (`rhylthyme eval-prompts`)
+evaluation harness in `rhylthyme` (`rhylthyme eval-prompts`)
 scores both this structure and the previous single-message prompt
 against an expert gold set. The measured numbers live in exactly one
-place: [rhylthyme-cli-runner's README, "Evaluating prompts"](https://github.com/rhylthyme/rhylthyme-cli-runner#evaluating-prompts).
+place: [rhylthyme's README, "Evaluating prompts"](https://github.com/rhylthyme/rhylthyme#evaluating-prompts).
 
 ## Example Usage
 

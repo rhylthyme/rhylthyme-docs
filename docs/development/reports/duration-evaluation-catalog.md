@@ -22,7 +22,7 @@ most-loaded programs**. Until then:
 A *usable* run is one that completed on a wall clock at speed 1; a usable
 *step* within it was ended by the executor and never paused. Both filters are
 defined once, in
-[`rhylthyme_cli_runner.history.usable`](../runs-schema.md#usable-runs), and a
+[`rhylthyme.history.usable`](../runs-schema.md#usable-runs), and a
 run that fails them is excluded with a reason `runs report` prints.
 
 ## The command to run when the window closes

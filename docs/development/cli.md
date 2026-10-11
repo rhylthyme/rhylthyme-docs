@@ -448,20 +448,20 @@ rhylthyme eval-prompts --gold rhylthyme-examples/gold \
 ```
 
 The published baseline numbers live in one place,
-`rhylthyme-cli-runner/README.md` ("Evaluating prompts"), beside the model
+the rhylthyme repository's `README.md` ("Evaluating prompts"), beside the model
 pin and the date.
 
-The Python API behind the command is `rhylthyme_cli_runner.eval`:
+The Python API behind the command is `rhylthyme.eval`:
 `load_gold_set(dir)`, `score_program(gold, predicted) -> ComponentScores`,
 `score_set(gold_set, {slug: program}) -> SetResult`, `write_results(result, out_dir)`,
-and for live runs `harness.run_harness(gold_set, HarnessConfig(...), client)`
-with a client from `eval.llm` (`AnthropicClient`, or `FakeClient` in tests).
-A prompt pattern is a `patterns.Pattern`: a `name`, `render(gold) -> list[Turn]`
+and for live runs `rhylthyme.cli.eval.harness.run_harness(gold_set, HarnessConfig(...), client)`
+with a client from `rhylthyme.cli.eval.llm` (`AnthropicClient`, or `FakeClient` in tests).
+A prompt pattern is a `rhylthyme.cli.eval.patterns.Pattern`: a `name`, `render(gold) -> list[Turn]`
 and `parse(turn_outputs) -> program`. `four-turn`
-(`eval/patterns/four_turn.py`) keeps byte-identical Python copies of the
+(`cli/eval/patterns/four_turn.py`) keeps byte-identical Python copies of the
 templates in `rhylthyme-server/mcp-api/prompts.js`, checked by a parity
 test that extracts the JS exports with `node`; run
-`python -m rhylthyme_cli_runner.eval.patterns.four_turn` to check them by
+`python -m rhylthyme.cli.eval.patterns.four_turn` to check them by
 hand. It records the 2/1/0 scores for turns 1 and 2 in `extras`.
 
 ---
@@ -580,10 +580,10 @@ Accepting a step that has no proposed value (a `fixed` step, or one below `k`)
 is an error, not a silent no-op.
 
 The Python API behind the command is
-`rhylthyme_cli_runner.history.calibrate`:
+`rhylthyme.history.calibrate`:
 
 ```python
-from rhylthyme_cli_runner.history import (
+from rhylthyme.history import (
     propose_calibration, apply_calibration, list_runs,
 )
 
@@ -676,10 +676,10 @@ so (`Not evaluated: fewer usable runs than --min-runs`) rather than reporting
 a mean absolute error over one observation.
 
 The Python API behind the command is
-`rhylthyme_cli_runner.history.evaluate`:
+`rhylthyme.history.evaluate`:
 
 ```python
-from rhylthyme_cli_runner.history import evaluate_program, list_runs
+from rhylthyme.history import evaluate_program, list_runs
 
 records = list_runs("./runs", "thanksgiving-one-oven")
 result = evaluate_program(records, program, holdout=0.2)

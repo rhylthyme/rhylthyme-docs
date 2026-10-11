@@ -15,12 +15,12 @@ This page covers installing the Rhylthyme CLI tools for local development and pr
 python3.12 -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-# Clone and install (rhylthyme-cli-runner depends on rhylthyme-spec)
+# Clone and install (rhylthyme depends on rhylthyme-spec)
 git clone https://github.com/rhylthyme/rhylthyme-spec.git
-git clone https://github.com/rhylthyme/rhylthyme-cli-runner.git
+git clone https://github.com/rhylthyme/rhylthyme.git
 
 pip install -e ./rhylthyme-spec
-pip install -e ./rhylthyme-cli-runner
+pip install -e ./rhylthyme      # add [all] for the importers and the timeline renderer
 ```
 
 ## Verify Installation
@@ -116,9 +116,9 @@ rhylthyme-spec/              # Schema definitions and validation
 │   └── schemas/             # JSON schemas
 └── pyproject.toml
 
-rhylthyme-cli-runner/        # Command-line interface
-├── src/rhylthyme_cli_runner/
-│   ├── cli.py              # Main CLI interface
+rhylthyme/                   # Library and command-line interface (formerly rhylthyme-cli-runner)
+├── src/rhylthyme/
+│   ├── cli/                # Command-line interface (cli/main.py, cli/tui.py)
 │   ├── program_runner.py   # Program execution
 │   ├── program_planner.py  # Schedule optimization
 │   ├── validate_program.py # Program validation
@@ -141,7 +141,7 @@ rhylthyme-examples/          # Example programs and environments
 
 ```bash
 pip install -e ./rhylthyme-spec[dev]
-pip install -e ./rhylthyme-cli-runner[dev]
+pip install -e './rhylthyme[dev]'
 ```
 
 ## Troubleshooting
@@ -150,7 +150,7 @@ pip install -e ./rhylthyme-cli-runner[dev]
 
 - Ensure the virtual environment is activated
 - Verify installation: `pip list | grep rhylthyme`
-- Reinstall: `pip install -e ./rhylthyme-cli-runner`
+- Reinstall: `pip install -e ./rhylthyme`
 
 ### Import errors for rhylthyme_spec
 
