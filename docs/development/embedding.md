@@ -373,6 +373,7 @@ The module also exports `findingCodes`, the catalogue the
 severity, summary, explanation, an example and the fix, so an app can show
 more than the one-line message:
 
+<!-- snippet: finding-codes-explain -->
 ```js
 import { validateProgram, findingCodes } from '@rhylthyme/timeline/schedule';
 

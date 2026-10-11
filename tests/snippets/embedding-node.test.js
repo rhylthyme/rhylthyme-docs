@@ -37,6 +37,31 @@ test('schedule-esm-import: the import works in an ES module', () => {
   for (const n of names) assert.equal(types[n], 'function', n);
 });
 
+test('finding-codes-explain: every error a program gets is explained from findingCodes', () => {
+  const s = snippet('finding-codes-explain');
+  // An invalid program for the snippet's free variable: a task with no
+  // resource constraint, and an indefinite step without defaultSeconds.
+  const program = {
+    schemaVersion: '0.3.0-alpha', programId: 'p', name: 'p', resourceConstraints: [],
+    tracks: [{ trackId: 't', name: 'T', steps: [
+      { stepId: 'a', name: 'A', task: 'oven', startTrigger: { type: 'programStart' }, duration: { type: 'fixed', seconds: 60 } },
+      { stepId: 'b', name: 'B', startTrigger: { type: 'afterStep', stepId: 'a' }, duration: { type: 'indefinite' } },
+    ] }],
+  };
+  const dir = projectDir();
+  fs.writeFileSync(path.join(dir, 'explain.mjs'), `const program = ${JSON.stringify(program)};\n` + s.code);
+  const out = run('node', ['explain.mjs'], dir);
+  const blocks = out.trim().split(/\n(?=\S)/);
+  assert.ok(blocks.length >= 2, out);
+  for (const b of blocks) {
+    const [head, explanation, fix] = b.split('\n');
+    assert.match(head, /^[A-Za-z_]+: \S/, b);
+    assert.ok(explanation && explanation.trim().length > 20 && explanation.trim() !== 'undefined', 'explanation from findingCodes: ' + b);
+    assert.match(fix, /^  fix: \S/, b);
+  }
+  assert.ok(blocks.some((b) => b.startsWith('task_not_constrained:')), out);
+});
+
 test('prose: the inline `import { ... } from \'@rhylthyme/timeline\'` works', () => {
   // Inline code in the Static chart section, not a fenced block.
   const page = fs.readFileSync(path.join(__dirname, '..', '..', snippet('static-chart-node').page), 'utf8');
