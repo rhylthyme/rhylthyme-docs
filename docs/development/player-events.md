@@ -243,6 +243,8 @@ el.addEventListener('rt-run-record', (e) => saveAttachment('run.json', e.detail.
 
 - [Embed Rhylthyme in your app](embedding.md): the player, charts,
   timings and the hosted service.
+- [Potion Night](../demo/potion-night/index.html): a toy app whose tower
+  scene and spell log listen only to `rt-step-began` and `rt-step-ended`.
 - The package README's
   [element section](https://github.com/rhylthyme/rhylthyme-timeline#1-the-rhylthyme-timeline-element-20-beta):
   attributes, methods and translation.
