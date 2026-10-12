@@ -359,7 +359,7 @@ that frees the slot to the instance it holds back, labelled `<task> <= <k>`,
 in an SVG group
 `<g class="rt-inflight" data-inflight-of="<stepId>" data-limit="<k>"
 data-from="<leaf instance>" data-step="<gated instance>">`. It is never
-drawn as an ordinary dependency arrow, and the legend gains an
+drawn as an ordinary dependency arrow, and the legend, when drawn, gains an
 "in-flight limit" key only when at least one gate is on the chart.
 
 ## Schema 0.3.0-alpha: bounded work in progress (`maxInFlight`)

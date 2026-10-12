@@ -164,7 +164,9 @@ fs.writeFileSync('birthday-party.svg', renderTimelineSvg(program, { style: 'publ
 `require()` and ES module imports both give every function by name
 (`import { renderTimelineSvg } from '@rhylthyme/timeline'`). Options include `style`
 (`classic`, `web`, `publication`), `palette`, `colorBy` (`track` or `task`),
-`startAt` (wall-clock axis), `legend`, `title` and `width`; the full table
+`startAt` (wall-clock axis), `legend` (off by default: `true` draws the key
+to arrows and marks, and the player's `legend` attribute does the same),
+`title` and `width`; the full table
 is in the [package README](https://github.com/rhylthyme/rhylthyme-timeline#3-the-static-svg-rendertimelinesvg-node-and-rendertimeline-browser).
 
 ## 3. Timings only
