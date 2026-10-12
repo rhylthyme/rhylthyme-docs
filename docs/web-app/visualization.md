@@ -66,8 +66,8 @@ How to read it:
 The colour is the sign of the **end** deviation, not the start: a step that
 starts late but catches up is still on time. The threshold exists so that a
 few seconds of timer or tick lag does not read as a schedule slip; it is the
-renderer's `deviationThreshold` option, and the legend always names the value
-in force (`late (>30s)`).
+renderer's `deviationThreshold` option, and the key, when you ask for it
+(`legend: true`), names the value in force (`late (>30s)`).
 
 Because the deviation is measured against the frozen plan, a slip propagates:
 if an indefinite step (the roast that ends when the cook says so) runs 25
