@@ -196,7 +196,7 @@ rhylthyme.com.
 | `load_public_recipe` | Open a catalog entry: summary and live-timeline URL | no |
 | `list_public_runs` | Anonymous runs others contributed for one exact program version | no |
 | `get_renderer_source` | The open-source timeline renderer (Apache-2.0, about 90 KB) for pages that cannot load scripts | no |
-| `import_from_source` | Search, import or pick a random recipe or protocol (TheMealDB, Spoonacular, protocols.io, Opentrons, Benchling, Cooklang) | import and random: yes; search: no |
+| `import_from_source` | Search, import or pick a random recipe or protocol (TheMealDB, Spoonacular, protocols.io, Opentrons, Benchling, Cooklang), or import an Ontime run of show | import and random: yes; search: no |
 | `import_text` | Turn pasted text (recipe, protocol, run sheet, training plan) into a validated program | yes |
 | `review_program` | A model checks an imported program against its source and reports what looks wrong | yes |
 | `login` | Sign-in link and token, for assistants that cannot connect accounts | no |
@@ -305,6 +305,7 @@ Imports recipes or lab protocols from external databases.
 | Spoonacular | Recipes with nutrition and equipment | search, import, random |
 | TheMealDB | Recipe database | search, import, random |
 | protocols.io | Laboratory protocols | search, import |
+| [Ontime](../development/ontime.md) | A run of show: the project file's JSON or the rundown table, pasted as `text`, or a URL or Google Sheet link as `query` | import |
 
 **Workflow:** Claude searches for recipes, imports the best matches, then composes them into a unified multi-track schedule. For multi-dish meals, all dishes are combined into a single visualization with coordinated timing.
 
