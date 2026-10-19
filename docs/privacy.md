@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**Last updated:** September 25, 2026
+**Last updated:** October 19, 2026
 **Effective date:** February 1, 2026
 
 ---
@@ -249,7 +249,7 @@ We use minimal cookies, limited to:
 - **Authentication tokens** to maintain your login session.
 - **Session identifiers** necessary for the Service to function.
 
-We use two advertising measurement tags so we can tell whether our own ads bring people to Rhylthyme: the Google Ads tag and the Reddit Pixel. Each sets a cookie and records that you visited, and whether you signed up or imported a protocol, so that Google or Reddit can attribute that to an ad you saw. Neither receives your email, your programs, or any other account data. You can block these with any standard ad or tracker blocker without affecting the app. We do not use third-party analytics cookies beyond this and do not engage in cross-site tracking for other purposes.
+We use one advertising measurement tag so we can tell whether our own ads bring people to Rhylthyme: the Google Ads tag. It sets a cookie and records that you visited, and whether you signed up, so that Google can attribute that to an ad you saw. It does not receive your email, your programs, or any other account data. You can block it with any standard ad or tracker blocker without affecting the app. We do not use third-party analytics cookies beyond this and do not engage in cross-site tracking for other purposes.
 
 ## Data Sharing and Selling
 
