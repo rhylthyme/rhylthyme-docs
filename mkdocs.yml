@@ -82,6 +82,7 @@ nav:
   - Legal:
     - Privacy Policy: privacy.md
     - Terms of Service: terms.md
+    - Community Guidelines: community-guidelines.md
 
 # The iOS app pages are hidden until their screenshots exist.
 exclude_docs: |

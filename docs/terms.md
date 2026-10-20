@@ -1,6 +1,6 @@
 # Terms of Service
 
-**Last updated:** May 20, 2026
+**Last updated:** October 19, 2026
 **Effective date:** February 1, 2026
 
 ---
@@ -9,7 +9,7 @@ These Terms of Service ("Terms") govern your access to and use of the Rhylthyme 
 
 ## Acceptance of Terms
 
-By creating an account or using the Service, you acknowledge that you have read, understood, and agree to be bound by these Terms and our [Privacy Policy](privacy.md). If you do not agree to these Terms, you may not use the Service.
+By creating an account or using the Service, you acknowledge that you have read, understood, and agree to be bound by these Terms, our [Community Guidelines](community-guidelines.md) and our [Privacy Policy](privacy.md). If you do not agree to these Terms, you may not use the Service.
 
 We reserve the right to update these Terms at any time. We will notify you of material changes by posting the updated Terms on this page and updating the "Last updated" date. Your continued use of the Service after changes are posted constitutes acceptance of the revised Terms.
 
@@ -58,6 +58,8 @@ When you share a program via a public share link, you grant other users a non-ex
 
 You are solely responsible for your User Content and any consequences of sharing it publicly. Do not share content that you do not have the right to distribute.
 
+Public programs, shared timelines, profiles and the photos and videos attached to them can be seen by other people, so they must follow the [Community Guidelines](community-guidelines.md).
+
 ### Content Preservation
 
 We perform regular backups but do not guarantee that your User Content will be preserved indefinitely. You are responsible for maintaining your own copies of important programs.
@@ -78,6 +80,8 @@ You are solely responsible for any AI-generated content you choose to save, shar
 
 ## Acceptable Use
 
+**There is no tolerance for objectionable content or abusive users on Rhylthyme.** Objectionable content includes spam and misleading content; harassment and bullying; hate speech and hate symbols; sexual or nude content; violence and dangerous acts; content that promotes self-harm; illegal activity; and content that infringes someone else's copyright or trademark. The [Community Guidelines](community-guidelines.md) describe each of these. We remove such content, and we suspend or permanently remove the accounts of users who post it or who abuse other users, without prior notice.
+
 You agree not to use the Service to:
 
 - Violate any applicable law, regulation, or third-party rights.
@@ -90,8 +94,21 @@ You agree not to use the Service to:
 - Abuse the AI chat feature by attempting to circumvent its safety measures or using it for purposes unrelated to the Service.
 - Impersonate any person or entity, or misrepresent your affiliation with any person or entity.
 - Use the Service to send unsolicited communications or spam.
+- Harass, bully, threaten, or abuse other users, or attempt to get around another user's block.
 
 We reserve the right to investigate and take appropriate action against anyone who violates these provisions, including removing content and suspending or terminating accounts.
+
+## Reporting and Blocking
+
+**Reporting.** Anyone can report content, with or without an account:
+
+- **On the website and in the Mac app:** open the program, shared timeline or profile and choose **Report** (the flag button). Pick a reason, add details if you like, and submit.
+- **In the iOS app:** open the program and choose **Report…** from the **…** menu next to the cover photo.
+- **By email:** write to [support@rhylthyme.com](mailto:support@rhylthyme.com) with a link to the content and what is wrong with it.
+
+**Blocking.** When you are signed in you can block another user from their profile, from the **Report** dialog (**Also block**), or from the **…** menu in the iOS app. Once you block someone you no longer see their programs, shared timelines or profile, and neither of you can follow the other. They are not notified. You can unblock people at any time under **Blocked Users** (on the website, under **Edit profile**; in the iOS app, in **Settings**). Rhylthyme's own catalog cannot be blocked; report an item from it instead.
+
+**What we do with reports.** We review every report within 24 hours. Content that breaks these Terms or the [Community Guidelines](community-guidelines.md) is removed, and users who post objectionable content or abuse other users are suspended or removed from the Service. The person whose content is reported is not told who reported it.
 
 ## Intellectual Property
 
@@ -177,7 +194,7 @@ You agree to indemnify, defend, and hold harmless Rhylthyme and its officers, di
 
 ### By You
 
-You may stop using the Service at any time. You may request account deletion by contacting us at [legal@rhylthyme.com](mailto:legal@rhylthyme.com).
+You may stop using the Service at any time. You can delete your account and all of its data yourself: in the iOS app go to **Settings → Account → Delete Account**; on the website, open **Edit profile** and choose **Delete my account**. You can also ask us to delete it by writing to [support@rhylthyme.com](mailto:support@rhylthyme.com).
 
 ### By Us
 
@@ -203,13 +220,15 @@ If any provision of these Terms is found to be unenforceable or invalid, that pr
 
 ## Entire Agreement
 
-These Terms, together with our Privacy Policy, constitute the entire agreement between you and Rhylthyme regarding the Service and supersede any prior agreements or understandings.
+These Terms, together with our Community Guidelines and Privacy Policy, constitute the entire agreement between you and Rhylthyme regarding the Service and supersede any prior agreements or understandings.
 
 ## Contact Us
 
 If you have questions about these Terms of Service, please contact us at:
 
 **Email:** [legal@rhylthyme.com](mailto:legal@rhylthyme.com)
+
+To report objectionable content or an abusive user, or for help with your account: [support@rhylthyme.com](mailto:support@rhylthyme.com). We review reports within 24 hours.
 
 ---
 

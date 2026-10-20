@@ -157,6 +157,23 @@ does not remove it. Contributed runs are readable by anyone
 people run can be calibrated against what actually happens rather than
 against its author's guess.
 
+### Reports and Blocks
+
+To keep the Service safe (see the [Community Guidelines](community-guidelines.md)), you can report content and block other users.
+
+**When you report something**, we store:
+
+- your account ID, if you are signed in (a report made while signed out has no reporter);
+- what you reported: whether it is a program, a shared timeline or a profile, its ID, the account that posted it, and the link to the specific photo or video if you reported one;
+- the reason you chose and any details you typed (up to 2,000 characters);
+- the page you reported it from, the time, and what we decided (whether the report is open, acted on or dismissed, a note from the moderator, who resolved it and when).
+
+We do not store your IP address with a report (it is used only, in memory, to limit how many reports can be sent per minute). A new report is sent to our moderators as an alert by email and in our team chat, with the reason, details, a link to the content and your account ID.
+
+**When you block someone**, we store your account ID, theirs, and when you blocked them. We use this list only to hide their programs, shared timelines and profile from you and to stop either of you from following the other; following links between you are deleted when you block.
+
+**Who sees this.** Reports are seen only by Rhylthyme's moderators. **The person you report is never told who reported them**, and they cannot see reports about their content. Your block list is visible to you (under **Blocked Users**) and to the Service; the person you block is not notified. If we remove content or suspend an account, we keep a record of what was removed, why, which report led to it, and who removed it.
+
 ### iOS Device Permissions
 
 The iOS application may request access to the following device capabilities. Each is optional and only used when you engage the corresponding feature:
@@ -193,7 +210,9 @@ To maintain a safe environment for all users, media files (images and videos) up
 - Content depicting illegal activity.
 - Content harmful to minors.
 
-Media that does not pass moderation is rejected and not stored. The media content is transmitted to Anthropic solely for this moderation purpose and is subject to Anthropic's data processing terms. We do not manually review uploaded media unless required for safety or legal reasons.
+Media that does not pass moderation is rejected and not stored. The media content is transmitted to Anthropic solely for this moderation purpose and is subject to Anthropic's data processing terms. We do not manually review uploaded media unless it is reported to us or review is required for safety or legal reasons.
+
+Users can also report programs, shared timelines, profiles and individual photos or videos (see [Reports and Blocks](#reports-and-blocks)). Our moderators review reports within 24 hours and look at the reported content to do so. Content that breaks the [Community Guidelines](community-guidelines.md) is taken down so that other users can no longer see it, and the accounts of users who post objectionable content or abuse others can be suspended, which hides all of their public content.
 
 ## Data Storage and Security
 
@@ -227,6 +246,8 @@ We use the following third-party services to operate the Service:
 | **Vercel** | Web application hosting | [vercel.com/legal/privacy-policy](https://vercel.com/legal/privacy-policy) |
 | **Google** | OAuth authentication provider | [policies.google.com/privacy](https://policies.google.com/privacy) |
 | **Apple** | Sign-In authentication provider | [apple.com/privacy](https://www.apple.com/privacy/) |
+| **Resend** | Sending email, including alerts about new reports to our moderators | [resend.com/legal/privacy-policy](https://resend.com/legal/privacy-policy) |
+| **Slack** | Our team's chat, where alerts about new reports are posted for moderators | [slack.com/trust/privacy/privacy-policy](https://slack.com/trust/privacy/privacy-policy) |
 
 These services may collect and process data according to their own privacy policies. We encourage you to review them.
 
@@ -260,7 +281,9 @@ We may share your information only in the following circumstances:
 - **With your consent:** When you explicitly share a program via a public share link.
 - **Service providers:** With the third-party services listed above, solely to operate the Service.
 - **Legal requirements:** If required by law, regulation, legal process, or governmental request.
-- **Safety:** To protect the rights, property, or safety of Rhylthyme, our users, or the public.
+- **Safety:** To protect the rights, property, or safety of Rhylthyme, our users, or the public, including reporting illegal content to the authorities.
+
+We never share who made a report with the person who was reported.
 
 ## Your Rights
 
@@ -269,7 +292,7 @@ You have the following rights regarding your personal data:
 - **Access:** You can view your account information and programs at any time through the Service.
 - **Export:** You can download your programs as JSON files at any time.
 - **Correction:** You can update your account information through your authentication provider.
-- **Deletion:** You can delete individual programs through the Service. To request complete account deletion, contact us at [privacy@rhylthyme.com](mailto:privacy@rhylthyme.com).
+- **Deletion:** You can delete individual programs through the Service, and delete your whole account yourself: in the iOS app go to **Settings → Account → Delete Account**; on the website, open **Edit profile** and choose **Delete my account**. You can also ask us to do it at [privacy@rhylthyme.com](mailto:privacy@rhylthyme.com).
 - **Portability:** Your programs are stored in standard JSON format and can be exported at any time.
 
 We will respond to data rights requests within 30 days.
@@ -284,9 +307,12 @@ We will respond to data rights requests within 30 days.
 - **Usage data** is retained in aggregate form and is not linked to individual accounts after 90 days.
 - **Bridge data** (lab machines, their current run and the commands sent to them) is kept until you delete it or request account deletion; each bridge's run state is overwritten by its next run.
 - **Import and review text** is not stored; only the audit row described above is kept.
+- **Reports** are kept for as long as we need them to deal with the report, to spot repeated abuse, and to keep a record of moderation decisions. When you delete your account, the reports you made are kept with your account ID removed, so they no longer identify you.
+- **Blocks** are kept until you unblock the person, or either account is deleted; deleting your account deletes your block list and every block of you.
+- **Moderation records** (what was removed or suspended, and why) are kept for as long as the removal is in force, and may be kept afterwards where we need them for safety or legal reasons.
 - **AI chat messages** are not stored by us after your session ends. Anthropic's retention of API data is governed by their privacy policy and data processing terms.
 
-Upon account deletion, we will remove your personal data within 30 days, except where retention is required by law.
+Upon account deletion, we will remove your personal data within 30 days, except where retention is required by law. Reports you made stay, without your account ID, as described above; reports about your content stay with the moderation record.
 
 ## Children's Privacy
 
