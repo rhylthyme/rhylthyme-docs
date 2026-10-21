@@ -1,0 +1,55 @@
+{#- The landing page: a hero above the page content. Used by docs/index.md
+    (front matter `template: home.html`). -#}
+{% extends "main.html" %}
+
+{% block tabs %}
+  {{ super() }}
+  <section class="rh-hero">
+    <div class="rh-hero__inner md-grid">
+      <div class="rh-hero__text">
+        <p class="rh-hero__eyebrow">Real-time scheduling, in JSON</p>
+        <h1 class="rh-hero__title">Run many things at once, <span>on time.</span></h1>
+        <p class="rh-hero__lead">
+          Rhylthyme turns a plan into parallel tracks of timed steps that share
+          ovens, instruments and people, then runs it live, step by step.
+        </p>
+        <div class="rh-hero__actions">
+          <a class="rh-button rh-button--primary" href="https://www.rhylthyme.com">
+            Open the web app
+            {% include ".icons/material/arrow-right.svg" %}
+          </a>
+          <a class="rh-button" href="{{ 'getting-started/quick-start/' | url }}">Quick start</a>
+          <a class="rh-button rh-button--ghost" href="{{ 'web-app/mcp/' | url }}">Use it from Claude</a>
+        </div>
+      </div>
+      <figure class="rh-hero__art" aria-hidden="true">
+        {#- A schematic timeline: three tracks, one shared resource, a "now" line. -#}
+        <svg viewBox="0 0 360 220" role="presentation">
+          <rect class="rh-art__panel" x="1" y="1" width="358" height="218" rx="14"/>
+          <g class="rh-art__grid">
+            <line x1="96" y1="34" x2="96" y2="196"/><line x1="160" y1="34" x2="160" y2="196"/>
+            <line x1="224" y1="34" x2="224" y2="196"/><line x1="288" y1="34" x2="288" y2="196"/>
+          </g>
+          <g class="rh-art__labels">
+            <text x="22" y="66">Eggs</text><text x="22" y="110">Bacon</text>
+            <text x="22" y="154">Toast</text>
+          </g>
+          <rect class="rh-art__bar rh-art__bar--a" x="96" y="50" width="70" height="24" rx="6"/>
+          <rect class="rh-art__bar rh-art__bar--a" x="170" y="50" width="54" height="24" rx="6"/>
+          <rect class="rh-art__bar rh-art__bar--a" x="228" y="50" width="96" height="24" rx="6"/>
+          <rect class="rh-art__bar rh-art__bar--b" x="96" y="94" width="196" height="24" rx="6"/>
+          <rect class="rh-art__bar rh-art__bar--c" x="246" y="138" width="78" height="24" rx="6"/>
+          <rect class="rh-art__res" x="96" y="180" width="228" height="8" rx="4"/>
+          <rect class="rh-art__res-used" x="96" y="180" width="196" height="8" rx="4"/>
+          <line class="rh-art__now" x1="200" y1="28" x2="200" y2="196"/>
+          <circle class="rh-art__now-dot" cx="200" cy="28" r="5"/>
+        </svg>
+      </figure>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  {#- No auto-inserted page title or edit button: the hero carries the h1. -#}
+  {{ page.content }}
+{% endblock %}

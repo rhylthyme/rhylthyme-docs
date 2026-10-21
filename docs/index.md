@@ -1,18 +1,56 @@
-# Welcome to Rhylthyme
+---
+template: home.html
+hide:
+  - toc
+---
 
-Rhylthyme is a framework for defining, visualizing, and executing real-time schedules with resource management.
+## Start here
 
-## Get Started
+<div class="grid cards rh-start" markdown>
 
-Open **[www.rhylthyme.com](https://www.rhylthyme.com)** -- no installation needed. Load an example, create a schedule with AI chat, or upload your own program JSON.
+-   :material-web:{ .lg } __Use the web app__
 
-An iOS app is also available; its guide will be published here when ready.
+    ---
 
-## Use It from Claude or ChatGPT
+    Open [www.rhylthyme.com](https://www.rhylthyme.com). No installation.
+    Load an example, describe a schedule to the AI chat, or upload your own
+    program JSON.
 
-Rhylthyme runs a hosted [MCP server](web-app/mcp.md), so an assistant can build
-a schedule in conversation and hand you a live timeline. In Claude Code,
-install the plugin (the server plus a skill for authoring schedules):
+    [:octicons-arrow-right-24: Web app guide](web-app/index.md)
+
+-   :material-robot-happy-outline:{ .lg } __Use it from an assistant__
+
+    ---
+
+    A hosted MCP server lets Claude, ChatGPT, Cursor and other assistants
+    build a schedule in conversation and hand you a live timeline.
+
+    [:octicons-arrow-right-24: MCP server](web-app/mcp.md)
+
+-   :material-lightbulb-on-outline:{ .lg } __Learn the model__
+
+    ---
+
+    Programs, tracks, steps, durations, triggers and resources: the handful
+    of ideas every schedule is built from.
+
+    [:octicons-arrow-right-24: Core concepts](getting-started/concepts.md)
+
+-   :material-console:{ .lg } __Build on it__
+
+    ---
+
+    A CLI that runs schedules in the terminal, a Python library for
+    validation and planning, JSON Schemas, and an embeddable player.
+
+    [:octicons-arrow-right-24: Development](development/installation.md)
+
+</div>
+
+## Add it to your assistant
+
+In Claude Code, install the plugin (the server plus a skill for authoring
+schedules):
 
 ```
 /plugin marketplace add rhylthyme/rhylthyme-mcp
@@ -24,32 +62,58 @@ In Claude, ChatGPT, Cursor or any other MCP client, add
 needed. Details, including what to do when an assistant has no connector, are
 on the [MCP Server](web-app/mcp.md) page.
 
+An iOS app is also available; its guide will be published here when ready.
+
 ## What is Rhylthyme?
 
-Rhylthyme lets you model complex workflows as **programs** composed of parallel **tracks** and sequential **steps**, with timing dependencies and resource constraints. Programs are defined in JSON and can be visualized as interactive timelines, run with real-time execution controls, or generated from natural language using the AI chat.
+Rhylthyme lets you model complex workflows as **programs** composed of
+parallel **tracks** and sequential **steps**, with timing dependencies and
+resource constraints. Programs are defined in JSON and can be visualized as
+interactive timelines, run with real-time execution controls, or generated
+from natural language using the AI chat.
 
-### Key Features
+<div class="grid cards rh-features" markdown>
 
-- **Interactive Visualization**: DAG, timeline, resource, itinerary, and editor views
-- **Real-time Execution**: Start, pause, and control schedules with speed adjustment
-- **AI Chat**: Describe what you need and get a complete schedule generated automatically
-- **Import Recipes & Protocols**: Pull in programs from Spoonacular, TheMealDB, or protocols.io
-- **Manual Controls**: Steps that wait for user interaction -- manual start, variable duration, indefinite tasks
-- **Resource Management**: Define constraints (e.g., 2 stove burners, 1 oven) and see utilization over time
-- **Save & Share**: Sign in to save programs, share links, and browse public schedules
-- **MCP Integration**: A hosted MCP server and a Claude Code plugin, so Claude, ChatGPT and other assistants can author, check and publish schedules
+-   :material-chart-timeline-variant: __Interactive visualization__
 
-## Learn More
+    DAG, timeline, resource, itinerary and editor views.
 
-- **[Core Concepts](getting-started/concepts.md)** -- Programs, tracks, steps, durations, triggers, and resources
-- **[Quick Start](getting-started/quick-start.md)** -- Walk through the Breakfast Schedule example
-- **[Examples](getting-started/examples.md)** -- Built-in examples across kitchen, lab, airport, and bakery environments
-- **[Glossary](getting-started/glossary.md)** -- Comprehensive reference of all Rhylthyme terminology
-- **[Web App Guide](web-app/index.md)** -- Full documentation for the web app
+-   :material-play-circle-outline: __Real-time execution__
 
-## For Developers
+    Start, pause and control schedules, with speed adjustment.
 
-Rhylthyme also has a CLI for running schedules in the terminal and a Python library for validation and optimization. See the [Development](development/installation.md) section for installation, CLI commands, schema references, and architecture details.
+-   :material-chat-processing-outline: __AI chat__
+
+    Describe what you need and get a complete schedule.
+
+-   :material-import: __Import recipes and protocols__
+
+    Pull in programs from Spoonacular, TheMealDB or protocols.io.
+
+-   :material-gesture-tap-button: __Manual controls__
+
+    Steps that wait for you: manual start, variable duration, indefinite tasks.
+
+-   :material-stove: __Resource management__
+
+    Constraints such as 2 burners and 1 oven, and utilization over time.
+
+-   :material-share-variant-outline: __Save and share__
+
+    Sign in to save programs, share links and browse public schedules.
+
+-   :material-connection: __MCP integration__
+
+    A hosted MCP server and a Claude Code plugin for authoring, checking and
+    publishing schedules.
+
+</div>
+
+## Learn more
+
+- **[Quick Start](getting-started/quick-start.md)**: walk through the Breakfast Schedule example
+- **[Examples](getting-started/examples.md)**: built-in examples across kitchen, lab, airport and bakery environments
+- **[Glossary](getting-started/glossary.md)**: every Rhylthyme term in one place
 
 ## License
 
