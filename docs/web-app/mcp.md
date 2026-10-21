@@ -57,8 +57,37 @@ and accepts the token you paste back (it lasts about an hour).
 
 ## Connect
 
-**Claude (claude.ai, desktop, mobile)**: Settings → Connectors → *Add custom
-connector* → paste an endpoint URL.
+### Claude (desktop and claude.ai)
+
+Rhylthyme is listed in Claude's connectors directory.
+
+1. Open **Customize** in the sidebar.
+
+    ![Customize in the Claude sidebar, with the Connectors tab](../assets/screenshots/claude/01-customize.png){ width="420" }
+
+2. Open the **Connectors** tab and search for **Rhylthyme**.
+
+    ![Searching the Connectors directory for Rhylthyme](../assets/screenshots/claude/02-find-connector.png){ width="420" }
+
+3. Open the Rhylthyme listing and click **Connect**.
+
+    ![The Rhylthyme listing with its Connect button](../assets/screenshots/claude/03-connector-listing.png){ width="320" }
+
+To use another endpoint, such as one of the cooking, lab, events or workout
+ones above, add it as a custom connector instead:
+
+1. In **Customize** → **Connectors**, click **Add**, then **Add custom
+   connector**.
+
+    ![The Add menu with Add custom connector](../assets/screenshots/claude/02-add-connector.png){ width="420" }
+
+2. Give it a name (for example `rhylthyme-kitchen`), paste the endpoint URL
+   and click **Continue**.
+
+    ![The Add custom connector dialog, with Name and MCP server URL fields](../assets/screenshots/claude/03-connector-dialog.png){ width="460" }
+
+### Other assistants
+
 
 **ChatGPT**: Settings → Apps & Connectors → Advanced settings → turn on
 *Developer mode*, then *Create* a connector with an endpoint URL as the MCP
