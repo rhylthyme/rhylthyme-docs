@@ -68,9 +68,9 @@ An iOS app is also available; its guide will be published here when ready.
 
 Rhylthyme lets you model complex workflows as **programs** composed of
 parallel **tracks** and sequential **steps**, with timing dependencies and
-resource constraints. Programs are defined in JSON and can be visualized as
-interactive timelines, run with real-time execution controls, or generated
-from natural language using the AI chat.
+resource constraints. Programs can be visualized as interactive timelines, run
+with real-time execution controls, or generated from natural language using the
+AI chat.
 
 <div class="grid cards rh-features" markdown>
 
