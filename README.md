@@ -1,6 +1,7 @@
 # Rhylthyme Documentation
 
-Documentation for the Rhylthyme project, built with MkDocs and the Material theme.
+Documentation for the Rhylthyme project, built with [Zensical](https://zensical.org) from `mkdocs.yml`, with
+the Material look (`theme.variant: classic`) and the overrides in `overrides/`.
 
 **Live site**: https://rhylthyme.github.io/rhylthyme-docs/
 
@@ -8,8 +9,15 @@ Documentation for the Rhylthyme project, built with MkDocs and the Material them
 
 ```bash
 pip install -r requirements.txt
-mkdocs serve
+zensical serve
 # Open http://127.0.0.1:8000
+```
+
+`zensical serve` leaves out the page dates. To see them, as CI builds the site:
+
+```bash
+python tools/page_dates.py
+zensical serve -f mkdocs.dates.yml
 ```
 
 ## Structure

@@ -20,19 +20,23 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0   # git-revision-date-localized reads the history
+        fetch-depth: 0   # tools/page_dates.py reads the history
 
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
 
-    - name: Install MkDocs
+    - name: Install Zensical
       run: pip install -r requirements.txt
 
     # Before npm test: tests/snippets/site-markers.test.js checks site/.
+    # Zensical has no git-revision-date plugin: page_dates.py writes each
+    # page's dates into mkdocs.dates.yml, which inherits mkdocs.yml.
     - name: Build documentation (strict)
-      run: mkdocs build --strict
+      run: |
+        python tools/page_dates.py
+        zensical build --strict -f mkdocs.dates.yml
 
     - name: Set up Node
       uses: actions/setup-node@v4

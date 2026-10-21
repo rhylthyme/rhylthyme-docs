@@ -1,0 +1,19 @@
+{#- The page's git dates, which tools/page_dates.py puts in
+    config.extra.page_dates; the markup is git-revision-date-localized's. -#}
+{% set dates = (config.extra.page_dates or {})[page.url] %}
+{% if dates %}
+  <aside class="md-source-file">
+    <span class="md-source-file__fact">
+      <span class="md-icon" title="{{ lang.t('source.file.date.updated') }}">
+        {% include ".icons/material/clock-edit-outline.svg" %}
+      </span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="{{ dates.updated.title }}">{{ dates.updated.date }}</span>
+    </span>
+    <span class="md-source-file__fact">
+      <span class="md-icon" title="{{ lang.t('source.file.date.created') }}">
+        {% include ".icons/material/clock-plus-outline.svg" %}
+      </span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="{{ dates.created.title }}">{{ dates.created.date }}</span>
+    </span>
+  </aside>
+{% endif %}

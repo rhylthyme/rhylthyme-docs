@@ -211,7 +211,7 @@ run cannot be said not to have regressed (`--allow-missing` waives it).
 Never widen a threshold to land a merge. Re-baseline quarterly to rotate
 the model pin, and always in a single commit that updates the pin, both
 JSON files, the cache and this table — see
-[`development/contributing.md`](https://rhylthyme.com/docs/development/contributing/)
+[`development/contributing.md`](contributing.md)
 for the procedure.
 
 Reproduce both patterns, all 24 programs, without spending anything:

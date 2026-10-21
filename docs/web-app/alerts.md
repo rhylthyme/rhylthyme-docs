@@ -180,7 +180,7 @@ time.
 
 ## On the web
 
-The web runner at [app.rhylthyme.com](https://app.rhylthyme.com) delivers
+The web runner at [www.rhylthyme.com](https://www.rhylthyme.com) delivers
 every alert while a program is playing:
 
 - **Banner:** alerts appear at the top of the page and stack if several arrive

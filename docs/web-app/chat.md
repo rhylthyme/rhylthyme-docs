@@ -93,4 +93,4 @@ On mobile, the chat is accessible through the **Chat** tab in the bottom navigat
     The assistant's responses are rendered with Markdown formatting, so code blocks, lists, and emphasis are displayed properly in the chat.
 
 !!! note "Self-Hosted Requirement"
-    When running the web app locally, the chat feature requires an `ANTHROPIC_API_KEY` environment variable to be set. Without it, the chat endpoint will return an error. The hosted version at www.rhylthyme.com has this configured.
+    When running the web app locally, the chat feature requires an `ANTHROPIC_API_KEY` environment variable to be set. Without it, the chat endpoint will return an error. The hosted version at [www.rhylthyme.com](https://www.rhylthyme.com) has this configured.

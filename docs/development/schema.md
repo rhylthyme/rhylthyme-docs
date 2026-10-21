@@ -707,7 +707,7 @@ all computed from the authored durations — history never rewrites the plan.
 
 - **CLI:** `rhylthyme run` reads recorded runs at start-up and freezes the
   predictions for the whole run. See
-  [`run --history`](cli.md#predicted-offsets-run---history) for `--history`,
+  [`run --history`](cli.md#predicted-offsets-run-history) for `--history`,
   `--no-history` and `--predict-context`.
 - **Web player:** set `element.predictions` (or the `data-predictions`
   attribute) to what `analyze_schedule` returned:

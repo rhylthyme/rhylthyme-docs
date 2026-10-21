@@ -23,8 +23,12 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
 
+    # Zensical has no git-revision-date plugin: page_dates.py writes each
+    # page's dates into mkdocs.dates.yml, which inherits mkdocs.yml.
     - name: Build documentation
-      run: mkdocs build
+      run: |
+        python tools/page_dates.py
+        zensical build -f mkdocs.dates.yml
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4

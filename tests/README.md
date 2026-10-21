@@ -40,7 +40,7 @@ runs each file through esbuild first, which drops comments, dead branches
 and functions nothing calls. An id built at runtime (`snippet(name)`) is not
 seen; write the literal id. The
 markers are comments, so the site does not show them;
-`site-markers.test.js` checks a `site/` built by `mkdocs build`.
+`site-markers.test.js` checks a `site/` built by `zensical build`.
 
 To cover a new page, add it to `tests/snippets.config`, mark its blocks and
 write the tests.

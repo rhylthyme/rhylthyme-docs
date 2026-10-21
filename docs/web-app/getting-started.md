@@ -64,7 +64,7 @@ The **Prompts** section in the sidebar provides pre-built queries that use the A
 Clicking a prompt automatically sends it to the AI chat panel. The assistant will call the appropriate importer, convert the external data into a Rhylthyme program, and visualize it.
 
 !!! note "Chat Required"
-    Prompts use the AI chat feature, which requires the Anthropic API to be available. On the hosted version at www.rhylthyme.com, this works out of the box.
+    Prompts use the AI chat feature, which requires the Anthropic API to be available. On the hosted version at [www.rhylthyme.com](https://www.rhylthyme.com), this works out of the box.
 
 ## Browsing Public Programs
 
