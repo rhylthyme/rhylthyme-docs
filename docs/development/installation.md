@@ -86,8 +86,15 @@ See the [CLI Commands Reference](cli.md) for the full list of commands and optio
 If you work in Claude Code, the plugin gives Claude the hosted MCP tools and a
 skill for writing schedules, with nothing else to install:
 
+These are two commands. Send the first on its own:
+
 ```
 /plugin marketplace add rhylthyme/rhylthyme-mcp
+```
+
+then, once it says the marketplace was added, the second:
+
+```
 /plugin install rhylthyme@rhylthyme
 ```
 

@@ -52,8 +52,15 @@ hide:
 In Claude Code, install the plugin (the server plus a skill for authoring
 schedules):
 
+These are two commands. Send the first on its own:
+
 ```
 /plugin marketplace add rhylthyme/rhylthyme-mcp
+```
+
+then, once it says the marketplace was added, the second:
+
+```
 /plugin install rhylthyme@rhylthyme
 ```
 
