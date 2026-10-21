@@ -206,6 +206,56 @@
   border-radius: 0 0 0.8rem 0.8rem;
 }
 
+/* Zensical keeps inline code in navigation titles, inside a .md-typeset
+   span; MkDocs showed them as plain text */
+.md-nav .md-ellipsis > .md-typeset {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.md-nav .md-ellipsis > .md-typeset code,
+.md-nav__link[href]:hover .md-ellipsis > .md-typeset code,
+.md-nav__link[href]:focus .md-ellipsis > .md-typeset code {
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  box-shadow: none;
+}
+
+/* Zensical: the header holds a button that opens the search dialog */
+.md-search__button {
+  width: 11.7rem;
+  height: 1.8rem;
+  padding-left: 2.2rem;
+  border: 1px solid var(--rh-border);
+  border-radius: 999px;
+  background-color: var(--rh-surface);
+  color: var(--md-default-fg-color--light);
+  font-size: 0.8rem;
+}
+
+.md-search__button:focus,
+.md-search__button:hover {
+  background-color: var(--rh-surface);
+  border-color: var(--md-default-fg-color--lighter);
+  color: var(--md-default-fg-color--light);
+}
+
+.md-search__button::before {
+  top: 0.4rem;
+  left: 0.6rem;
+  background-color: var(--md-default-fg-color--light);
+}
+
+.md-search__button::after {
+  top: 0.4rem;
+  right: 0.8rem;
+  color: var(--md-default-fg-color--lighter);
+  background: none;
+}
+
 .md-header .md-source {
   color: var(--md-default-fg-color--light);
 }
@@ -803,7 +853,8 @@
   margin-top: 0;
 }
 
-.md-container:has(.rh-hero) .md-content__inner > h2:first-child {
+.md-container:has(.rh-hero) .md-content__inner > h2:first-child,
+.md-container:has(.rh-hero) .md-content__inner > #__skip:first-child + h2 {
   margin-top: 0.6em;
 }
 
