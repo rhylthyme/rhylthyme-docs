@@ -107,13 +107,32 @@ test('the built Concepts page has 12 working buttons', { skip }, async () => {
     const b = button(page, id);
     assert.equal(await b.evaluate((el) => el.closest('pre, code') === null), true, `${id}: not in a code block`);
     assert.ok(await b.isVisible(), `${id}: visible`);
+    const text = await b.textContent();
     await b.click();
     await dialogOpen(page);
     assert.equal(await title(page), loadExample(id).title, id);
     await page.click('.rt-pg-close');
     await dialogClosed(page);
-    assert.equal(await b.textContent(), 'Try it live');
+    assert.equal(await b.textContent(), text, `${id}: its own text is back`);
   }
+  await done();
+});
+
+test('a labelled row button gets its own label back after loading', { skip }, async () => {
+  const { page, done } = await sitePage(CONCEPTS);
+  const label = 'Try it live: afterStep';
+  const b = page.locator('.rt-try-row .rt-try', { hasText: label });
+  assert.equal(await b.count(), 1);
+  await b.click(); // the first click also loads the bundle
+  await dialogOpen(page);
+  await page.click('.rt-pg-close');
+  await dialogClosed(page);
+  assert.equal(await b.textContent(), label);
+  await b.click(); // and a second open, bundle already there
+  await dialogOpen(page);
+  await page.click('.rt-pg-close');
+  await dialogClosed(page);
+  assert.equal(await b.textContent(), label);
   await done();
 });
 

@@ -9,7 +9,34 @@ const path = require('path');
 const { EXAMPLE_IDS } = require('./lib/examples');
 
 const ROOT = path.join(__dirname, '..', '..');
-const BUTTON = /<button class="rt-try" data-example="([a-z0-9-]+)">Try it live<\/button>/g;
+// A button is <button class="rt-try" data-example="<id>">Try it live</button>;
+// inside a <p class="rt-try-row"> its text is "Try it live: <label>" instead.
+const BUTTON = /<button class="rt-try" data-example="([a-z0-9-]+)">(Try it live(?:: ([^<]*))?)<\/button>/g;
+const ROW = /<p class="rt-try-row">([\s\S]*?)<\/p>/g;
+
+// The page's buttons in order: { id, text, label, row } (row: index of the
+// .rt-try-row holding it, or -1).
+function buttons(md) {
+  const rows = [...md.matchAll(ROW)].map((m) => [m.index, m.index + m[0].length]);
+  return [...md.matchAll(BUTTON)].map((m) => ({
+    id: m[1],
+    text: m[2],
+    label: m[3],
+    row: rows.findIndex(([from, to]) => m.index > from && m.index < to),
+  }));
+}
+
+function checkLabels(file, found) {
+  for (const b of found) {
+    if (b.row === -1) assert.equal(b.text, 'Try it live', `${file}: ${b.id} is outside a row, so its text is "Try it live"`);
+    else assert.match(b.text, /^Try it live: \S(.*\S)?$/, `${file}: ${b.id} is in a row, so it reads "Try it live: <label>"`);
+  }
+  const rows = new Set(found.filter((b) => b.row !== -1).map((b) => b.row));
+  for (const row of rows) {
+    const labels = found.filter((b) => b.row === row).map((b) => b.label);
+    assert.equal(new Set(labels).size, labels.length, `${file}: labels repeat within a row`);
+  }
+}
 
 function markdownFiles(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
@@ -21,15 +48,19 @@ function markdownFiles(dir) {
 
 test('the Concepts page has the 12 buttons in order', () => {
   const md = fs.readFileSync(path.join(ROOT, 'docs/getting-started/concepts.md'), 'utf8');
-  const ids = [...md.matchAll(BUTTON)].map((m) => m[1]);
-  assert.deepEqual(ids, EXAMPLE_IDS);
+  const found = buttons(md);
+  assert.deepEqual(found.map((b) => b.id), EXAMPLE_IDS);
+  const row = found.filter((b) => b.row !== -1);
+  assert.deepEqual(row.map((b) => b.label), ['programStart', 'afterStep', 'manual']);
 });
 
 test('every button in the docs has an example, and every example a button', () => {
   const seen = [];
   for (const file of markdownFiles(path.join(ROOT, 'docs'))) {
     const md = fs.readFileSync(file, 'utf8');
-    const ids = [...md.matchAll(BUTTON)].map((m) => m[1]);
+    const found = buttons(md);
+    checkLabels(file, found);
+    const ids = found.map((b) => b.id);
     assert.equal(new Set(ids).size, ids.length, `${file}: an id appears twice`);
     const classed = (md.match(/<[a-z]+[^>]*class="(?:[^"]*\s)?rt-try(?:\s[^"]*)?"[^>]*>/g) || []).length;
     assert.equal(classed, ids.length, `${file}: an rt-try element does not match the standard markup`);

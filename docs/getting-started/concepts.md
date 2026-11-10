@@ -126,9 +126,9 @@ Triggers define when a step begins:
 | `manual` | Waits for the user to click "Start Step" | `{"type": "manual"}` |
 
 <p class="rt-try-row">
-<button class="rt-try" data-example="trigger-program-start">Try it live</button>
-<button class="rt-try" data-example="trigger-after-step">Try it live</button>
-<button class="rt-try" data-example="trigger-manual">Try it live</button>
+<button class="rt-try" data-example="trigger-program-start">Try it live: programStart</button>
+<button class="rt-try" data-example="trigger-after-step">Try it live: afterStep</button>
+<button class="rt-try" data-example="trigger-manual">Try it live: manual</button>
 </p>
 
 `afterStepWithBuffer` has a live example under [Buffers](#buffers).

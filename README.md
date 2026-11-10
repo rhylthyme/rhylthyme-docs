@@ -61,6 +61,11 @@ put the button on its own line in the page, with blank lines around it:
 <button class="rt-try" data-example="<id>">Try it live</button>
 ```
 
+Several buttons under one table go in one `<p class="rt-try-row">`, one
+button per line; only there a button reads `Try it live: <label>`, with a
+short label (unique in its row) that says which example it opens.
+`tests/playground/pages.test.js` checks both forms.
+
 The overlay is a bundle that is built, not committed. Build it before
 serving the site, and run the tests:
 
