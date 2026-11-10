@@ -187,3 +187,8 @@ markdown_extensions:
 # Extra CSS
 extra_css:
   - stylesheets/extra.css
+  - stylesheets/try-it-live.css
+
+# Extra JavaScript
+extra_javascript:
+  - javascripts/try-it-live.js

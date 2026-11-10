@@ -17,6 +17,8 @@ A **program** is a complete schedule defined in JSON. It describes everything th
 }
 ```
 
+<button class="rt-try" data-example="program">Try it live</button>
+
 ![A program loaded in the web app showing the DAG view](../assets/screenshots/program-dag-view.png)
 <!-- TODO: Capture screenshot of a program loaded in the web app DAG view -->
 
@@ -33,6 +35,8 @@ Think of tracks as lanes of activity. In a breakfast program, you might have an 
   "steps": [ ... ]
 }
 ```
+
+<button class="rt-try" data-example="tracks">Try it live</button>
 
 ![Timeline view showing multiple tracks running in parallel](../assets/screenshots/tracks-timeline.png)
 <!-- TODO: Capture screenshot of timeline view with multiple parallel tracks -->
@@ -56,6 +60,8 @@ A **step** is a single task within a track. Each step has:
 }
 ```
 
+<button class="rt-try" data-example="steps">Try it live</button>
+
 ## Durations
 
 Steps can have three types of duration:
@@ -74,6 +80,8 @@ The most common type. The step runs for exactly the specified number of seconds.
 {"type": "fixed", "seconds": 300}
 ```
 
+<button class="rt-try" data-example="duration-fixed">Try it live</button>
+
 ### Variable Duration
 
 The step has a time range. It auto-completes at `defaultSeconds` unless you click **Mark Complete** after the minimum has passed.
@@ -87,6 +95,8 @@ The step has a time range. It auto-completes at `defaultSeconds` unless you clic
 }
 ```
 
+<button class="rt-try" data-example="duration-variable">Try it live</button>
+
 ### Indefinite Duration
 
 The step runs until you manually mark it complete. Use `defaultSeconds` to set the display width on the timeline.
@@ -97,6 +107,8 @@ The step runs until you manually mark it complete. Use `defaultSeconds` to set t
   "defaultSeconds": 120
 }
 ```
+
+<button class="rt-try" data-example="duration-indefinite">Try it live</button>
 
 ![Variable and indefinite steps during execution with Mark Complete buttons](../assets/screenshots/duration-types.png)
 <!-- TODO: Capture screenshot showing variable/indefinite steps with completion controls -->
@@ -112,6 +124,14 @@ Triggers define when a step begins:
 | `afterStep` | Starts immediately after another step ends | `{"type": "afterStep", "stepId": "boil-water"}` |
 | `afterStepWithBuffer` | Starts after another step ends, plus a buffer period | `{"type": "afterStepWithBuffer", "stepId": "knead", "bufferSeconds": 60}` |
 | `manual` | Waits for the user to click "Start Step" | `{"type": "manual"}` |
+
+<p class="rt-try-row">
+<button class="rt-try" data-example="trigger-program-start">Try it live</button>
+<button class="rt-try" data-example="trigger-after-step">Try it live</button>
+<button class="rt-try" data-example="trigger-manual">Try it live</button>
+</p>
+
+`afterStepWithBuffer` has a live example under [Buffers](#buffers).
 
 Triggers create the dependency structure of a program. For instance, you can't cook eggs until the pan is hot, so "Cook Eggs" has an `afterStep` trigger pointing to "Heat Pan."
 
@@ -136,6 +156,8 @@ A step with `replicates` runs several times; each run is an **instance**
 {"stepId": "cool", "startTrigger": {"type": "afterStep", "stepId": "bake", "instances": "each"}},
 {"stepId": "box",  "startTrigger": {"type": "afterStep", "stepId": "cool", "instances": "all"}}
 ```
+
+<button class="rt-try" data-example="instances">Try it live</button>
 
 Three trays bake one after another; each starts cooling the moment it comes
 out; boxing waits for all three. On the timeline a barrier is drawn as a
@@ -164,6 +186,8 @@ Buffers are useful when you need rest time, cooling time, or a pause between act
 }
 ```
 
+<button class="rt-try" data-example="buffers">Try it live</button>
+
 In this example, after kneading finishes, there's a 60-second buffer before the resting step begins. On the timeline, buffers appear as gaps between step bars.
 
 ## Resource Constraints
@@ -177,6 +201,8 @@ In this example, after kneading finishes, there's a 60-second buffer before the 
   "description": "Available stove burners"
 }
 ```
+
+<button class="rt-try" data-example="resource-constraints">Try it live</button>
 
 Switch to the **Resources** view in the web app to see resource utilization over time. Red shading indicates periods where the schedule exceeds the constraint.
 
