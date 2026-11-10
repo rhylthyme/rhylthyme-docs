@@ -1,0 +1,98 @@
+{
+  "title": "Tracks run in parallel",
+  "try": [
+    {
+      "say": "Change \"seconds\" on Fry Bacon from 360 to 600: the bacon track gets longer.",
+      "path": [
+        "tracks",
+        1,
+        "steps",
+        0,
+        "duration",
+        "seconds"
+      ],
+      "value": 600
+    },
+    {
+      "say": "Replace the toast \"startTrigger\" with afterStep \"fry-bacon\": toast waits for the bacon.",
+      "path": [
+        "tracks",
+        2,
+        "steps",
+        0,
+        "startTrigger"
+      ],
+      "value": {
+        "type": "afterStep",
+        "stepId": "fry-bacon"
+      }
+    }
+  ],
+  "program": {
+    "programId": "breakfast-tracks",
+    "name": "Breakfast Tracks",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "eggs",
+        "name": "Eggs",
+        "steps": [
+          {
+            "stepId": "scramble-eggs",
+            "name": "Scramble Eggs",
+            "task": "griddle",
+            "duration": {
+              "type": "fixed",
+              "seconds": 240
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          }
+        ]
+      },
+      {
+        "trackId": "bacon",
+        "name": "Bacon",
+        "steps": [
+          {
+            "stepId": "fry-bacon",
+            "name": "Fry Bacon",
+            "task": "griddle",
+            "duration": {
+              "type": "fixed",
+              "seconds": 360
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          }
+        ]
+      },
+      {
+        "trackId": "toast",
+        "name": "Toast",
+        "steps": [
+          {
+            "stepId": "make-toast",
+            "name": "Make Toast",
+            "task": "griddle",
+            "duration": {
+              "type": "fixed",
+              "seconds": 180
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": [
+      {
+        "task": "griddle",
+        "maxConcurrent": 3
+      }
+    ]
+  }
+}

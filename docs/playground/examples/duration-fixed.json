@@ -1,0 +1,65 @@
+{
+  "title": "Fixed duration",
+  "try": [
+    {
+      "say": "Change \"seconds\" from 210 to 420: the toasting bar doubles.",
+      "path": [
+        "tracks",
+        0,
+        "steps",
+        0,
+        "duration",
+        "seconds"
+      ],
+      "value": 420
+    }
+  ],
+  "program": {
+    "programId": "toast-and-butter",
+    "name": "Toast and Butter",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "toast",
+        "name": "Toast",
+        "steps": [
+          {
+            "stepId": "toast-bread",
+            "name": "Toast Bread",
+            "task": "toasting",
+            "duration": {
+              "type": "fixed",
+              "seconds": 210
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          },
+          {
+            "stepId": "butter-toast",
+            "name": "Butter Toast",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 30
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "toast-bread"
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": [
+      {
+        "task": "toasting",
+        "maxConcurrent": 1
+      },
+      {
+        "task": "prep",
+        "maxConcurrent": 1
+      }
+    ]
+  }
+}

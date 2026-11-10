@@ -1,0 +1,71 @@
+{
+  "title": "Variable duration",
+  "try": [
+    {
+      "say": "Change \"defaultSeconds\" from 150 to 180: the planned bar grows to the longest time.",
+      "path": [
+        "tracks",
+        0,
+        "steps",
+        0,
+        "duration",
+        "defaultSeconds"
+      ],
+      "value": 180
+    },
+    {
+      "say": "Press the play button, then press \"Mark complete\" after two minutes."
+    }
+  ],
+  "program": {
+    "programId": "soft-eggs",
+    "name": "Soft Eggs",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "eggs",
+        "name": "Eggs",
+        "steps": [
+          {
+            "stepId": "cook-eggs",
+            "name": "Cook Eggs",
+            "task": "frying",
+            "duration": {
+              "type": "variable",
+              "minSeconds": 120,
+              "maxSeconds": 180,
+              "defaultSeconds": 150,
+              "triggerName": "eggs-done"
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          },
+          {
+            "stepId": "plate-eggs",
+            "name": "Plate Eggs",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 60
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "cook-eggs"
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": [
+      {
+        "task": "frying",
+        "maxConcurrent": 1
+      },
+      {
+        "task": "prep",
+        "maxConcurrent": 1
+      }
+    ]
+  }
+}

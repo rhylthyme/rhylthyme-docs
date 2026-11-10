@@ -1,0 +1,96 @@
+{
+  "title": "Instances and barriers",
+  "try": [
+    {
+      "say": "Change \"count\" from 3 to 5: five trays bake, cool and get boxed.",
+      "path": [
+        "tracks",
+        0,
+        "steps",
+        1,
+        "replicates",
+        "count"
+      ],
+      "value": 5
+    },
+    {
+      "say": "Change \"mode\" from \"serial\" to \"parallel\": the trays bake side by side.",
+      "path": [
+        "tracks",
+        0,
+        "steps",
+        1,
+        "replicates",
+        "mode"
+      ],
+      "value": "parallel"
+    }
+  ],
+  "program": {
+    "programId": "cookie-trays",
+    "name": "Cookie Trays",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "cookies",
+        "name": "Cookies",
+        "steps": [
+          {
+            "stepId": "mix-dough",
+            "name": "Mix Dough",
+            "duration": {
+              "type": "fixed",
+              "seconds": 300
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          },
+          {
+            "stepId": "bake-tray",
+            "name": "Bake Tray",
+            "duration": {
+              "type": "fixed",
+              "seconds": 600
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "mix-dough"
+            },
+            "replicates": {
+              "count": 3,
+              "mode": "serial"
+            }
+          },
+          {
+            "stepId": "cool-tray",
+            "name": "Cool Tray",
+            "duration": {
+              "type": "fixed",
+              "seconds": 300
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "bake-tray",
+              "instances": "each"
+            }
+          },
+          {
+            "stepId": "box-cookies",
+            "name": "Box Cookies",
+            "duration": {
+              "type": "fixed",
+              "seconds": 180
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "cool-tray",
+              "instances": "all"
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": []
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "title": "Indefinite duration",
+  "try": [
+    {
+      "say": "Change \"defaultSeconds\" from 120 to 300: the placeholder bar grows.",
+      "path": [
+        "tracks",
+        0,
+        "steps",
+        0,
+        "duration",
+        "defaultSeconds"
+      ],
+      "value": 300
+    },
+    {
+      "say": "Press the play button, then press \"Mark complete\" when you like."
+    }
+  ],
+  "program": {
+    "programId": "pan-sauce",
+    "name": "Pan Sauce",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "sauce",
+        "name": "Sauce",
+        "steps": [
+          {
+            "stepId": "reduce-sauce",
+            "name": "Reduce Sauce",
+            "task": "simmering",
+            "duration": {
+              "type": "indefinite",
+              "defaultSeconds": 120,
+              "triggerName": "sauce-thick"
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          },
+          {
+            "stepId": "serve-sauce",
+            "name": "Serve Sauce",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 60
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "reduce-sauce"
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": [
+      {
+        "task": "simmering",
+        "maxConcurrent": 1
+      },
+      {
+        "task": "prep",
+        "maxConcurrent": 1
+      }
+    ]
+  }
+}

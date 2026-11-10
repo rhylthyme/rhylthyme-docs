@@ -1,0 +1,88 @@
+{
+  "title": "Wait for a person",
+  "try": [
+    {
+      "say": "Replace the Guests Arrive \"startTrigger\" with afterStep \"prep-table\": no more waiting for a person.",
+      "path": [
+        "tracks",
+        1,
+        "steps",
+        0,
+        "startTrigger"
+      ],
+      "value": {
+        "type": "afterStep",
+        "stepId": "prep-table"
+      }
+    },
+    {
+      "say": "Press the play button, then press \"Start\" on Guests Arrive."
+    }
+  ],
+  "program": {
+    "programId": "dinner-party",
+    "name": "Dinner Party",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "host",
+        "name": "Host",
+        "steps": [
+          {
+            "stepId": "prep-table",
+            "name": "Prep Table",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 600
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          }
+        ]
+      },
+      {
+        "trackId": "guests",
+        "name": "Guests",
+        "steps": [
+          {
+            "stepId": "guests-arrive",
+            "name": "Guests Arrive",
+            "task": "greeting",
+            "duration": {
+              "type": "fixed",
+              "seconds": 300
+            },
+            "startTrigger": {
+              "type": "manual"
+            }
+          },
+          {
+            "stepId": "serve-dinner",
+            "name": "Serve Dinner",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 420
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "guests-arrive"
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": [
+      {
+        "task": "prep",
+        "maxConcurrent": 2
+      },
+      {
+        "task": "greeting",
+        "maxConcurrent": 1
+      }
+    ]
+  }
+}
