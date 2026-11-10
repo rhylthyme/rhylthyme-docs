@@ -42,6 +42,43 @@ html.rt-try-ready .rt-try:focus-visible {
   outline-offset: 2px;
 }
 
+/* Several buttons under one table: one row, wrapping on a phone. Hidden with
+   its buttons until the loader runs, so it leaves no empty gap. */
+.rt-try-row {
+  display: none;
+}
+
+html.rt-try-ready .rt-try-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px 0 16px; /* a single button's margins, on top of the paragraph's */
+}
+
+html.rt-try-ready .rt-try-row .rt-try {
+  margin: 0;
+}
+
+/* A button whose load failed: an error message, not a button to press. */
+html.rt-try-ready .rt-try.rt-try-failed {
+  border-color: var(--rt-try-error, #b91c1c);
+  border-style: dashed;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--rt-try-error, #b91c1c);
+  text-align: left;
+  cursor: default;
+}
+
+[data-md-color-scheme="slate"] .rt-try.rt-try-failed {
+  --rt-try-error: #fca5a5;
+}
+
+html.rt-try-ready .rt-try.rt-try-failed::before {
+  content: "⚠";
+  font-size: 14px;
+}
+
 /* The page behind the overlay does not scroll. */
 html.rt-pg-open {
   overflow: hidden;

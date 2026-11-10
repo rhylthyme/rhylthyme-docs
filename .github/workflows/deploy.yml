@@ -23,6 +23,20 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
 
+    # The "Try it live" overlay bundle (docs/javascripts/playground.bundle.js)
+    # is built, not committed: build it before the site so site/ has it.
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+
+    - name: Install Node dependencies
+      run: npm ci
+
+    - name: Build the Try it live bundle
+      run: npm run build:playground
+
     # Zensical has no git-revision-date plugin: page_dates.py writes each
     # page's dates into mkdocs.dates.yml, which inherits mkdocs.yml.
     - name: Build documentation

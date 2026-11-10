@@ -57,7 +57,7 @@ must pin the same one.
 | `RHYLTHYME_TIMELINE_TARBALL=path/to/rhylthyme-timeline-X.tgz` | Test an `npm pack` tarball before publishing it: jsDelivr requests for the pinned version are answered from the unpacked tarball, and `tests/setup.js` installs the tarball with `--no-save`. Its version must be the pinned one. Run `npm ci` afterwards to go back. |
 | `RHYLTHYME_LIVE_MCP=1` | Also run the curl and fetch snippets against the live `mcp.rhylthyme.com` (CI sets it). They call `validate_program` and `analyze_schedule` only; a snippet that calls `visualize_schedule`, which publishes, fails instead of running. |
 | `PLAYWRIGHT_CHANNEL=chrome` | Use the installed Google Chrome instead of Playwright's Chromium. |
-| `MKDOCS_SITE_DIR=dir` | Where `site-markers.test.js` looks for the built site (default `site/`). |
+| `MKDOCS_SITE_DIR=dir` | Where `site-markers.test.js` and `playground/site.test.js` look for the built site (default `site/`). |
 
 React 18 and 19 are installed side by side as the aliases `react18`,
 `react-dom18`, `react19` and `react-dom19` (hence `legacy-peer-deps` in
@@ -70,3 +70,34 @@ once per version.
 linked from the embedding guide) end to end in Chromium against the pinned
 package, or the tarball: every station lights, every step is logged once,
 the night completes, and the cursed recipe is explained with `findingCodes`.
+
+## Live examples
+
+The "Try it live" buttons (see "Adding a live example" in the top-level
+`README.md`) are tested by `tests/playground/`. `npm test` builds the
+overlay bundle first (`npm run build:playground`, in `pretest`).
+
+- `examples.test.js`: each example file has the right shape, its program
+  is valid with no warnings or conflicts, and each suggestion with a `path`
+  keeps it valid and changes what the panel shows.
+- `apply.test.js`, `check.test.js`: applying a suggestion, and what the
+  status bar says (JSON error line, validator and analyzer messages).
+- `pages.test.js`: every button in the Markdown has an example and every
+  example a button, in the standard markup; the loader and stylesheet are
+  in `mkdocs.yml`.
+- `loader.test.js`, `panel.test.js`: the loader and the overlay in Chromium
+  on a fixture page (`tests/playground/fixture/`).
+- `site.test.js`: the built Concepts page in Chromium: all twelve buttons,
+  instant navigation to and away from the page, `?try=<id>` links, the
+  overlay above the site's header and its keyboard shortcuts, the page
+  behind not scrolling, no errors or failed requests. It needs a build of
+  the site and is skipped without one (`MKDOCS_SITE_DIR` as for
+  `site-markers.test.js`); it serves the bundle, loader and stylesheet from
+  `docs/`, so a stale copy in `site/` does not matter:
+
+  ```bash
+  npm run build:playground
+  python tools/page_dates.py
+  zensical build --strict -f mkdocs.dates.yml
+  npm test
+  ```

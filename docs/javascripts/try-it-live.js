@@ -76,7 +76,12 @@
 
   function init() {
     if (started) {
-      if (window.RhylthymePlayground && window.RhylthymePlayground.isOpen()) window.RhylthymePlayground.close();
+      // A new page: close the overlay of the old one. Its ?try= went with it,
+      // so the close observer must not strip the new page's.
+      if (window.RhylthymePlayground && window.RhylthymePlayground.isOpen()) {
+        window.RhylthymePlayground.close();
+        wasOpen = false;
+      }
     } else {
       started = true;
       watchClose();

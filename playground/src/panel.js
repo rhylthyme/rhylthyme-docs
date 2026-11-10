@@ -271,6 +271,10 @@ function deepActiveElement() {
 }
 
 function onKeydown(e) {
+  // The dialog is modal: the site's own shortcuts (search on "/", "s" or
+  // Ctrl/Cmd+K, next/previous page) listen on window and must not act
+  // behind it.
+  e.stopPropagation();
   if (e.key === 'Escape') {
     // CodeMirror marks the Escape it used (closing a tooltip or panel) as handled.
     if (!e.defaultPrevented) {
