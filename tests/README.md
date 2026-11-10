@@ -82,18 +82,21 @@ overlay bundle first (`npm run build:playground`, in `pretest`).
   keeps it valid and changes what the panel shows.
 - `apply.test.js`, `check.test.js`: applying a suggestion, and what the
   status bar says (JSON error line, validator and analyzer messages).
-- `pages.test.js`: every button in the Markdown has an example and every
-  example a button, in the standard markup; the loader and stylesheet are
-  in `mkdocs.yml`.
+- `pages.test.js`: each page in `PAGE_EXAMPLES` (`lib/examples.js`) has
+  its buttons in order, every button in the Markdown has an example and
+  every example a button, in the standard markup; the loader and stylesheet
+  are in `mkdocs.yml`.
 - `loader.test.js`, `panel.test.js`: the loader and the overlay in Chromium
   on a fixture page (`tests/playground/fixture/`).
-- `site.test.js`: the built Concepts page in Chromium: all twelve buttons,
+- `site.test.js`: the built pages in Chromium: each listed page's buttons,
   instant navigation to and away from the page, `?try=<id>` links, the
   overlay above the site's header and its keyboard shortcuts, the page
-  behind not scrolling, no errors or failed requests. It needs a build of
-  the site and is skipped without one (`MKDOCS_SITE_DIR` as for
-  `site-markers.test.js`); it serves the bundle, loader and stylesheet from
-  `docs/`, so a stale copy in `site/` does not matter:
+  behind not scrolling, no errors or failed requests; and that `site/`
+  itself holds the bundle, loader, stylesheet and examples. It needs a
+  build of the site and is skipped without one (`MKDOCS_SITE_DIR` as for
+  `site-markers.test.js`), except in CI (`CI` set), where a missing build
+  fails. Otherwise it serves the bundle, loader and stylesheet from `docs/`,
+  so a stale copy in `site/` does not matter:
 
   ```bash
   npm run build:playground

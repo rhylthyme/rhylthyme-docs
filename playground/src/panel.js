@@ -16,6 +16,9 @@ import { firstJsonError } from './json-line.js';
 const DEBOUNCE_MS = 300;
 const COPIED_MS = 1500;
 const SCHEME_ATTR = 'data-md-color-scheme';
+// Below this width the panel is stacked (as in try-it-live.css) and opening
+// focuses Close, not the editor: a phone's keyboard would cover the panel.
+const NARROW = '(max-width: 799.98px)';
 const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex], [contenteditable]:not([contenteditable="false"])';
 
 const TEMPLATE = `
@@ -75,6 +78,9 @@ let editSeq = 0;
 let openSeq = 0;
 let schemeWatcher = null;
 let copiedTimer = 0;
+let status = { state: '', lines: [] }; // the last check's lines
+let copiedNote = false; // "Link copied" shown after them
+let shownKey = ''; // what the status region holds now
 
 function isDark() {
   return document.body.getAttribute(SCHEME_ATTR) === 'slate';
@@ -96,6 +102,7 @@ function build() {
     root,
     title: $('.rt-pg-title'),
     copy: $('.rt-pg-copy'),
+    close: $('.rt-pg-close'),
     linkbox: $('.rt-pg-linkbox'),
     linkInput: $('.rt-pg-linkbox input'),
     preview: $('.rt-pg-preview'),
@@ -107,7 +114,7 @@ function build() {
   view = new EditorView({ parent: $('.rt-pg-editor') });
   $('.rt-pg-reset').addEventListener('click', reset);
   ui.copy.addEventListener('click', copyLink);
-  $('.rt-pg-close').addEventListener('click', close);
+  ui.close.addEventListener('click', close);
   root.addEventListener('keydown', onKeydown);
 }
 
@@ -182,7 +189,20 @@ function check() {
 }
 
 function showStatus(state, lines) {
-  ui.status.dataset.state = state;
+  if (JSON.stringify([state, lines]) !== JSON.stringify([status.state, status.lines])) dropCopiedNote();
+  status = { state, lines };
+  renderStatus();
+  ui.preview.classList.toggle('rt-pg-stale', state !== 'valid');
+}
+
+// The region is aria-live: rewrite it only when what it says changes, so an
+// edit that changes nothing is not announced again.
+function renderStatus() {
+  const lines = copiedNote ? [...status.lines, { kind: 'info', text: 'Link copied' }] : status.lines;
+  const key = JSON.stringify([status.state, lines]);
+  if (key === shownKey) return;
+  shownKey = key;
+  ui.status.dataset.state = status.state;
   ui.status.replaceChildren(
     ...lines.map((l) => {
       const row = document.createElement('div');
@@ -198,7 +218,12 @@ function showStatus(state, lines) {
       return row;
     }),
   );
-  ui.preview.classList.toggle('rt-pg-stale', state !== 'valid');
+}
+
+function dropCopiedNote() {
+  clearTimeout(copiedTimer);
+  copiedNote = false;
+  if (ui) ui.copy.textContent = 'Copy link';
 }
 
 // ---- header actions ------------------------------------------------------
@@ -229,9 +254,14 @@ async function copyLink() {
     return;
   }
   hideLinkbox();
-  ui.copy.textContent = 'Copied ✓';
   clearTimeout(copiedTimer);
-  copiedTimer = setTimeout(() => (ui.copy.textContent = 'Copy link'), COPIED_MS);
+  ui.copy.textContent = 'Copied ✓';
+  copiedNote = true;
+  renderStatus(); // announced by the status region
+  copiedTimer = setTimeout(() => {
+    dropCopiedNote();
+    renderStatus();
+  }, COPIED_MS);
 }
 
 function hideLinkbox() {
@@ -323,6 +353,7 @@ async function open({ id, exampleUrl, pageUrl, returnFocus }) {
   );
   ui.tryBox.hidden = suggestions.length === 0;
   hideLinkbox();
+  dropCopiedNote();
   clearTimeout(timer);
   view.setState(EditorState.create({ doc: current.text, extensions: extensions() }));
   checkNow();
@@ -333,7 +364,8 @@ async function open({ id, exampleUrl, pageUrl, returnFocus }) {
     schemeWatcher.observe(document.body, { attributes: true, attributeFilter: [SCHEME_ATTR] });
   }
   applyScheme();
-  view.focus();
+  if (window.matchMedia(NARROW).matches) ui.close.focus();
+  else view.focus();
 }
 
 function close() {
@@ -341,6 +373,8 @@ function close() {
   openSeq++;
   clearTimeout(timer);
   editSeq++;
+  dropCopiedNote();
+  renderStatus();
   schemeWatcher.disconnect();
   schemeWatcher = null;
   if (ui.player.status === 'running') ui.player.pause();

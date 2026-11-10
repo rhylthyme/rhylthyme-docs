@@ -24,7 +24,8 @@ function checkProgram(program, { validateProgram, analyzeSchedule }) {
     return { state: 'invalid', lines };
   }
   const analysis = analyzeSchedule(program);
-  const steps = result.stats.steps;
+  // The steps the learner wrote: the validator's count expands replicates.
+  const steps = program.tracks.reduce((n, t) => n + (Array.isArray(t.steps) ? t.steps.length : 0), 0);
   const lines = [line('ok', `✓ Valid · ${steps} ${steps === 1 ? 'step' : 'steps'} · takes ${analysis.makespan}`)];
   for (const w of result.warnings) lines.push(line('warn', w.message, w.fix));
   for (const c of analysis.resourceConflicts) {

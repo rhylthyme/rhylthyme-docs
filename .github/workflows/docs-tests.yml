@@ -53,6 +53,11 @@ jobs:
         python tools/page_dates.py
         zensical build --strict -f mkdocs.dates.yml
 
+    # The site build copies the bundle only if it exists: without it every
+    # "Try it live" button would fail on the published site.
+    - name: Check the site has the Try it live bundle
+      run: test -s site/javascripts/playground.bundle.js
+
     - name: Install Chromium
       run: npx playwright install --with-deps chromium
 

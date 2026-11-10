@@ -2,7 +2,7 @@
   "title": "Fixed duration",
   "try": [
     {
-      "say": "Change \"seconds\" from 210 to 420: the toasting bar doubles.",
+      "say": "Change \"seconds\" from 210 to 420: the Toast Bread bar doubles.",
       "path": [
         "tracks",
         0,

@@ -2,7 +2,7 @@
   "title": "Instances and barriers",
   "try": [
     {
-      "say": "Change \"count\" from 3 to 5: five trays bake, cool and get boxed.",
+      "say": "Change \"count\" from 3 to 2: two trays bake and cool, and Box Cookies starts ten minutes sooner.",
       "path": [
         "tracks",
         0,
@@ -11,7 +11,7 @@
         "replicates",
         "count"
       ],
-      "value": 5
+      "value": 2
     },
     {
       "say": "Change \"mode\" from \"serial\" to \"parallel\": the trays bake side by side.",

@@ -16,7 +16,7 @@
       }
     },
     {
-      "say": "Press the play button, then press \"Start\" on Guests Arrive."
+      "say": "Press Start, then 'Start: Guests Arrive': its bar stops sliding later and Guests Arrive begins."
     }
   ],
   "program": {

@@ -31,6 +31,14 @@ test('a valid example: ok line with steps and makespan', () => {
   assert.equal(r.lines.length, 1);
 });
 
+test('the step count is the steps written, not the expanded instances', () => {
+  const ex = loadExample('instances');
+  const written = ex.program.tracks.reduce((n, t) => n + t.steps.length, 0);
+  assert.ok(ex.program.tracks.some((t) => t.steps.some((s) => s.replicates)), 'the example has replicates');
+  const r = checkProgram(ex.program, schedule);
+  assert.match(r.lines[0].text, new RegExp(`^✓ Valid · ${written} steps · `));
+});
+
 test('a rule violation: the validator message and fix', () => {
   const p = structuredClone(loadExample('trigger-after-step').program);
   p.tracks[0].steps.shift(); // something now points at a missing step
@@ -43,7 +51,8 @@ test('a rule violation: the validator message and fix', () => {
 
 test('more than three errors are summarised', () => {
   const r = checkProgram({ tracks: 'no', steps: 1, a: [], schemaVersion: 9 }, schedule);
-  assert.ok(r.lines.length <= 4);
+  assert.equal(r.lines.length, 4);
+  assert.match(r.lines[3].text, /^\+\d+ more$/);
 });
 
 test('not an object: the validator says so', () => {

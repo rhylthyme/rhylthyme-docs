@@ -6,7 +6,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('fs');
 const path = require('path');
-const { EXAMPLE_IDS } = require('./lib/examples');
+const { EXAMPLE_IDS, PAGE_EXAMPLES } = require('./lib/examples');
 
 const ROOT = path.join(__dirname, '..', '..');
 // A button is <button class="rt-try" data-example="<id>">Try it live</button>;
@@ -46,7 +46,20 @@ function markdownFiles(dir) {
   });
 }
 
-test('the Concepts page has the 12 buttons in order', () => {
+for (const [file, ids] of Object.entries(PAGE_EXAMPLES)) {
+  test(`${file} has its ${ids.length} buttons in order`, () => {
+    const found = buttons(fs.readFileSync(path.join(ROOT, file), 'utf8'));
+    assert.deepEqual(found.map((b) => b.id), ids);
+  });
+}
+
+test('the pages together have every example once', () => {
+  const all = Object.values(PAGE_EXAMPLES).flat();
+  assert.deepEqual([...all].sort(), [...EXAMPLE_IDS].sort());
+  assert.equal(new Set(all).size, all.length, 'an example is on two pages');
+});
+
+test('the Concepts page has the 12 buttons, the trigger row labelled', () => {
   const md = fs.readFileSync(path.join(ROOT, 'docs/getting-started/concepts.md'), 'utf8');
   const found = buttons(md);
   assert.deepEqual(found.map((b) => b.id), EXAMPLE_IDS);
@@ -66,6 +79,8 @@ test('every button in the docs has an example, and every example a button', () =
     assert.equal(classed, ids.length, `${file}: an rt-try element does not match the standard markup`);
     const attrs = (md.match(/data-example="/g) || []).length;
     assert.equal(attrs, ids.length, `${file}: a data-example is not on a standard button`);
+    const rel = path.relative(ROOT, file).split(path.sep).join('/');
+    if (ids.length) assert.ok(PAGE_EXAMPLES[rel], `${rel} has buttons: list it in PAGE_EXAMPLES`);
     seen.push(...ids);
   }
   assert.deepEqual([...seen].sort(), [...EXAMPLE_IDS].sort());

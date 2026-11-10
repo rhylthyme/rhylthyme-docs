@@ -1,9 +1,10 @@
 'use strict';
 // "Try it live" in the built site: the Concepts page as `zensical build` makes
 // it (site/, or $MKDOCS_SITE_DIR), with Zensical's instant navigation, header
-// and search. Skipped when there is no build. The bundle, loader and
-// stylesheet are served from docs/ (fresh from `pretest`) even when site/
-// holds older copies.
+// and search. Skipped when there is no build, except in CI ($CI set), where a
+// missing build fails. The bundle, loader and stylesheet are served from
+// docs/ (fresh from `pretest`) even when site/ holds older copies; one test
+// checks the copies in site/ itself, which is what gets deployed.
 
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
@@ -11,13 +12,19 @@ const fs = require('fs');
 const path = require('path');
 const { launch } = require('../snippets/lib/browser');
 const { serve } = require('./lib/server');
-const { EXAMPLE_IDS, loadExample } = require('./lib/examples');
+const { EXAMPLE_IDS, PAGE_EXAMPLES, pageUrlPath, loadExample } = require('./lib/examples');
 const { applySuggestion } = require('../../playground/src/apply');
 
 const ROOT = path.join(__dirname, '..', '..');
 const SITE = path.resolve(process.env.MKDOCS_SITE_DIR || path.join(ROOT, 'site'));
 const built = fs.existsSync(path.join(SITE, 'index.html'));
 const skip = built ? false : `no build in ${SITE}`;
+
+if (!built && process.env.CI) {
+  test('the site is built before the tests in CI', () => {
+    assert.fail(`no build in ${SITE}: run zensical build before npm test`);
+  });
+}
 
 const CONCEPTS = '/getting-started/concepts/';
 const QUICK_START = '/getting-started/quick-start/';
@@ -99,10 +106,35 @@ async function arriveByNav(page) {
   assert.equal(await page.evaluate(() => window.__noReload), true, 'the page was not reloaded');
 }
 
-test('the built Concepts page has 12 working buttons', { skip }, async () => {
-  const { page, done } = await sitePage(CONCEPTS);
-  const ids = await page.$$eval('button.rt-try', (bs) => bs.map((b) => b.getAttribute('data-example')));
-  assert.deepEqual([...ids].sort(), [...EXAMPLE_IDS].sort());
+test('the built site itself holds the loader, stylesheet, bundle and examples', { skip }, () => {
+  const files = [
+    'javascripts/playground.bundle.js',
+    'javascripts/try-it-live.js',
+    'stylesheets/try-it-live.css',
+    ...EXAMPLE_IDS.map((id) => `playground/examples/${id}.json`),
+  ];
+  for (const rel of files) {
+    const file = path.join(SITE, rel);
+    assert.ok(fs.existsSync(file), `site/${rel} is missing`);
+    assert.ok(fs.statSync(file).size > 0, `site/${rel} is empty`);
+    if (rel.endsWith('.json')) assert.doesNotThrow(() => JSON.parse(fs.readFileSync(file, 'utf8')), `site/${rel}`);
+  }
+});
+
+test('every page with buttons has its working buttons, in order', { skip }, async () => {
+  const seen = [];
+  for (const [md, expected] of Object.entries(PAGE_EXAMPLES)) {
+    const { page, done } = await sitePage(pageUrlPath(md));
+    const ids = await page.$$eval('button.rt-try', (bs) => bs.map((b) => b.getAttribute('data-example')));
+    assert.deepEqual(ids, expected, md);
+    seen.push(...ids);
+    await openEach(page, ids);
+    await done();
+  }
+  assert.deepEqual([...seen].sort(), [...EXAMPLE_IDS].sort());
+});
+
+async function openEach(page, ids) {
   for (const id of ids) {
     const b = button(page, id);
     assert.equal(await b.evaluate((el) => el.closest('pre, code') === null), true, `${id}: not in a code block`);
@@ -115,8 +147,7 @@ test('the built Concepts page has 12 working buttons', { skip }, async () => {
     await dialogClosed(page);
     assert.equal(await b.textContent(), text, `${id}: its own text is back`);
   }
-  await done();
-});
+}
 
 test('a labelled row button gets its own label back after loading', { skip }, async () => {
   const { page, done } = await sitePage(CONCEPTS);
@@ -157,6 +188,47 @@ test('leaving the page closes the overlay', { skip }, async () => {
   assert.equal(await page.locator('#rt-playground').isVisible(), false);
   assert.equal(await htmlHasOpen(page), false);
   assert.equal(await page.evaluate(() => window.__noReload), true, 'back was an instant navigation');
+  await done();
+});
+
+test('a pending open does not land on the next page', { skip }, async () => {
+  let release;
+  const held = new Promise((ok) => (release = ok));
+  const { page, done } = await sitePage(CONCEPTS, {
+    setup: (p) =>
+      p.route('**/playground.bundle.js', async (route) => {
+        await held;
+        await route.fallback();
+      }),
+  });
+  await button(page, EXAMPLE_IDS[0]).click(); // the bundle is held back
+  await page.evaluate(() => {
+    window.__noReload = true;
+    document.querySelector(`.md-sidebar--primary a.md-nav__link[href$="quick-start/"]`).click();
+  });
+  await page.waitForURL((u) => u.pathname === QUICK_START);
+  release();
+  await page.waitForFunction(() => !!window.RhylthymePlayground);
+  await page.waitForTimeout(500); // time for an example fetch and an open
+  assert.equal(await isOpen(page), false, 'no overlay on the new page');
+  assert.equal(await htmlHasOpen(page), false);
+  assert.equal(await page.evaluate(() => window.__noReload), true, 'an instant navigation');
+  await done();
+});
+
+test('a ?try= link scrolls to its button, so closing leaves the reader there', { skip }, async () => {
+  const [md, ids] = Object.entries(PAGE_EXAMPLES)[0];
+  const id = ids[ids.length - 1]; // far down the page
+  const { page, done } = await sitePage(`${pageUrlPath(md)}?try=${id}`);
+  await dialogOpen(page);
+  await page.click('.rt-pg-close');
+  await dialogClosed(page);
+  const inView = await button(page, id).evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    return r.top >= 0 && r.bottom <= innerHeight;
+  });
+  assert.ok(await page.evaluate(() => scrollY > 0), 'the page is scrolled');
+  assert.ok(inView, 'the button is in view');
   await done();
 });
 

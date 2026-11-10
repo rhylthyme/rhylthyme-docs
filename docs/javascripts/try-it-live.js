@@ -6,6 +6,7 @@
   var bundle = null; // the one in-flight (or finished) bundle load
   var started = false;
   var wasOpen = false;
+  var generation = 0; // bumped per page: an open from an older page is dropped
 
   function buttonFor(id) {
     return Array.prototype.find.call(document.querySelectorAll('.rt-try'), function (b) {
@@ -35,24 +36,31 @@
 
   function open(id, button) {
     button = button || buttonFor(id);
-    var label = button && button.textContent;
+    var mine = generation;
+    var pageUrl = withoutTry(); // this page's, before any navigation
     if (button) {
       if (button.getAttribute('aria-busy') === 'true') return Promise.resolve();
+      // Its own text, kept once: a failure replaces the text.
+      if (!button.dataset.label) button.dataset.label = button.textContent;
       button.setAttribute('aria-busy', 'true');
       button.classList.remove('rt-try-failed');
       button.textContent = 'Loading…';
     }
     return loadBundle()
       .then(function () {
+        if (mine !== generation) return; // the reader has left that page
         return window.RhylthymePlayground.open({
           id: id,
           exampleUrl: new URL('../playground/examples/' + encodeURIComponent(id) + '.json', base).href,
-          pageUrl: withoutTry(),
+          pageUrl: pageUrl,
           returnFocus: button,
+        }).then(function () {
+          // Left while the example loaded: close it before the reader sees it.
+          if (mine !== generation && window.RhylthymePlayground.isOpen()) closeLeftOver();
         });
       })
       .then(function () {
-        if (button) button.textContent = label;
+        if (button) button.textContent = button.dataset.label;
       }, function () {
         if (button) {
           button.textContent = FAILED;
@@ -74,21 +82,29 @@
     }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
   }
 
+  // Closes the old page's overlay. Its ?try= went with it, so the close
+  // observer must not strip the new page's.
+  function closeLeftOver() {
+    window.RhylthymePlayground.close();
+    wasOpen = false;
+  }
+
   function init() {
+    generation++;
     if (started) {
-      // A new page: close the overlay of the old one. Its ?try= went with it,
-      // so the close observer must not strip the new page's.
-      if (window.RhylthymePlayground && window.RhylthymePlayground.isOpen()) {
-        window.RhylthymePlayground.close();
-        wasOpen = false;
-      }
+      if (window.RhylthymePlayground && window.RhylthymePlayground.isOpen()) closeLeftOver();
     } else {
       started = true;
       watchClose();
     }
     document.documentElement.classList.add('rt-try-ready');
     var id = new URLSearchParams(location.search).get('try');
-    if (id && buttonFor(id)) open(id);
+    var button = id && buttonFor(id);
+    if (button) {
+      // Behind the overlay, and where the reader is after closing it.
+      button.scrollIntoView({ block: 'center' });
+      open(id, button);
+    }
   }
 
   document.addEventListener('click', function (e) {

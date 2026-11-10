@@ -36,7 +36,7 @@ dashes):
       "path": ["tracks", 0, "steps", 1, "startTrigger", "bufferSeconds"],
       "value": 600
     },
-    { "say": "Press the play button and watch the gap pass." }
+    { "say": "Set Speed to 10× and press Start: no step runs during the gap." }
   ],
   "program": { "programId": "…", "schemaVersion": "0.3.0-alpha", "tracks": [] }
 }
@@ -54,8 +54,16 @@ dashes):
   conflicts, short enough to read in the editor (70 lines at most when
   pretty-printed).
 
-Then add the id to `EXAMPLE_IDS` in `tests/playground/lib/examples.js` and
-put the button on its own line in the page, with blank lines around it:
+A `say` must be true of what the panel then shows, and name only what is on
+screen: the player's buttons are **Start**, **Stop**, the **Speed** menu and,
+per step, **Done: &lt;step name&gt;** (variable and indefinite durations) and
+**Start: &lt;step name&gt;** (manual triggers). Open the example and try it
+before writing it.
+
+Then add the id to `EXAMPLE_IDS` in `tests/playground/lib/examples.js`, and
+to the page's list in `PAGE_EXAMPLES` there (in the order the buttons appear
+on the page), and put the button on its own line in the page, with blank
+lines around it:
 
 ```html
 <button class="rt-try" data-example="<id>">Try it live</button>
@@ -65,6 +73,14 @@ Several buttons under one table go in one `<p class="rt-try-row">`, one
 button per line; only there a button reads `Try it live: <label>`, with a
 short label (unique in its row) that says which example it opens.
 `tests/playground/pages.test.js` checks both forms.
+
+To put examples on a page that has none yet: write the example file as
+above, put the button in that page's Markdown, and add the page to
+`PAGE_EXAMPLES` in `tests/playground/lib/examples.js` as a new entry, its
+Markdown path (`'docs/<section>/<page>.md'`) mapped to its example ids in
+page order. The loader and stylesheet are on every page already. The tests
+check each listed page's buttons against its list, in the source and in the
+built site, and that every example is on exactly one page.
 
 The overlay is a bundle that is built, not committed. Build it before
 serving the site, and run the tests:

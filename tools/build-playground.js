@@ -42,4 +42,7 @@ esbuild
     const kb = (fs.statSync(OUTFILE).size / 1024).toFixed(1);
     console.log(`build:playground: ${path.relative(ROOT, OUTFILE)} ${kb} KB`);
   })
-  .catch(() => process.exit(1));
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });

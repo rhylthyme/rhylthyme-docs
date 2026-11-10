@@ -36,6 +36,9 @@ for (const id of EXAMPLE_IDS) {
     for (const s of ex.try.filter((s) => s.path)) {
       const changed = applySuggestion(ex.program, s);
       assert.deepEqual(validateProgram(changed).errors, [], s.say);
+      // A warning the learner cannot relate to the change they made; resource
+      // conflicts (the analyzer's) stay allowed.
+      assert.deepEqual(validateProgram(changed).warnings, [], s.say);
       assert.notDeepEqual(shown(changed), before, `"${s.say}" changes nothing the panel shows`);
     }
   });

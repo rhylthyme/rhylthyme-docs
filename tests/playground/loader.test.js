@@ -139,3 +139,49 @@ test('a failed example fetch is reported on the button', async () => {
   assert.equal(await page.evaluate(() => window.RhylthymePlayground.isOpen()), false);
   await done({ allow: /^console\.error: Failed to load resource/ });
 });
+
+test('a retry after a failed load restores the button\'s own label', async () => {
+  let aborted = 0;
+  const { page, bundleRequests, done } = await fixture({
+    setup: (p) =>
+      p.route('**/playground.bundle.js', (route) => (aborted++ === 0 ? route.abort() : route.fallback())),
+  });
+  const b = button(page, FIRST);
+  const label = await b.textContent();
+  await b.click();
+  await page.waitForFunction((sel) => document.querySelector(sel).classList.contains('rt-try-failed'), '.rt-try');
+  assert.equal((await b.textContent()).trim(), FAILED);
+  await b.click(); // now the bundle loads
+  await dialogOpen(page);
+  await page.click('.rt-pg-close');
+  assert.equal(await b.textContent(), label);
+  assert.equal(await b.evaluate((el) => el.classList.contains('rt-try-failed')), false);
+  assert.equal(await b.getAttribute('aria-busy'), null);
+  assert.equal(bundleRequests.length, 2);
+  await done({ allow: /^console\.error: Failed to load resource/ });
+});
+
+test('a second button clicked while the bundle loads wins, with one bundle and one dialog', async () => {
+  let release;
+  const held = new Promise((ok) => (release = ok));
+  const { page, bundleRequests, done } = await fixture({
+    setup: (p) =>
+      p.route('**/playground.bundle.js', async (route) => {
+        await held;
+        await route.fallback();
+      }),
+  });
+  const labels = [await button(page, FIRST).textContent(), await button(page, SECOND).textContent()];
+  await button(page, FIRST).click();
+  await button(page, SECOND).click();
+  assert.equal(await page.evaluate(() => !!window.RhylthymePlayground), false, 'still loading');
+  release();
+  await dialogOpen(page);
+  await page.waitForFunction(() => [...document.querySelectorAll('.rt-try')].every((b) => !b.hasAttribute('aria-busy')));
+  assert.equal(bundleRequests.length, 1);
+  assert.equal(await page.locator('#rt-playground').count(), 1);
+  assert.equal((await page.textContent('.rt-pg-title')).trim(), loadExample(SECOND).title);
+  assert.equal(await button(page, FIRST).textContent(), labels[0]);
+  assert.equal(await button(page, SECOND).textContent(), labels[1]);
+  await done();
+});

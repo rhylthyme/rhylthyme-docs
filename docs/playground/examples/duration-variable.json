@@ -2,7 +2,7 @@
   "title": "Variable duration",
   "try": [
     {
-      "say": "Change \"defaultSeconds\" from 150 to 180: the planned bar grows to the longest time.",
+      "say": "Change \"defaultSeconds\" from 150 to 180: the Cook Eggs bar grows to its maxSeconds, three minutes.",
       "path": [
         "tracks",
         0,
@@ -14,7 +14,10 @@
       "value": 180
     },
     {
-      "say": "Press the play button, then press \"Mark complete\" after two minutes."
+      "say": "Set Speed to 10× and press Start. Before two minutes have passed, 'Done: Cook Eggs' does nothing."
+    },
+    {
+      "say": "Once two minutes have passed, press 'Done: Cook Eggs': Plate Eggs starts at once."
     }
   ],
   "program": {

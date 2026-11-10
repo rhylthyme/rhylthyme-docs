@@ -2,7 +2,7 @@
   "title": "Limited equipment",
   "try": [
     {
-      "say": "Change \"maxConcurrent\" from 3 to 2: only two burners, so the third pan has to wait.",
+      "say": "At the bottom of the JSON, change \"maxConcurrent\" from 3 to 2: a warning below the editor says \"3 at once, limit 2\".",
       "path": [
         "resourceConstraints",
         0,
@@ -11,7 +11,7 @@
       "value": 2
     },
     {
-      "say": "Change \"maxConcurrent\" from 3 to 1: one burner, so the pans take turns.",
+      "say": "Change it from 3 to 1 instead: the warning's time span widens to 1:00–10:00, whenever two pans overlap.",
       "path": [
         "resourceConstraints",
         0,

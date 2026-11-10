@@ -84,7 +84,7 @@ The most common type. The step runs for exactly the specified number of seconds.
 
 ### Variable Duration
 
-The step has a time range. It auto-completes at `defaultSeconds` unless you click **Mark Complete** after the minimum has passed.
+The step has a time range. It auto-completes at `defaultSeconds` unless you click **Mark Complete** (in the live player, **Done: &lt;step&gt;**) after the minimum has passed.
 
 ```json
 {
@@ -123,7 +123,7 @@ Triggers define when a step begins:
 | `programStartOffset` | Starts after a delay from program start | `{"type": "programStartOffset", "offsetSeconds": 480}` |
 | `afterStep` | Starts immediately after another step ends | `{"type": "afterStep", "stepId": "boil-water"}` |
 | `afterStepWithBuffer` | Starts after another step ends, plus a buffer period | `{"type": "afterStepWithBuffer", "stepId": "knead", "bufferSeconds": 60}` |
-| `manual` | Waits for the user to click "Start Step" | `{"type": "manual"}` |
+| `manual` | Waits for the user to click "Start Step" (in the live player, "Start: &lt;step&gt;") | `{"type": "manual"}` |
 
 <p class="rt-try-row">
 <button class="rt-try" data-example="trigger-program-start">Try it live: programStart</button>

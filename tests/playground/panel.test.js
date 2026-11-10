@@ -79,6 +79,7 @@ const getText = (page) => page.evaluate(() => window.RhylthymePlayground.getText
 const statusState = (page) => page.getAttribute('.rt-pg-status', 'data-state');
 const waitForState = (page, state) =>
   page.waitForFunction((s) => document.querySelector('.rt-pg-status').dataset.state === s, state);
+const focusInEditor = (page) => page.evaluate(() => !!document.activeElement.closest('.rt-pg-editor'));
 const focusInside = (page) => page.evaluate(() => document.getElementById('rt-playground').contains(document.activeElement));
 
 test('opens with the example: title, pretty JSON, bars drawn', async () => {
@@ -98,6 +99,34 @@ test('opens with the example: title, pretty JSON, bars drawn', async () => {
   assert.equal(await page.evaluate(() => document.documentElement.classList.contains('rt-pg-open')), true);
   assert.equal(await page.evaluate(() => window.RhylthymePlayground.isOpen()), true);
   assert.ok(await focusInside(page), 'focus moved into the dialog');
+  assert.ok(await focusInEditor(page), 'on a wide screen, into the editor');
+  await done();
+});
+
+test('an edit that changes no status line leaves the status region alone', async () => {
+  const { page, done } = await fixture();
+  await openExample(page);
+  const { program } = await fetchExample(page);
+  await page.evaluate(() => {
+    window.__statusMutations = 0;
+    window.__loads = 0;
+    new MutationObserver((records) => (window.__statusMutations += records.length)).observe(
+      document.querySelector('.rt-pg-status'),
+      { childList: true, subtree: true, characterData: true, attributes: true },
+    );
+    document.querySelector('.rt-pg-player').addEventListener('rt-load', () => window.__loads++);
+  });
+  // The same program, laid out differently: checked again, same lines.
+  await setText(page, JSON.stringify(program));
+  await page.waitForFunction(() => window.__loads > 0);
+  await page.waitForTimeout(100);
+  assert.equal(await page.evaluate(() => window.__statusMutations), 0, 'the aria-live region was not rewritten');
+  // A change that does change a line is still shown.
+  const changed = structuredClone(program);
+  changed.tracks[0].steps[0].duration.seconds *= 20;
+  const before = await page.textContent('.rt-pg-status');
+  await setText(page, JSON.stringify(changed, null, 2));
+  await page.waitForFunction((t) => document.querySelector('.rt-pg-status').textContent !== t, before);
   await done();
 });
 
@@ -200,6 +229,11 @@ test('copy link writes ?try=<id>', async () => {
   const copied = await page.evaluate(() => navigator.clipboard.readText());
   assert.equal(copied, site.url + '/fixture/?try=' + ID);
   assert.equal(await page.locator('.rt-pg-linkbox').isVisible(), false);
+  // Announced through the status bar's live region, then gone again.
+  const note = page.locator('.rt-pg-status[aria-live] .rt-pg-line', { hasText: 'Link copied' });
+  assert.equal(await note.count(), 1);
+  await note.waitFor({ state: 'detached' });
+  assert.match(await page.textContent('.rt-pg-status'), /^✓ Valid/);
   await done();
 });
 
@@ -282,6 +316,10 @@ test('phone width stacks player above editor', async () => {
     };
   });
   assert.ok(layout.playerBottom <= layout.editorTop, JSON.stringify(layout));
+  // Not into the editor: a phone's keyboard would cover the panel.
+  assert.ok(await focusInside(page), 'focus moved into the dialog');
+  assert.equal(await focusInEditor(page), false, 'focus is not in the editor');
+  assert.equal(await page.evaluate(() => document.activeElement.matches('.rt-pg-close')), true, 'focus is on Close');
   assert.equal(layout.pageScrollsSideways, false);
   assert.equal(layout.dialogScrollsSideways, false);
   await done();

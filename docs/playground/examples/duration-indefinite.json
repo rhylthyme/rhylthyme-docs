@@ -2,7 +2,7 @@
   "title": "Indefinite duration",
   "try": [
     {
-      "say": "Change \"defaultSeconds\" from 120 to 300: the placeholder bar grows.",
+      "say": "Change \"defaultSeconds\" from 120 to 300: the Reduce Sauce bar grows to five minutes.",
       "path": [
         "tracks",
         0,
@@ -14,7 +14,7 @@
       "value": 300
     },
     {
-      "say": "Press the play button, then press \"Mark complete\" when you like."
+      "say": "Set Speed to 10×, press Start, then press 'Done: Reduce Sauce' when you like: Serve Sauce starts at once."
     }
   ],
   "program": {
