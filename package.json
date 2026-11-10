@@ -7,13 +7,20 @@
     "node": ">=22"
   },
   "scripts": {
-    "pretest": "node tests/setup.js",
+    "build:playground": "node tools/build-playground.js",
+    "pretest": "node tests/setup.js && npm run build:playground",
     "test": "node --test --test-concurrency=4 \"tests/**/*.test.js\"",
-    "pretest:snippets": "node tests/setup.js",
+    "pretest:snippets": "node tests/setup.js && npm run build:playground",
     "test:snippets": "node --test --test-concurrency=4 \"tests/snippets/**/*.test.js\""
   },
   "devDependencies": {
+    "@codemirror/lang-json": "6.0.2",
+    "@codemirror/lint": "6.9.7",
+    "@codemirror/state": "6.7.6",
+    "@codemirror/theme-one-dark": "6.1.3",
+    "@lezer/json": "1.0.3",
     "@rhylthyme/timeline": "2.0.0-beta.7",
+    "codemirror": "6.0.2",
     "esbuild": "0.28.2",
     "playwright": "1.64.0",
     "react-dom18": "npm:react-dom@18.3.1",
