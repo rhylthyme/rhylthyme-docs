@@ -1,0 +1,100 @@
+{
+  "title": "Steps in a track",
+  "try": [
+    {
+      "say": "Change \"seconds\" on Simmer Soup from 900 to 1800: the middle step doubles.",
+      "path": [
+        "tracks",
+        0,
+        "steps",
+        1,
+        "duration",
+        "seconds"
+      ],
+      "value": 1800
+    },
+    {
+      "say": "Add a fourth step: Garnish Soup, 60 seconds, afterStep \"ladle-soup\".",
+      "path": [
+        "tracks",
+        0,
+        "steps",
+        3
+      ],
+      "value": {
+        "stepId": "garnish-soup",
+        "name": "Garnish Soup",
+        "task": "prep",
+        "duration": {
+          "type": "fixed",
+          "seconds": 60
+        },
+        "startTrigger": {
+          "type": "afterStep",
+          "stepId": "ladle-soup"
+        }
+      }
+    }
+  ],
+  "program": {
+    "programId": "soup-night",
+    "name": "Soup Night",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "soup",
+        "name": "Soup",
+        "steps": [
+          {
+            "stepId": "chop-vegetables",
+            "name": "Chop Vegetables",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 420
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          },
+          {
+            "stepId": "simmer-soup",
+            "name": "Simmer Soup",
+            "task": "simmering",
+            "duration": {
+              "type": "fixed",
+              "seconds": 900
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "chop-vegetables"
+            }
+          },
+          {
+            "stepId": "ladle-soup",
+            "name": "Ladle Soup",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 120
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "simmer-soup"
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": [
+      {
+        "task": "prep",
+        "maxConcurrent": 1
+      },
+      {
+        "task": "simmering",
+        "maxConcurrent": 1
+      }
+    ]
+  }
+}

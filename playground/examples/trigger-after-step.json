@@ -1,0 +1,98 @@
+{
+  "title": "After another step",
+  "try": [
+    {
+      "say": "Change \"seconds\" on Boil Water from 300 to 600: the pasta starts later.",
+      "path": [
+        "tracks",
+        0,
+        "steps",
+        0,
+        "duration",
+        "seconds"
+      ],
+      "value": 600
+    },
+    {
+      "say": "Replace the Cook Pasta \"startTrigger\" with {\"type\": \"programStart\"}: it no longer waits.",
+      "path": [
+        "tracks",
+        1,
+        "steps",
+        0,
+        "startTrigger"
+      ],
+      "value": {
+        "type": "programStart"
+      }
+    }
+  ],
+  "program": {
+    "programId": "pasta-night",
+    "name": "Pasta Night",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "water",
+        "name": "Water",
+        "steps": [
+          {
+            "stepId": "boil-water",
+            "name": "Boil Water",
+            "task": "stovetop",
+            "duration": {
+              "type": "fixed",
+              "seconds": 300
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          }
+        ]
+      },
+      {
+        "trackId": "pasta",
+        "name": "Pasta",
+        "steps": [
+          {
+            "stepId": "cook-pasta",
+            "name": "Cook Pasta",
+            "task": "stovetop",
+            "duration": {
+              "type": "fixed",
+              "seconds": 540
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "boil-water"
+            }
+          }
+        ]
+      },
+      {
+        "trackId": "sauce",
+        "name": "Sauce",
+        "steps": [
+          {
+            "stepId": "make-sauce",
+            "name": "Make Sauce",
+            "task": "stovetop",
+            "duration": {
+              "type": "fixed",
+              "seconds": 720
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": [
+      {
+        "task": "stovetop",
+        "maxConcurrent": 3
+      }
+    ]
+  }
+}

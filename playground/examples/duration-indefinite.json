@@ -1,0 +1,69 @@
+{
+  "title": "Indefinite duration",
+  "try": [
+    {
+      "say": "Change \"defaultSeconds\" from 120 to 300: the Reduce Sauce bar grows to five minutes.",
+      "path": [
+        "tracks",
+        0,
+        "steps",
+        0,
+        "duration",
+        "defaultSeconds"
+      ],
+      "value": 300
+    },
+    {
+      "say": "Set Speed to 10×, press Start, then press 'Done: Reduce Sauce' when you like: Serve Sauce starts at once."
+    }
+  ],
+  "program": {
+    "programId": "pan-sauce",
+    "name": "Pan Sauce",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "sauce",
+        "name": "Sauce",
+        "steps": [
+          {
+            "stepId": "reduce-sauce",
+            "name": "Reduce Sauce",
+            "task": "simmering",
+            "duration": {
+              "type": "indefinite",
+              "defaultSeconds": 120,
+              "triggerName": "sauce-thick"
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          },
+          {
+            "stepId": "serve-sauce",
+            "name": "Serve Sauce",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 60
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "reduce-sauce"
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": [
+      {
+        "task": "simmering",
+        "maxConcurrent": 1
+      },
+      {
+        "task": "prep",
+        "maxConcurrent": 1
+      }
+    ]
+  }
+}

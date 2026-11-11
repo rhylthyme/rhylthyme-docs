@@ -1,0 +1,112 @@
+{
+  "title": "A whole program",
+  "try": [
+    {
+      "say": "Change \"seconds\" on Cook Eggs from 240 to 480: the eggs cook longer.",
+      "path": [
+        "tracks",
+        0,
+        "steps",
+        1,
+        "duration",
+        "seconds"
+      ],
+      "value": 480
+    },
+    {
+      "say": "Add a Coffee track: a third parallel track with one step, starting at programStart.",
+      "path": [
+        "tracks",
+        2
+      ],
+      "value": {
+        "trackId": "coffee",
+        "name": "Coffee",
+        "steps": [
+          {
+            "stepId": "brew-coffee",
+            "name": "Brew Coffee",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 300
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "program": {
+    "programId": "breakfast",
+    "name": "Breakfast",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "eggs",
+        "name": "Eggs",
+        "steps": [
+          {
+            "stepId": "crack-eggs",
+            "name": "Crack Eggs",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 60
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          },
+          {
+            "stepId": "cook-eggs",
+            "name": "Cook Eggs",
+            "task": "frying",
+            "duration": {
+              "type": "fixed",
+              "seconds": 240
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "crack-eggs"
+            }
+          }
+        ]
+      },
+      {
+        "trackId": "toast",
+        "name": "Toast",
+        "steps": [
+          {
+            "stepId": "make-toast",
+            "name": "Make Toast",
+            "task": "toasting",
+            "duration": {
+              "type": "fixed",
+              "seconds": 180
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": [
+      {
+        "task": "prep",
+        "maxConcurrent": 2
+      },
+      {
+        "task": "frying",
+        "maxConcurrent": 1
+      },
+      {
+        "task": "toasting",
+        "maxConcurrent": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "title": "Limited equipment",
+  "try": [
+    {
+      "say": "At the bottom of the JSON, change \"maxConcurrent\" from 3 to 2: a warning below the editor says \"3 at once, limit 2\".",
+      "path": [
+        "resourceConstraints",
+        0,
+        "maxConcurrent"
+      ],
+      "value": 2
+    },
+    {
+      "say": "Change it from 3 to 1 instead: the warning's time span widens to 1:00–10:00, whenever two pans overlap.",
+      "path": [
+        "resourceConstraints",
+        0,
+        "maxConcurrent"
+      ],
+      "value": 1
+    }
+  ],
+  "program": {
+    "programId": "three-pans",
+    "name": "Three Pans",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "onions",
+        "name": "Onions",
+        "steps": [
+          {
+            "stepId": "saute-onions",
+            "name": "Saute Onions",
+            "task": "stove-burner",
+            "duration": {
+              "type": "fixed",
+              "seconds": 600
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          }
+        ]
+      },
+      {
+        "trackId": "peppers",
+        "name": "Peppers",
+        "steps": [
+          {
+            "stepId": "char-peppers",
+            "name": "Char Peppers",
+            "task": "stove-burner",
+            "duration": {
+              "type": "fixed",
+              "seconds": 480
+            },
+            "startTrigger": {
+              "type": "programStartOffset",
+              "offsetSeconds": 60
+            }
+          }
+        ]
+      },
+      {
+        "trackId": "sausage",
+        "name": "Sausage",
+        "steps": [
+          {
+            "stepId": "brown-sausage",
+            "name": "Brown Sausage",
+            "task": "stove-burner",
+            "duration": {
+              "type": "fixed",
+              "seconds": 540
+            },
+            "startTrigger": {
+              "type": "programStartOffset",
+              "offsetSeconds": 120
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": [
+      {
+        "task": "stove-burner",
+        "maxConcurrent": 3
+      }
+    ]
+  }
+}

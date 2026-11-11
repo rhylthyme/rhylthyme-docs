@@ -1,0 +1,74 @@
+{
+  "title": "Variable duration",
+  "try": [
+    {
+      "say": "Change \"defaultSeconds\" from 150 to 180: the Cook Eggs bar grows to its maxSeconds, three minutes.",
+      "path": [
+        "tracks",
+        0,
+        "steps",
+        0,
+        "duration",
+        "defaultSeconds"
+      ],
+      "value": 180
+    },
+    {
+      "say": "Set Speed to 10× and press Start. Before two minutes have passed, 'Done: Cook Eggs' does nothing."
+    },
+    {
+      "say": "Once two minutes have passed, press 'Done: Cook Eggs': Plate Eggs starts at once."
+    }
+  ],
+  "program": {
+    "programId": "soft-eggs",
+    "name": "Soft Eggs",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "eggs",
+        "name": "Eggs",
+        "steps": [
+          {
+            "stepId": "cook-eggs",
+            "name": "Cook Eggs",
+            "task": "frying",
+            "duration": {
+              "type": "variable",
+              "minSeconds": 120,
+              "maxSeconds": 180,
+              "defaultSeconds": 150,
+              "triggerName": "eggs-done"
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          },
+          {
+            "stepId": "plate-eggs",
+            "name": "Plate Eggs",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 60
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "cook-eggs"
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": [
+      {
+        "task": "frying",
+        "maxConcurrent": 1
+      },
+      {
+        "task": "prep",
+        "maxConcurrent": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "title": "A gap between steps",
+  "try": [
+    {
+      "say": "Change \"bufferSeconds\" from 60 to 600: the gap before Rest Dough grows to ten minutes.",
+      "path": [
+        "tracks",
+        0,
+        "steps",
+        1,
+        "startTrigger",
+        "bufferSeconds"
+      ],
+      "value": 600
+    }
+  ],
+  "program": {
+    "programId": "bread-dough",
+    "name": "Bread Dough",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "dough",
+        "name": "Dough",
+        "steps": [
+          {
+            "stepId": "knead-dough",
+            "name": "Knead Dough",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 600
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          },
+          {
+            "stepId": "rest-dough",
+            "name": "Rest Dough",
+            "task": "resting",
+            "duration": {
+              "type": "fixed",
+              "seconds": 1800
+            },
+            "startTrigger": {
+              "type": "afterStepWithBuffer",
+              "stepId": "knead-dough",
+              "bufferSeconds": 60
+            }
+          },
+          {
+            "stepId": "shape-loaf",
+            "name": "Shape Loaf",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 300
+            },
+            "startTrigger": {
+              "type": "afterStep",
+              "stepId": "rest-dough"
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": [
+      {
+        "task": "prep",
+        "maxConcurrent": 1
+      },
+      {
+        "task": "resting",
+        "maxConcurrent": 1
+      }
+    ]
+  }
+}

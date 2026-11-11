@@ -1,0 +1,71 @@
+{
+  "title": "Start at the beginning, or later",
+  "try": [
+    {
+      "say": "Change \"offsetSeconds\" from 480 to 120: the salad starts sooner.",
+      "path": [
+        "tracks",
+        1,
+        "steps",
+        0,
+        "startTrigger",
+        "offsetSeconds"
+      ],
+      "value": 120
+    }
+  ],
+  "program": {
+    "programId": "roast-and-salad",
+    "name": "Roast and Salad",
+    "schemaVersion": "0.3.0-alpha",
+    "tracks": [
+      {
+        "trackId": "oven",
+        "name": "Oven",
+        "steps": [
+          {
+            "stepId": "roast-vegetables",
+            "name": "Roast Vegetables",
+            "task": "baking",
+            "duration": {
+              "type": "fixed",
+              "seconds": 1200
+            },
+            "startTrigger": {
+              "type": "programStart"
+            }
+          }
+        ]
+      },
+      {
+        "trackId": "salad",
+        "name": "Salad",
+        "steps": [
+          {
+            "stepId": "toss-salad",
+            "name": "Toss Salad",
+            "task": "prep",
+            "duration": {
+              "type": "fixed",
+              "seconds": 300
+            },
+            "startTrigger": {
+              "type": "programStartOffset",
+              "offsetSeconds": 480
+            }
+          }
+        ]
+      }
+    ],
+    "resourceConstraints": [
+      {
+        "task": "baking",
+        "maxConcurrent": 1
+      },
+      {
+        "task": "prep",
+        "maxConcurrent": 1
+      }
+    ]
+  }
+}
